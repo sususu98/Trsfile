@@ -12,7 +12,7 @@ namespace com.riscure.trs.parameter.trace
 	using com.riscure.trs.types;
 
 
-	public class TraceParameterMap : LinkedHashMap<string, TraceParameter>
+	public class TraceParameterMap : Dictionary<string, TraceParameter>
 	{
 		private const string KEY_NOT_FOUND = "TraceParameter %s was not found in the trace.";
 		private const string EMPTY_DATA_BUT_NONEMPTY_DEFINITIONS = "The provided byte array is null or empty, but the provided definitions are not";
@@ -24,7 +24,10 @@ namespace com.riscure.trs.parameter.trace
 
 		public TraceParameterMap(TraceParameterMap toCopy) : this()
 		{
-			toCopy.forEach((key, value) => put(key, value.copy()));
+            foreach (var (key, value) in toCopy)
+            {
+				Add(key, value.copy());
+            }
 		}
 
 		/// <returns> a new instance of a TraceParameterMap containing all the same values as this one </returns>

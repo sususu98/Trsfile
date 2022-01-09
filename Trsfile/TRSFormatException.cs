@@ -8,7 +8,7 @@ namespace com.riscure.trs
 		{
 		}
 
-		public TRSFormatException(Exception throwable) : base(throwable)
+		public TRSFormatException(Exception throwable) : base(throwable.Message, throwable)
 		{
 		}
 

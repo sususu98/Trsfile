@@ -16,7 +16,7 @@ namespace com.riscure.trs
 
 	using static com.riscure.trs.enums.TRSTag;
 
-	public class TraceSet : AutoCloseable
+	public class TraceSet : IDisposable
 	{
 		private const string ERROR_READING_FILE = "Error reading TRS file: file size (%d) != meta data (%d) + trace size (%d) * nr of traces (%d)";
 		private const string TRACE_SET_NOT_OPEN = "TraceSet has not been opened or has been closed.";
@@ -192,7 +192,7 @@ namespace com.riscure.trs
 			}
 			catch (TRSFormatException ex)
 			{
-				throw new IOException(ex);
+				throw new IOException(ex.Message, ex);
 			}
 		}
 
@@ -361,9 +361,10 @@ namespace com.riscure.trs
 			return result;
 		}
 
+		private bool closed = false;
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: @Override public void close() throws IOException, TRSFormatException
-		public override void close()
+		public void close()
 		{
 			open_Conflict = false;
 			if (writing)
@@ -374,6 +375,7 @@ namespace com.riscure.trs
 			{
 				closeReader();
 			}
+			closed = true;
 		}
 
 		private void checkValid(Trace trace)
@@ -606,6 +608,23 @@ namespace com.riscure.trs
 		{
 			metaData.put(TRS_VERSION, 2, false);
 			return new TraceSet(file, metaData);
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+                if (!closed)
+				{
+					close();
+				}
+			}
 		}
 	}
 

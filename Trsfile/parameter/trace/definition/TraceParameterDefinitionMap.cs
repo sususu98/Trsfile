@@ -15,7 +15,7 @@ namespace com.riscure.trs.parameter.trace.definition
 	/// This class represents the header definitions of all user-added local parameters in the trace format
 	/// This explicitly implements LinkedHashMap to ensure that the data is retrieved in the same order as it was added
 	/// </summary>
-	public class TraceParameterDefinitionMap : LinkedHashMap<string, TraceParameterDefinition<TraceParameter>>
+	public class TraceParameterDefinitionMap : Dictionary<string, TraceParameterDefinition<TraceParameter>>
 	{
 
 		public TraceParameterDefinitionMap() : base()
@@ -109,7 +109,7 @@ namespace com.riscure.trs.parameter.trace.definition
 		/// <returns> a set of definitions based on the parameters present in a trace </returns>
 		public static TraceParameterDefinitionMap createFrom(TraceParameterMap parameters)
 		{
-			TraceParameterDefinitionMap definitions = new TraceParameterDefinitionMap();
+			TraceParameterDefinitionMap definitions = new ();
 			if (!parameters.isEmpty())
 			{
 				short offset = 0;
@@ -122,24 +122,24 @@ namespace com.riscure.trs.parameter.trace.definition
 			return definitions;
 		}
 
-		public override bool Equals(object o)
+		public override bool Equals(object obj)
 		{
-			if (this == o)
+			if (this == obj)
 			{
 				return true;
 			}
-			if (o == null || this.GetType() != o.GetType())
+			if (obj == null || this.GetType() != obj.GetType())
 			{
 				return false;
 			}
 
-			TraceParameterDefinitionMap that = (TraceParameterDefinitionMap) o;
-			if (this.size() != that.size())
+			TraceParameterDefinitionMap that = (TraceParameterDefinitionMap) obj;
+			if (Count != that.Count)
 			{
 				return false;
 			}
 
-			return this.entrySet().All(e => e.getValue().Equals(that.get(e.getKey())));
+			return this.All(e => e.Value == that[e.Key]);
 		}
 
 		public override int GetHashCode()
