@@ -61,7 +61,7 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.io.InputStream.read(byte[], int, int)"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final int read(byte[] b) throws IOException
-		public int read(sbyte[] b)
+		public int read(byte[] b)
 		{
 			return @in.read(b, 0, b.Length);
 		}
@@ -117,7 +117,7 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.io.InputStream.read(byte[], int, int)"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final int read(byte[] b, int off, int len) throws IOException
-		public int read(sbyte[] b, int off, int len)
+		public int read(byte[] b, int off, int len)
 		{
 			return @in.read(b, off, len);
 		}
@@ -141,7 +141,7 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.io.FilterInputStream.in"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void readFully(byte[] b) throws IOException
-		public void readFully(sbyte[] b)
+		public void readFully(byte[] b)
 		{
 			readFully(b, 0, b.Length);
 		}
@@ -167,7 +167,7 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.io.FilterInputStream.in"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public final void readFully(byte[] b, int off, int len) throws IOException
-		public void readFully(sbyte[] b, int off, int len)
+		public void readFully(byte[] b, int off, int len)
 		{
 			if (len < 0)
 			{
@@ -426,7 +426,7 @@ namespace com.riscure.trs.io
 			return ((ch1 << 0) + (ch2 << 8) + (ch3 << 16) + (ch4 << 24));
 		}
 
-		private sbyte[] readBuffer = new sbyte[8];
+		private byte[] readBuffer = new sbyte[8];
 
 		/// <summary>
 		/// See the general contract of the <code>readLong</code>
@@ -616,7 +616,7 @@ namespace com.riscure.trs.io
 		public string readUTF()
 		{
 			int length = readUnsignedShort();
-			sbyte[] bytes = new sbyte[length];
+			byte[] bytes = new sbyte[length];
 			int read = this.read(bytes);
 			if (read != length)
 			{

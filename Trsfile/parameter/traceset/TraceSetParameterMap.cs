@@ -36,7 +36,7 @@ namespace com.riscure.trs.parameter.traceset
 
 		/// <returns> this map converted to a byte array, serialized according to the TRS V2 standard definition </returns>
 		/// <exception cref="RuntimeException"> if the map failed to serialize correctly </exception>
-		public virtual sbyte[] serialize()
+		public virtual byte[] serialize()
 		{
 			MemoryStream baos = new MemoryStream();
 			try
@@ -47,7 +47,7 @@ namespace com.riscure.trs.parameter.traceset
 					dos.writeShort(size());
 					foreach (KeyValuePair<string, TraceSetParameter> entry in entrySet())
 					{
-						sbyte[] nameBytes = entry.Key.getBytes(StandardCharsets.UTF_8);
+						byte[] nameBytes = entry.Key.getBytes(StandardCharsets.UTF_8);
 						//Write NL
 						dos.writeShort(nameBytes.Length);
 						//Write N
@@ -68,7 +68,7 @@ namespace com.riscure.trs.parameter.traceset
 		/// <param name="bytes"> a valid serialized Trace set parameter map </param>
 		/// <returns> a new populated Trace set parameter map as represented by the provided byte array </returns>
 		/// <exception cref="RuntimeException"> if the provided byte array does not represent a valid parameter map </exception>
-		public static TraceSetParameterMap deserialize(sbyte[] bytes)
+		public static TraceSetParameterMap deserialize(byte[] bytes)
 		{
 			TraceSetParameterMap result = new TraceSetParameterMap();
 			if (bytes != null && bytes.Length > 0)
@@ -159,7 +159,7 @@ namespace com.riscure.trs.parameter.traceset
 			put(new ByteTypeKey(key), value);
 		}
 
-		public virtual void put(string key, sbyte[] value)
+		public virtual void put(string key, byte[] value)
 		{
 			put(new ByteArrayTypeKey(key), value);
 		}
@@ -234,7 +234,7 @@ namespace com.riscure.trs.parameter.traceset
 			return getOrElseThrow(new ByteTypeKey(key));
 		}
 
-		public virtual sbyte[] getByteArray(string key)
+		public virtual byte[] getByteArray(string key)
 		{
 			return getOrElseThrow(new ByteArrayTypeKey(key));
 		}

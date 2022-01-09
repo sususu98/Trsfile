@@ -173,7 +173,7 @@ namespace com.riscure.trs.enums
 
         private const string UNKNOWN_TAG = "Unknown tag: 0x%X";
 
-        private readonly sbyte value;
+        private readonly byte value;
         private readonly string name;
         private readonly bool required;
         private readonly Type type;
@@ -183,7 +183,7 @@ namespace com.riscure.trs.enums
 
         internal TRSTag(string nameValue, InnerEnum innerEnum, int value, string name, bool required, Type type, int length, object defaultValue, string description)
         {
-            this.value = (sbyte)value;
+            this.value = (byte)value;
             this.name = name;
             this.required = required;
             this.type = type;
@@ -196,7 +196,7 @@ namespace com.riscure.trs.enums
             innerEnumValue = innerEnum;
         }
 
-        public sbyte Value
+        public byte Value
         {
             get
             {
@@ -254,7 +254,7 @@ namespace com.riscure.trs.enums
 
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: public static TRSTag fromValue(byte value) throws com.riscure.trs.TRSFormatException
-        public static TRSTag FromValue(sbyte value)
+        public static TRSTag FromValue(byte value)
         {
             foreach (TRSTag tag in TRSTag.Values())
             {

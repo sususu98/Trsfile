@@ -134,6 +134,12 @@ public class ByteBuffer
 		return this;
 	}
 
+	public ByteBuffer get(byte[] dst)
+	{
+		stream.Read(dst, 0, dst.Length);
+		return this;
+	}
+
 	public ByteBuffer put(byte b)
 	{
 		stream.WriteByte(b);

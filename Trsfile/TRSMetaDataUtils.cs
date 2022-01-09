@@ -28,10 +28,10 @@ namespace com.riscure.trs
 //ORIGINAL LINE: public static void writeTRSMetaData(java.io.FileOutputStream fos, TRSMetaData metaData) throws IOException, TRSFormatException
 		public static void writeTRSMetaData(FileStream fos, TRSMetaData metaData)
 		{
-			if (fos.getChannel().position() != 0)
+			if (fos.Position != 0)
 			{
 				Console.Error.WriteLine(REWINDING_STREAM);
-				fos.getChannel().position(0);
+				fos.Position = 0;
 			}
 			foreach (TRSTag tag in TRSTag.Values())
 			{
@@ -39,54 +39,57 @@ namespace com.riscure.trs
 				{
 					continue; //TRACE BLOCK should be the last write
 				}
-				if (!tag.isRequired() && metaData.hasDefaultValue(tag))
+				if (!tag.Required && metaData.hasDefaultValue(tag))
 				{
 					continue; //ignore if default and not required
 				}
-				fos.WriteByte(tag.getValue());
-				if (tag.getType() == typeof(string))
+				fos.WriteByte(tag.Value);
+				if (tag.Type == typeof(string))
 				{
 					string s = metaData.getString(tag);
-					sbyte[] stringBytes = s.GetBytes(Encoding.UTF8);
+					byte[] stringBytes = Encoding.UTF8.GetBytes(s);
 					writeLength(fos, stringBytes.Length);
 					fos.Write(stringBytes, 0, stringBytes.Length);
 				}
-				else if (tag.getType() == typeof(Float))
+				else if (tag.Type == typeof(float))
 				{
 					float f = metaData.getFloat(tag);
-					writeLength(fos, tag.getLength());
-					writeInt(fos, Float.floatToIntBits(f), tag.getLength());
-				}
-				else if (tag.getType() == typeof(Boolean))
+					writeLength(fos, tag.Length);
+                    for (int i = 0; i < tag.Length; i++)
+                    {
+                        fos.Write(BitConverter.GetBytes(f));
+                    }
+                }
+				else if (tag.Type == typeof(bool))
 				{
 					int value = metaData.getBoolean(tag) ? 1 : 0;
-					writeLength(fos, tag.getLength());
-					writeInt(fos, value, tag.getLength());
+					writeLength(fos, tag.Length);
+					writeInt(fos, value, tag.Length);
 				}
-				else if (tag.getType() == typeof(Integer))
+				else if (tag.Type == typeof(int))
 				{
-					writeLength(fos, tag.getLength());
-					writeInt(fos, metaData.getInt(tag), tag.getLength());
+					writeLength(fos, tag.Length);
+					writeInt(fos, metaData.getInt(tag), tag.Length);
 				}
-				else if (tag.getType() == typeof(TraceSetParameterMap))
+				else if (tag.Type == typeof(TraceSetParameterMap))
 				{
-					sbyte[] serialized = metaData.TraceSetParameters.serialize();
+					byte[] serialized = metaData.TraceSetParameters.serialize();
 					writeLength(fos, serialized.Length);
 					fos.Write(serialized, 0, serialized.Length);
 				}
-				else if (tag.getType() == typeof(TraceParameterDefinitionMap))
+				else if (tag.Type == typeof(TraceParameterDefinitionMap))
 				{
-					sbyte[] serialized = metaData.TraceParameterDefinitions.serialize();
+					byte[] serialized = metaData.TraceParameterDefinitions.serialize();
 					writeLength(fos, serialized.Length);
 					fos.Write(serialized, 0, serialized.Length);
 				}
 				else
 				{
-					throw new TRSFormatException(String.format(UNSUPPORTED_TAG_TYPE, tag.getName(), tag.getType()));
+					throw new TRSFormatException(string.Format(UNSUPPORTED_TAG_TYPE, tag.Name, tag.Type.Name));
 				}
 			}
-			fos.WriteByte(TRSTag.TRACE_BLOCK.getValue());
-			fos.WriteByte(TRSTag.TRACE_BLOCK.getLength());
+			fos.WriteByte(TRSTag.TRACE_BLOCK.Value);
+			fos.WriteByte((byte)TRSTag.TRACE_BLOCK.Length); // it's safe here
 		}
 
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
@@ -95,7 +98,7 @@ namespace com.riscure.trs
 		{
 			for (int i = 0; i < length; i++)
 			{
-				fos.WriteByte((sbyte)(value >> (i * 8)));
+				fos.WriteByte((byte)(value >> (i * 8)));
 			}
 		}
 
@@ -106,15 +109,15 @@ namespace com.riscure.trs
 			if (length > 0x7F)
 			{
 				int lenlen = 1 + (int)(Math.Log(length) / Math.Log(256));
-				fos.WriteByte(unchecked((sbyte)(0x80 + lenlen)));
+				fos.WriteByte(unchecked((byte)(0x80 + lenlen)));
 				for (int i = 0; i < lenlen; i++)
 				{
-					fos.WriteByte((sbyte)(length >> (i * 8)));
+					fos.WriteByte((byte)(length >> (i * 8)));
 				}
 			}
 			else
 			{
-				fos.WriteByte((sbyte) length);
+				fos.WriteByte((byte) length);
 			}
 		}
 
@@ -130,13 +133,13 @@ namespace com.riscure.trs
 		public static TRSMetaData readTRSMetaData(ByteBuffer buffer)
 		{
 			TRSMetaData trs = TRSMetaData.create();
-			sbyte tag;
+			byte tag;
 
 			//We keep on reading meta data until we hit tag TB=0x5f
 			do
 			{
 				// read meta data items and put them in trs
-				tag = buffer.get();
+				tag = (byte)buffer.get();
 				int length = buffer.get();
 				if ((length & 0x80) != 0)
 				{
@@ -148,7 +151,7 @@ namespace com.riscure.trs
 					}
 				}
 				readAndStoreData(buffer, tag, length, trs);
-			} while (tag != TRSTag.TRACE_BLOCK.getValue());
+			} while (tag != TRSTag.TRACE_BLOCK.Value);
 			return trs;
 		}
 
@@ -158,21 +161,21 @@ namespace com.riscure.trs
 		{
 			//Read NL
 			short nameLength = dis.readShort();
-			sbyte[] nameBytes = new sbyte[nameLength];
+			byte[] nameBytes = new byte[nameLength];
 			int read = dis.read(nameBytes, 0, nameLength);
 			if (read != nameLength)
 			{
 				throw new IOException("Error reading parameter name");
 			}
 			//Read N
-			return StringHelper.NewString(nameBytes, StandardCharsets.UTF_8);
+			return StringHelper.NewString(nameBytes, Encoding.UTF8);
 		}
 
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: private static void readAndStoreData(ByteBuffer buffer, byte tag, int length, TRSMetaData trsMD) throws TRSFormatException
-		private static void readAndStoreData(ByteBuffer buffer, sbyte tag, int length, TRSMetaData trsMD)
+		private static void readAndStoreData(ByteBuffer buffer, byte tag, int length, TRSMetaData trsMD)
 		{
-			bool hasValidLength = (0 <= length & length <= 0xffff);
+			bool hasValidLength = 0 <= length && length <= 0xffff;
 			TRSTag trsTag;
 			try
 			{
@@ -182,12 +185,12 @@ namespace com.riscure.trs
 			{
 				//unknown tag, but read it anyway
 				buffer.position(buffer.position() + length);
-				System.err.printf(IGNORED_UNKNOWN_TAG, tag);
+				Console.Error.WriteLine(string.Format(IGNORED_UNKNOWN_TAG, tag));
 				return;
 			}
 			if (!hasValidLength)
 			{
-				throw new TRSFormatException(String.format(TAG_LENGTH_INVALID, trsTag.ToString(), length));
+				throw new TRSFormatException(string.Format(TAG_LENGTH_INVALID, trsTag.ToString(), length));
 			}
 
 			if (trsTag == TRSTag.TRACE_BLOCK)
@@ -195,33 +198,35 @@ namespace com.riscure.trs
 				return; //If we read TRACE_BLOCK, we've reached the end of the metadata
 			}
 
-			if (trsTag.getType() == typeof(string))
+			if (trsTag.Type == typeof(string))
 			{
 				trsMD.put(trsTag, readString(buffer, length));
 			}
-			else if (trsTag.getType() == typeof(Float))
+			else if (trsTag.Type == typeof(float))
 			{
 				trsMD.put(trsTag, readFloat(buffer));
 			}
-			else if (trsTag.getType() == typeof(Boolean))
+			else if (trsTag.Type == typeof(bool))
 			{
 				trsMD.put(trsTag, readBoolean(buffer));
 			}
-			else if (trsTag.getType() == typeof(Integer))
+			else if (trsTag.Type == typeof(int))
 			{
 				trsMD.put(trsTag, readInt(buffer, length));
-			}
-			else if (trsTag.getType() == typeof(TraceSetParameterMap))
+                System.Buffers.Text.Utf8Parser.TryParse()
+
+            }
+			else if (trsTag.Type == typeof(TraceSetParameterMap))
 			{
 				trsMD.put(trsTag, readTraceSetParameters(buffer, length));
 			}
-			else if (trsTag.getType() == typeof(TraceParameterDefinitionMap))
+			else if (trsTag.Type == typeof(TraceParameterDefinitionMap))
 			{
 				trsMD.put(trsTag, readTraceParameterDefinitions(buffer, length));
 			}
 			else
 			{
-				throw new TRSFormatException(String.format(UNSUPPORTED_TAG_TYPE, trsTag.getName(), trsTag.getType()));
+				throw new TRSFormatException(string.Format(UNSUPPORTED_TAG_TYPE, trsTag.Name, trsTag.Type.Name));
 			}
 		}
 
@@ -235,7 +240,7 @@ namespace com.riscure.trs
 			long result = 0;
 			for (int i = 0; i < length; i++)
 			{
-				result += (((int) buffer.get()) & 0xFF) << (8 * i);
+				result += (buffer.get() & 0xFF) << (8 * i);
 			}
 			return (int) result;
 		}
@@ -244,26 +249,26 @@ namespace com.riscure.trs
 		private static float readFloat(ByteBuffer buffer)
 		{
 			int intValue = readInt(buffer, 4);
-			return Float.intBitsToFloat(intValue);
+			return BitConverter.Int32BitsToSingle(intValue);
 		}
 
 		private static string readString(ByteBuffer buffer, int length)
 		{
-			sbyte[] ba = new sbyte[length];
+			byte[] ba = new byte[length];
 			buffer.get(ba);
-			return StringHelper.NewString(ba, StandardCharsets.UTF_8);
+			return StringHelper.NewString(ba, Encoding.UTF8);
 		}
 
 		private static TraceSetParameterMap readTraceSetParameters(ByteBuffer buffer, int length)
 		{
-			sbyte[] ba = new sbyte[length];
+			byte[] ba = new byte[length];
 			buffer.get(ba);
 			return TraceSetParameterMap.deserialize(ba);
 		}
 
 		private static TraceParameterDefinitionMap readTraceParameterDefinitions(ByteBuffer buffer, int length)
 		{
-			sbyte[] ba = new sbyte[length];
+			byte[] ba = new byte[length];
 			buffer.get(ba);
 			return TraceParameterDefinitionMap.deserialize(ba);
 		}

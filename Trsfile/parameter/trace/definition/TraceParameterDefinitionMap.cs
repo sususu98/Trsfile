@@ -40,7 +40,7 @@ namespace com.riscure.trs.parameter.trace.definition
 
 		/// <returns> this map converted to a byte array, serialized according to the TRS V2 standard definition </returns>
 		/// <exception cref="RuntimeException"> if the map failed to serialize correctly </exception>
-		public virtual sbyte[] serialize()
+		public virtual byte[] serialize()
 		{
 			MemoryStream baos = new MemoryStream();
 			try
@@ -51,7 +51,7 @@ namespace com.riscure.trs.parameter.trace.definition
 					dos.writeShort(size());
 					foreach (KeyValuePair<string, TraceParameterDefinition<TraceParameter>> entry in entrySet())
 					{
-						sbyte[] nameBytes = entry.Key.getBytes(StandardCharsets.UTF_8);
+						byte[] nameBytes = entry.Key.getBytes(StandardCharsets.UTF_8);
 						//Write NL
 						dos.writeShort(nameBytes.Length);
 						//Write N
@@ -74,7 +74,7 @@ namespace com.riscure.trs.parameter.trace.definition
 		/// <param name="bytes"> a valid serialized Trace parameter definition map </param>
 		/// <returns> a new populated Trace parameter definition map as represented by the provided byte array </returns>
 		/// <exception cref="RuntimeException"> if the provided byte array does not represent a valid parameter definition map </exception>
-		public static TraceParameterDefinitionMap deserialize(sbyte[] bytes)
+		public static TraceParameterDefinitionMap deserialize(byte[] bytes)
 		{
 			TraceParameterDefinitionMap result = new TraceParameterDefinitionMap();
 			if (bytes != null && bytes.Length > 0)
