@@ -4,7 +4,7 @@ using System.Text;
 namespace com.riscure.trs.io
 {
 
-	public class LittleEndianOutputStream : FilterOutputStream, DataOutput
+	public class LittleEndianOutputStream : IDisposable
 	{
 		/// <summary>
 		/// The number of bytes written to the data output stream so far.
@@ -12,23 +12,44 @@ namespace com.riscure.trs.io
 		/// </summary>
 		protected internal int written;
 
+		private readonly Stream stream;
+		private readonly object obj = new object();
+
 		/// <summary>
 		/// Creates an output stream filter built on top of the specified
 		/// underlying output stream.
 		/// </summary>
-		/// <param name="out"> the underlying output stream to be assigned to
+		/// <param name="outS"> the underlying output stream to be assigned to
 		///            the field <code>this.out</code> for later use, or
 		///            <code>null</code> if this instance is to be
 		///            created without an underlying stream. </param>
-		public LittleEndianOutputStream(Stream @out) : base(@out)
+		public LittleEndianOutputStream(Stream outS)
 		{
+			stream = outS;
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (stream is not null)
+				{
+					stream.Close();
+				}
+			}
 		}
 
 		/// <summary>
 		/// Increases the written counter by the specified value
 		/// until it reaches Integer.MAX_VALUE.
 		/// </summary>
-		private void incCount(int value)
+		private void IncCount(int value)
 		{
 			int temp = written + value;
 			if (temp < 0)
@@ -37,6 +58,8 @@ namespace com.riscure.trs.io
 			}
 			written = temp;
 		}
+
+
 
 		/// <summary>
 		/// Writes the specified byte (the low eight bits of the argument
@@ -53,12 +76,12 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: @Override public synchronized void write(int b) throws IOException
-		public override void write(int b)
+		public void write(int b)
 		{
-			lock (this)
+			lock (obj)
 			{
-				@out.write(b);
-				incCount(1);
+				stream.Write(BitConverter.GetBytes(b));
+				IncCount(1);
 			}
 		}
 
@@ -75,12 +98,12 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: @Override public synchronized void write(byte[] b, int off, int len) throws IOException
-		public override void write(sbyte[] b, int off, int len)
+		public void write(byte[] b, int off, int len)
 		{
-			lock (this)
+			lock (obj)
 			{
-				@out.write(b, off, len);
-				incCount(len);
+				stream.Write(b, off, len);
+				IncCount(len);
 			}
 		}
 
@@ -98,9 +121,9 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.io.OutputStream.flush()"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: @Override public void flush() throws IOException
-		public override void flush()
+		public void flush()
 		{
-			@out.flush();
+			stream.Flush();
 		}
 
 		/// <summary>
@@ -116,10 +139,10 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: @Override public final void writeBoolean(boolean v) throws IOException
-		public override void writeBoolean(bool v)
+		public void writeBoolean(bool v)
 		{
-			@out.write(v ? 1 : 0);
-			incCount(1);
+			stream.WriteByte(v ? (byte)1 : (byte)0);
+			IncCount(1);
 		}
 
 		/// <summary>
@@ -132,10 +155,10 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: @Override public final void writeByte(int v) throws IOException
-		public override void writeByte(int v)
+		public void writeByte(int v)
 		{
-			@out.write(v);
-			incCount(1);
+			stream.WriteByte((byte)v);
+			IncCount(1);
 		}
 
 		/// <summary>
@@ -148,11 +171,11 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: @Override public final void writeShort(int v) throws IOException
-		public override void writeShort(int v)
+		public void writeShort(short v)
 		{
-			@out.write(((int)((uint)v >> 0)) & 0xFF);
-			@out.write(((int)((uint)v >> 8)) & 0xFF);
-			incCount(2);
+			stream.WriteByte((byte)(((int)((uint)v >> 0)) & 0xFF));
+			stream.WriteByte((byte)(((int)((uint)v >> 8)) & 0xFF));
+			IncCount(2);
 		}
 
 		/// <summary>
@@ -165,11 +188,11 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: @Override public final void writeChar(int v) throws IOException
-		public override void writeChar(int v)
+		public void writeChar(char v)
 		{
-			@out.write(((int)((uint)v >> 0)) & 0xFF);
-			@out.write(((int)((uint)v >> 8)) & 0xFF);
-			incCount(2);
+			stream.WriteByte((byte)(((int)((uint)v >> 0)) & 0xFF));
+			stream.WriteByte((byte)(((int)((uint)v >> 8)) & 0xFF));
+			IncCount(2);
 		}
 
 		/// <summary>
@@ -182,16 +205,16 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: @Override public final void writeInt(int v) throws IOException
-		public override void writeInt(int v)
+		public void writeInt(int v)
 		{
-			@out.write(((int)((uint)v >> 0)) & 0xFF);
-			@out.write(((int)((uint)v >> 8)) & 0xFF);
-			@out.write(((int)((uint)v >> 16)) & 0xFF);
-			@out.write(((int)((uint)v >> 24)) & 0xFF);
-			incCount(4);
+			stream.WriteByte((byte)(((int)((uint)v >> 0)) & 0xFF));
+			stream.WriteByte((byte)(((int)((uint)v >> 8)) & 0xFF));
+			stream.WriteByte((byte)(((int)((uint)v >> 16)) & 0xFF));
+			stream.WriteByte((byte)(((int)((uint)v >> 24)) & 0xFF));
+			IncCount(4);
 		}
 
-		private sbyte[] writeBuffer = new sbyte[8];
+		private byte[] writeBuffer = new byte[8];
 
 		/// <summary>
 		/// Writes a <code>long</code> to the underlying output stream as eight
@@ -203,18 +226,18 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: @Override public final void writeLong(long v) throws IOException
-		public override void writeLong(long v)
+		public void writeLong(long v)
 		{
-			writeBuffer[0] = (sbyte)((long)((ulong)v >> 0));
-			writeBuffer[1] = (sbyte)((long)((ulong)v >> 8));
-			writeBuffer[2] = (sbyte)((long)((ulong)v >> 16));
-			writeBuffer[3] = (sbyte)((long)((ulong)v >> 24));
-			writeBuffer[4] = (sbyte)((long)((ulong)v >> 32));
-			writeBuffer[5] = (sbyte)((long)((ulong)v >> 40));
-			writeBuffer[6] = (sbyte)((long)((ulong)v >> 48));
-			writeBuffer[7] = (sbyte)((long)((ulong)v >> 56));
-			@out.write(writeBuffer, 0, 8);
-			incCount(8);
+			writeBuffer[0] = (byte)((long)((ulong)v >> 0));
+			writeBuffer[1] = (byte)((long)((ulong)v >> 8));
+			writeBuffer[2] = (byte)((long)((ulong)v >> 16));
+			writeBuffer[3] = (byte)((long)((ulong)v >> 24));
+			writeBuffer[4] = (byte)((long)((ulong)v >> 32));
+			writeBuffer[5] = (byte)((long)((ulong)v >> 40));
+			writeBuffer[6] = (byte)((long)((ulong)v >> 48));
+			writeBuffer[7] = (byte)((long)((ulong)v >> 56));
+			stream.Write(writeBuffer, 0, 8);
+			IncCount(8);
 		}
 
 		/// <summary>
@@ -231,9 +254,9 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.lang.Float.floatToIntBits(float)"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: @Override public final void writeFloat(float v) throws IOException
-		public override void writeFloat(float v)
+		public void writeFloat(float v)
 		{
-			writeInt(Float.floatToIntBits(v));
+			writeInt(BitConverter.SingleToInt32Bits(v));
 		}
 
 		/// <summary>
@@ -250,9 +273,9 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.lang.Double.doubleToLongBits(double)"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: @Override public final void writeDouble(double v) throws IOException
-		public override void writeDouble(double v)
+		public void writeDouble(double v)
 		{
-			writeLong(System.BitConverter.DoubleToInt64Bits(v));
+			writeLong(BitConverter.DoubleToInt64Bits(v));
 		}
 
 		/// <summary>
@@ -267,14 +290,14 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: @Override public final void writeBytes(String s) throws IOException
-		public override void writeBytes(string s)
+		public void writeBytes(string s)
 		{
 			int len = s.Length;
 			for (int i = 0; i < len; i++)
 			{
-				@out.write((sbyte) s[i]);
+				stream.WriteByte((byte) s[i]);
 			}
-			incCount(len);
+			IncCount(len);
 		}
 
 		/// <summary>
@@ -290,16 +313,16 @@ namespace com.riscure.trs.io
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: @Override public final void writeChars(String s) throws IOException
-		public override void writeChars(string s)
+		public void writeChars(string s)
 		{
 			int len = s.Length;
 			for (int i = 0; i < len; i++)
 			{
 				int v = s[i];
-				@out.write(((int)((uint)v >> 0)) & 0xFF);
-				@out.write(((int)((uint)v >> 8)) & 0xFF);
+				stream.WriteByte((byte)(((int)((uint)v >> 0)) & 0xFF));
+				stream.WriteByte((byte)(((int)((uint)v >> 8)) & 0xFF));
 			}
-			incCount(len * 2);
+			IncCount(len * 2);
 		}
 
 		/// <summary>
@@ -324,25 +347,22 @@ namespace com.riscure.trs.io
 		/// <exception cref="IOException"> if an I/O error occurs. </exception>
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: @Override public final void writeUTF(String str) throws IOException
-		public override void writeUTF(string str)
+		public void writeUTF(string str)
 		{
-			sbyte[] bytes = str.GetBytes(Encoding.UTF8);
-			writeShort(bytes.Length);
-			@out.write(bytes);
-			incCount(bytes.Length);
+			byte[] bytes = str.GetBytes(Encoding.UTF8);
+			writeShort((short)bytes.Length);
+			stream.Write(bytes);
+			IncCount(bytes.Length);
 		}
 
-		/// <summary>
-		/// Returns the current value of the counter <code>written</code>,
-		/// the number of bytes written to this data output stream so far.
-		/// If the counter overflows, it will be wrapped to Integer.MAX_VALUE.
-		/// </summary>
-		/// <returns> the value of the <code>written</code> field. </returns>
-		/// <seealso cref="LittleEndianOutputStream.written"/>
-		public int size()
-		{
-			return written;
-		}
+        /// <summary>
+        /// Returns the current value of the counter <code>written</code>,
+        /// the number of bytes written to this data output stream so far.
+        /// If the counter overflows, it will be wrapped to Integer.MAX_VALUE.
+        /// </summary>
+        /// <returns> the value of the <code>written</code> field. </returns>
+        /// <seealso cref="written"/>
+        public int Size => written;
 	}
 
 }
