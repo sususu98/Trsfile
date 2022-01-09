@@ -35,7 +35,7 @@ namespace com.riscure.trs.parameter.trace.definition
 
 		public virtual int totalSize()
 		{
-			return values().Select(definition => definition.getLength() * definition.getType().getByteSize()).Sum();
+			return Values.Select(definition => definition.Length * definition.Type.ByteSize).Sum();
 		}
 
 		/// <returns> this map converted to a byte array, serialized according to the TRS V2 standard definition </returns>
@@ -51,9 +51,9 @@ namespace com.riscure.trs.parameter.trace.definition
 					dos.writeShort(size());
 					foreach (KeyValuePair<string, TraceParameterDefinition<TraceParameter>> entry in entrySet())
 					{
-						byte[] nameBytes = entry.Key.getBytes(StandardCharsets.UTF_8);
+						byte[] nameBytes = entry.Key.GetBytes(System.Text.Encoding.UTF8);
 						//Write NL
-						dos.writeShort(nameBytes.Length);
+						dos.writeShort((short)nameBytes.Length);
 						//Write N
 						dos.write(nameBytes);
 //JAVA TO C# CONVERTER WARNING: Java wildcard generics have no direct equivalent in C#:
@@ -90,7 +90,7 @@ namespace com.riscure.trs.parameter.trace.definition
 						{
 							string name = TRSMetaDataUtils.readName(dis);
 							//Read definition
-							result.put(name, TraceParameterDefinition.deserialize(dis));
+							result.Add(name, TraceParameterDefinition.deserialize(dis));
 						}
 						}
 				}
@@ -110,13 +110,13 @@ namespace com.riscure.trs.parameter.trace.definition
 		public static TraceParameterDefinitionMap createFrom(TraceParameterMap parameters)
 		{
 			TraceParameterDefinitionMap definitions = new ();
-			if (!parameters.isEmpty())
+			if (parameters.Count != 0)
 			{
 				short offset = 0;
-				foreach (KeyValuePair<string, TraceParameter> entry in parameters.entrySet())
+				foreach (var entry in parameters)
 				{
-					definitions.put(entry.Key, new TraceParameterDefinition<>(entry.Value, offset));
-					offset += entry.Value.length() * entry.Value.getType().getByteSize();
+					definitions.Add(entry.Key, new TraceParameterDefinition<TraceParameter>(entry.Value, offset));
+					offset += (short)(entry.Value.length() * entry.Value.Type.ByteSize);
 				}
 			}
 			return definitions;

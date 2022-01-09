@@ -15,7 +15,7 @@ namespace com.riscure.trs.parameter.traceset
 	/// 
 	/// This explicitly implements LinkedHashMap to ensure that the data is retrieved in the same order as it was added
 	/// </summary>
-	public class TraceSetParameterMap : LinkedHashMap<string, TraceSetParameter>
+	public class TraceSetParameterMap : Dictionary<string, TraceSetParameter>
 	{
 		private const string KEY_NOT_FOUND = "TraceSetParameter %s was not found in the trace set.";
 
@@ -41,24 +41,22 @@ namespace com.riscure.trs.parameter.traceset
 			MemoryStream baos = new MemoryStream();
 			try
 			{
-					using (LittleEndianOutputStream dos = new LittleEndianOutputStream(baos))
-					{
-					//Write NE
-					dos.writeShort(size());
-					foreach (KeyValuePair<string, TraceSetParameter> entry in entrySet())
-					{
-						byte[] nameBytes = entry.Key.getBytes(StandardCharsets.UTF_8);
-						//Write NL
-						dos.writeShort(nameBytes.Length);
-						//Write N
-						dos.write(nameBytes);
-						//Write value
-						entry.Value.serialize(dos);
-					}
-					dos.flush();
-					return baos.toByteArray();
-					}
-			}
+                using LittleEndianOutputStream dos = new LittleEndianOutputStream(baos);
+                //Write NE
+                dos.writeShort(Count);
+                foreach (var entry in entrySet())
+                {
+                    byte[] nameBytes = entry.Key.GetBytes(System.Text.Encoding.UTF8);
+                    //Write NL
+                    dos.writeShort(nameBytes.Length);
+                    //Write N
+                    dos.write(nameBytes);
+                    //Write value
+                    entry.Value.serialize(dos);
+                }
+                dos.flush();
+                return baos.toByteArray();
+            }
 			catch (IOException ex)
 			{
 				throw new Exception(ex);

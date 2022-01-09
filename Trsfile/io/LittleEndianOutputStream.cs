@@ -107,6 +107,15 @@ namespace com.riscure.trs.io
 			}
 		}
 
+		public void write(ReadOnlySpan<byte> b)
+        {
+            lock (obj)
+            {
+				stream.Write(b);
+				IncCount(b.Length);
+            }
+        }
+
 		/// <summary>
 		/// Flushes this data output stream. This forces any buffered output
 		/// bytes to be written out to the stream.
@@ -177,6 +186,11 @@ namespace com.riscure.trs.io
 			stream.WriteByte((byte)(((int)((uint)v >> 8)) & 0xFF));
 			IncCount(2);
 		}
+
+		public void writeShort(int v)
+        {
+			writeShort((short)v);
+        }
 
 		/// <summary>
 		/// Writes a <code>char</code> to the underlying output stream as a
