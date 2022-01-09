@@ -38,7 +38,7 @@ namespace com.riscure.trs.parameter.trace
 
 		/// <returns> a concatenation of all trace parameters in this map, individually converted to byte arrays </returns>
 		/// <exception cref="RuntimeException"> if the map failed to serialize correctly </exception>
-		public virtual byte[] toByteArray()
+		public virtual byte[] ToByteArray()
 		{
 			MemoryStream baos = new MemoryStream();
 			try
