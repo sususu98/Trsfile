@@ -73,7 +73,7 @@ public class TestTraceSet
 		{
 			for (int k = 0; k < NUMBER_OF_TRACES; k++)
 			{
-				writable.add(Trace.create(BYTE_SAMPLES));
+				writable.add(Trace.Create(BYTE_SAMPLES));
 			}
 		}
 
@@ -81,7 +81,7 @@ public class TestTraceSet
 		{
 			for (int k = 0; k < NUMBER_OF_TRACES; k++)
 			{
-				writable.add(Trace.create(SHORT_SAMPLES));
+				writable.add(Trace.Create(SHORT_SAMPLES));
 			}
 		}
 
@@ -89,7 +89,7 @@ public class TestTraceSet
 		{
 			for (int k = 0; k < NUMBER_OF_TRACES; k++)
 			{
-				writable.add(Trace.create(INT_SAMPLES));
+				writable.add(Trace.Create(INT_SAMPLES));
 			}
 		}
 
@@ -97,7 +97,7 @@ public class TestTraceSet
 		{
 			for (int k = 0; k < NUMBER_OF_TRACES; k++)
 			{
-				writable.add(Trace.create(FLOAT_SAMPLES));
+				writable.add(Trace.Create(FLOAT_SAMPLES));
 			}
 		}
 	}
@@ -747,7 +747,7 @@ public class TestTraceSet
 		TraceParameterMap tpm = new TraceParameterMap();
 		tpm.put("EMPTY_STRING", "");
 		TraceParameterDefinitionMap tpdm = TraceParameterDefinitionMap.createFrom(tpm);
-		byte[] serialized = tpm.toByteArray();
+		byte[] serialized = tpm.ToByteArray();
 
 		TraceParameterMap deserialized = TraceParameterMap.deserialize(serialized, tpdm);
 		string empty_string = deserialized.get("EMPTY_STRING").ToString();
