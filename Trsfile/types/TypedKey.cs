@@ -6,43 +6,28 @@ namespace com.riscure.trs.types
 	using TraceParameter = com.riscure.trs.parameter.TraceParameter;
 
 
-	public abstract class TypedKey<T>
+	public abstract class TypedKey<T> where T : struct
 	{
 		public const string INCORRECT_TYPE = "Tried to retrieve a value of type %s, but the actual value was of type %s";
 
-		private readonly Type cls = typeof(T);
-		private readonly string key;
-
-		protected internal TypedKey(Type cls, string key)
+		protected TypedKey(Type cls, string key)
 		{
-			this.cls = cls;
-			this.key = key;
+			Cls = cls;
+			Key = key;
 		}
 
-		public virtual Type<T> Cls
-		{
-			get
-			{
-				return cls;
-			}
-		}
+		public virtual Type Cls { get; } = typeof(T);
 
-		public virtual string Key
-		{
-			get
-			{
-				return key;
-			}
-		}
+		public virtual string Key { get; }
 
 		public virtual T cast(object value)
 		{
-			if (cls.IsAssignableFrom(value.GetType()))
+			_ = value ?? throw new ArgumentNullException();
+			if (Cls.IsAssignableFrom(value.GetType()))
 			{
-				return cls.cast(value);
+				return (T)value;
 			}
-//JAVA TO C# CONVERTER WARNING: The .NET Type.FullName property will not always yield results identical to the Java Class.getName method:
-			throw new System.InvalidCastException(String.format(INCORRECT_TYPE, cls.FullName, value.GetType().FullName));
+			throw new InvalidCastException(string.Format(INCORRECT_TYPE, Cls.FullName, value.GetType().FullName));
 		}
 
 		public abstract TraceParameter createParameter(T value);
@@ -51,7 +36,7 @@ namespace com.riscure.trs.types
 		{
 			get
 			{
-				return ParameterType.fromClass(cls);
+				return ParameterType.fromClass(Cls);
 			}
 		}
 
@@ -78,23 +63,23 @@ namespace com.riscure.trs.types
 //ORIGINAL LINE: TypedKey<?> typedKey = (TypedKey<?>) o;
 			TypedKey<object> typedKey = (TypedKey<object>) o;
 
-			if (!Objects.equals(cls, typedKey.cls))
+			if (!Objects.equals(Cls, typedKey.Cls))
 			{
 				return false;
 			}
-			return Objects.equals(key, typedKey.key);
+			return Objects.equals(Key, typedKey.Key);
 		}
 
 		public override int GetHashCode()
 		{
-			int result = cls != null ? cls.GetHashCode() : 0;
-			result = 31 * result + (!string.ReferenceEquals(key, null) ? key.GetHashCode() : 0);
+			int result = Cls != null ? Cls.GetHashCode() : 0;
+			result = 31 * result + (!string.ReferenceEquals(Key, null) ? Key.GetHashCode() : 0);
 			return result;
 		}
 
 		public override string ToString()
 		{
-			return "TypedKey{" + "key='" + key + "', cls=" + cls + '}';
+			return "TypedKey{" + "key='" + Key + "', cls=" + Cls + '}';
 		}
 	}
 
