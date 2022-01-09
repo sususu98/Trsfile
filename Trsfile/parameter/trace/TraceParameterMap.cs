@@ -38,7 +38,7 @@ namespace com.riscure.trs.parameter.trace
 
 		/// <returns> a concatenation of all trace parameters in this map, individually converted to byte arrays </returns>
 		/// <exception cref="RuntimeException"> if the map failed to serialize correctly </exception>
-		public virtual sbyte[] toByteArray()
+		public virtual byte[] toByteArray()
 		{
 			MemoryStream baos = new MemoryStream();
 			try
@@ -63,7 +63,7 @@ namespace com.riscure.trs.parameter.trace
 		/// <param name="definitions"> the type and length information describing the provided byte array </param>
 		/// <returns> a new TraceParameterMap, created from the provided byte array based on the provided definitions </returns>
 		/// <exception cref="RuntimeException"> if the provided byte array does not represent a valid parameter map </exception>
-		public static TraceParameterMap deserialize(sbyte[] bytes, TraceParameterDefinitionMap definitions)
+		public static TraceParameterMap deserialize(byte[] bytes, TraceParameterDefinitionMap definitions)
 		{
 			TraceParameterMap result = new TraceParameterMap();
 			if (bytes != null)
@@ -154,12 +154,12 @@ namespace com.riscure.trs.parameter.trace
 			return get(typedKey).orElse(defaultValue);
 		}
 
-		public virtual void put(string key, sbyte value)
+		public virtual void put(string key, byte value)
 		{
 			put(new ByteTypeKey(key), value);
 		}
 
-		public virtual void put(string key, sbyte[] value)
+		public virtual void put(string key, byte[] value)
 		{
 			put(new ByteArrayTypeKey(key), value);
 		}
@@ -229,12 +229,12 @@ namespace com.riscure.trs.parameter.trace
 			put(new BooleanArrayTypeKey(key), value);
 		}
 
-		public virtual sbyte getByte(string key)
+		public virtual byte getByte(string key)
 		{
 			return getOrElseThrow(new ByteTypeKey(key));
 		}
 
-		public virtual sbyte[] getByteArray(string key)
+		public virtual byte[] getByteArray(string key)
 		{
 			return getOrElseThrow(new ByteArrayTypeKey(key));
 		}
