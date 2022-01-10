@@ -43,19 +43,17 @@ namespace com.riscure.trs.parameter.trace
 			MemoryStream baos = new MemoryStream();
 			try
 			{
-					using (LittleEndianOutputStream dos = new LittleEndianOutputStream(baos))
-					{
-					foreach (TraceParameter parameter in values())
-					{
-						parameter.serialize(dos);
-					}
-					dos.flush();
-					return baos.toByteArray();
-					}
-			}
+                using LittleEndianOutputStream dos = new LittleEndianOutputStream(baos);
+                foreach (TraceParameter parameter in Values)
+                {
+                    parameter.serialize(dos);
+                }
+                dos.flush();
+                return baos.ToArray();
+            }
 			catch (IOException ex)
 			{
-				throw new Exception(ex);
+				throw new Exception(ex.Message, ex);
 			}
 		}
 
@@ -70,23 +68,21 @@ namespace com.riscure.trs.parameter.trace
 			{
 				if (bytes.Length != definitions.totalSize())
 				{
-					throw new System.ArgumentException(String.format(DATA_LENGTH_DEFINITIONS_MISMATCH, bytes.Length, definitions.totalSize()));
+					throw new ArgumentException(string.Format(DATA_LENGTH_DEFINITIONS_MISMATCH, bytes.Length, definitions.totalSize()));
 				}
 				try
 				{
-						using (MemoryStream bais = new MemoryStream(bytes))
-						{
-						LittleEndianInputStream dis = new LittleEndianInputStream(bais);
-						foreach (KeyValuePair<string, TraceParameterDefinition<TraceParameter>> entry in definitions.entrySet())
-						{
-							TraceParameter traceParameter = TraceParameter.deserialize(entry.Value.getType(), entry.Value.getLength(), dis);
-							result.put(entry.Key, traceParameter);
-						}
-						}
-				}
+                    using MemoryStream bais = new MemoryStream(bytes);
+                    LittleEndianInputStream dis = new LittleEndianInputStream(bais);
+                    foreach (var entry in definitions)
+                    {
+                        TraceParameter traceParameter = TraceParameter.deserialize(entry.Value.Type, entry.Value.Length, dis);
+                        result.Add(entry.Key, traceParameter);
+                    }
+                }
 				catch (IOException ex)
 				{
-					throw new Exception(ex);
+					throw new Exception(ex.Message, ex);
 				}
 			}
 			else if (definitions.totalSize() != 0)
@@ -102,9 +98,9 @@ namespace com.riscure.trs.parameter.trace
 		/// <param name="value"> the value of the parameter to add </param>
 		/// @param <T> the type of the parameter </param>
 		/// <exception cref="IllegalArgumentException"> if the value is not valid </exception>
-		public virtual void put<T>(TypedKey<T> typedKey, T value)
+		public virtual void Add<T>(TypedKey<T> typedKey, T value) where T : struct
 		{
-			put(typedKey.Key, typedKey.createParameter(value));
+			Add(typedKey.Key, typedKey.createParameter(value));
 		}
 
 		/// <summary>
@@ -113,9 +109,9 @@ namespace com.riscure.trs.parameter.trace
 		/// @param <T> the type of the parameter </param>
 		/// <returns> the value of the requested parameter </returns>
 		/// <exception cref="ClassCastException"> if the requested value is not of the expected type </exception>
-		public virtual Optional<T> get<T>(TypedKey<T> typedKey)
+		public virtual T? get<T>(TypedKey<T> typedKey) where T : struct
 		{
-			TraceParameter parameter = get(typedKey.Key);
+			TraceParameter parameter = this[typedKey.Key];
 			if (parameter != null)
 			{
 				if (parameter.length() == 1 && !typedKey.Cls.IsArray)
@@ -127,7 +123,7 @@ namespace com.riscure.trs.parameter.trace
 					return typedKey.cast(parameter.Value);
 				}
 			}
-			return null;
+			return default(T);
 		}
 
 		/// <summary>
@@ -316,12 +312,17 @@ namespace com.riscure.trs.parameter.trace
 			}
 
 			TraceParameterMap that = (TraceParameterMap)o;
-			if (this.size() != that.size())
+			if (Count != that.Count)
 			{
 				return false;
 			}
 
-			return this.entrySet().All(e => e.getValue().Equals(that.get(e.getKey())));
+			foreach (var (key, item) in this)
+			{
+				if (!that.ContainsKey(key) || that[key] != item)
+					return false;
+			}
+			return true;
 		}
 
 		public override int GetHashCode()

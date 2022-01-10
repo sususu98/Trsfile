@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using com.riscure.trs;
+using com.riscure.trs.io;
+using com.riscure.trs.types;
 
 namespace com.riscure.trs.parameter.traceset
 {
-	using TRSMetaDataUtils = com.riscure.trs.TRSMetaDataUtils;
-	using LittleEndianInputStream = com.riscure.trs.io.LittleEndianInputStream;
-	using LittleEndianOutputStream = com.riscure.trs.io.LittleEndianOutputStream;
-	using com.riscure.trs.types;
-
-
 	/// <summary>
 	/// This class represents the header definitions of all user-added global parameters of the trace set
 	/// 
@@ -25,8 +22,10 @@ namespace com.riscure.trs.parameter.traceset
 
 		public TraceSetParameterMap(TraceSetParameterMap toCopy) : this()
 		{
-			toCopy.forEach((key, value) => put(key, value.copy()));
-			
+			foreach (var (key, value) in toCopy)
+			{
+				Add(key, value.copy());
+			}
 		}
 
 		/// <returns> a new instance of a TraceParameterMap containing all the same values as this one </returns>
@@ -303,24 +302,29 @@ namespace com.riscure.trs.parameter.traceset
 			return getOrElseThrow(new BooleanArrayTypeKey(key));
 		}
 
-		public override bool Equals(object o)
+		public override bool Equals(object? obj)
 		{
-			if (this == o)
+			if (this == obj)
 			{
 				return true;
 			}
-			if (o == null || this.GetType() != o.GetType())
+			if (obj == null || GetType() != obj.GetType())
 			{
 				return false;
 			}
 
-			TraceSetParameterMap that = (TraceSetParameterMap)o;
-			if (this.size() != that.size())
+			TraceSetParameterMap that = (TraceSetParameterMap)obj;
+			if (Count != that.Count)
 			{
 				return false;
 			}
 
-			return this.entrySet().All(e => e.getValue().Equals(that.get(e.getKey())));
+            foreach (var (key, item) in this)
+            {
+				if (!that.ContainsKey(key) || that[key] != item)
+					return false;
+            }
+			return true;
 		}
 
 		public override int GetHashCode()
