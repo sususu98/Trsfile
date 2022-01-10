@@ -6,15 +6,15 @@
 	using TraceParameter = com.riscure.trs.parameter.TraceParameter;
 
 
-	public class TraceParameterDefinition<T> where T : com.riscure.trs.parameter.TraceParameter
+	public class TraceParameterDefinition: ICloneable
 	{
 		private readonly ParameterType type;
 		private readonly short offset;
 		private readonly short length;
 
-		public TraceParameterDefinition(T instance, short offset)
+		public TraceParameterDefinition(TraceParameter instance, short offset)
 		{
-			this.type = instance.getType();
+			this.type = instance.Type;
 			this.offset = offset;
 			this.length = (short) instance.length();
 		}
@@ -30,19 +30,19 @@
 //ORIGINAL LINE: public void serialize(com.riscure.trs.io.LittleEndianOutputStream dos) throws java.io.IOException
 		public virtual void serialize(LittleEndianOutputStream dos)
 		{
-			dos.writeByte(type.getValue());
+			dos.writeByte(type.Value);
 			dos.writeShort(length);
 			dos.writeShort(offset);
 		}
 
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public static TraceParameterDefinition<com.riscure.trs.parameter.TraceParameter> deserialize(com.riscure.trs.io.LittleEndianInputStream dis) throws java.io.IOException
-		public static TraceParameterDefinition<TraceParameter> deserialize(LittleEndianInputStream dis)
+		public static TraceParameterDefinition deserialize(LittleEndianInputStream dis)
 		{
 			ParameterType type = ParameterType.fromValue(dis.readByte());
 			short length = dis.readShort();
 			short offset = dis.readShort();
-			return new TraceParameterDefinition<TraceParameter>(type, length, offset);
+			return new TraceParameterDefinition(type, length, offset);
 		}
 
 		public virtual ParameterType Type
@@ -82,7 +82,7 @@
 
 //JAVA TO C# CONVERTER WARNING: Java wildcard generics have no direct equivalent in C#:
 //ORIGINAL LINE: TraceParameterDefinition<?> that = (TraceParameterDefinition<?>) o;
-			TraceParameterDefinition<object> that = (TraceParameterDefinition<object>) o;
+			TraceParameterDefinition that = (TraceParameterDefinition) o;
 
 			if (offset != that.offset)
 			{
@@ -107,6 +107,11 @@
 		{
 			return string.Format("TraceParameterDefinition{{Type={0}, Offset={1:D}, Length={2:D}}}", Type, Offset, Length);
 		}
-	}
+
+        public object Clone()
+        {
+			return new TraceParameterDefinition(Type, Length, Offset);
+        }
+    }
 
 }
