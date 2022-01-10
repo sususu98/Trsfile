@@ -52,28 +52,19 @@
 //ORIGINAL LINE: public static TraceParameter deserialize(com.riscure.trs.enums.ParameterType type, int length, com.riscure.trs.io.LittleEndianInputStream dis) throws java.io.IOException
 		public static TraceParameter deserialize(ParameterType type, int length, LittleEndianInputStream dis)
 		{
-			switch (type.innerEnumValue)
-			{
-				case ParameterType.InnerEnum.BYTE:
-					return ByteArrayParameter.deserialize(dis, length);
-				case ParameterType.InnerEnum.SHORT:
-					return ShortArrayParameter.deserialize(dis, length);
-				case ParameterType.InnerEnum.INT:
-					return IntegerArrayParameter.deserialize(dis, length);
-				case ParameterType.InnerEnum.FLOAT:
-					return FloatArrayParameter.deserialize(dis, length);
-				case ParameterType.InnerEnum.LONG:
-					return LongArrayParameter.deserialize(dis, length);
-				case ParameterType.InnerEnum.DOUBLE:
-					return DoubleArrayParameter.deserialize(dis, length);
-				case ParameterType.InnerEnum.STRING:
-					return StringParameter.deserialize(dis, length);
-				case ParameterType.InnerEnum.BOOL:
-					return BooleanArrayParameter.deserialize(dis, length);
-				default:
-					throw new System.ArgumentException("Unknown parameter type: " + type.ToString());
-			}
-		}
+            return type.innerEnumValue switch
+            {
+                ParameterType.InnerEnum.BYTE => ByteArrayParameter.deserialize(dis, length),
+                ParameterType.InnerEnum.SHORT => ShortArrayParameter.deserialize(dis, length),
+                ParameterType.InnerEnum.INT => IntegerArrayParameter.deserialize(dis, length),
+                ParameterType.InnerEnum.FLOAT => FloatArrayParameter.deserialize(dis, length),
+                ParameterType.InnerEnum.LONG => LongArrayParameter.deserialize(dis, length),
+                ParameterType.InnerEnum.DOUBLE => DoubleArrayParameter.deserialize(dis, length),
+                ParameterType.InnerEnum.STRING => StringParameter.deserialize(dis, length),
+                ParameterType.InnerEnum.BOOL => BooleanArrayParameter.deserialize(dis, length),
+                _ => throw new System.ArgumentException("Unknown parameter type: " + type.ToString()),
+            };
+        }
 	}
 
 }
