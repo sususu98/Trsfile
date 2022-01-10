@@ -15,7 +15,7 @@ namespace com.riscure.trs.parameter.trace.definition
 	/// This class represents the header definitions of all user-added local parameters in the trace format
 	/// This explicitly implements LinkedHashMap to ensure that the data is retrieved in the same order as it was added
 	/// </summary>
-	public class TraceParameterDefinitionMap : Dictionary<string, TraceParameterDefinition<TraceParameter>>
+	public class TraceParameterDefinitionMap : Dictionary<string, TraceParameterDefinition>
 	{
 
 		public TraceParameterDefinitionMap() : base()
@@ -24,7 +24,10 @@ namespace com.riscure.trs.parameter.trace.definition
 
 		public TraceParameterDefinitionMap(TraceParameterDefinitionMap toCopy) : this()
 		{
-			putAll(toCopy);
+			foreach (var (key, value) in toCopy)
+			{
+				Add(key, value.copy());
+			}
 		}
 
 		/// <returns> a new instance of a TraceParameterDefinitionMap containing all the same values as this one </returns>
@@ -48,8 +51,8 @@ namespace com.riscure.trs.parameter.trace.definition
 					using (LittleEndianOutputStream dos = new LittleEndianOutputStream(baos))
 					{
 					//Write NE
-					dos.writeShort(size());
-					foreach (KeyValuePair<string, TraceParameterDefinition<TraceParameter>> entry in entrySet())
+					dos.writeShort(Count);
+					foreach (KeyValuePair<string, TraceParameterDefinition> entry in entrySet())
 					{
 						byte[] nameBytes = entry.Key.GetBytes(System.Text.Encoding.UTF8);
 						//Write NL
@@ -58,16 +61,16 @@ namespace com.riscure.trs.parameter.trace.definition
 						dos.write(nameBytes);
 //JAVA TO C# CONVERTER WARNING: Java wildcard generics have no direct equivalent in C#:
 //ORIGINAL LINE: TraceParameterDefinition<? extends com.riscure.trs.parameter.TraceParameter> value = entry.getValue();
-						TraceParameterDefinition<TraceParameter> value = entry.Value;
+						TraceParameterDefinition value = entry.Value;
 						value.serialize(dos);
 					}
 					dos.flush();
-					return baos.toByteArray();
+					return baos.ToArray();
 					}
 			}
 			catch (IOException ex)
 			{
-				throw new Exception(ex);
+				throw new Exception(ex.Message, ex);
 			}
 		}
 
@@ -96,7 +99,7 @@ namespace com.riscure.trs.parameter.trace.definition
 				}
 				catch (IOException ex)
 				{
-					throw new Exception(ex);
+					throw new Exception(ex.Message, ex);
 				}
 			}
 			return UnmodifiableTraceParameterDefinitionMap.of(result);
@@ -115,7 +118,7 @@ namespace com.riscure.trs.parameter.trace.definition
 				short offset = 0;
 				foreach (var entry in parameters)
 				{
-					definitions.Add(entry.Key, new TraceParameterDefinition<TraceParameter>(entry.Value, offset));
+					definitions.Add(entry.Key, new TraceParameterDefinition(entry.Value, offset));
 					offset += (short)(entry.Value.length() * entry.Value.Type.ByteSize);
 				}
 			}
@@ -128,7 +131,7 @@ namespace com.riscure.trs.parameter.trace.definition
 			{
 				return true;
 			}
-			if (obj == null || this.GetType() != obj.GetType())
+			if (obj == null || GetType() != obj.GetType())
 			{
 				return false;
 			}

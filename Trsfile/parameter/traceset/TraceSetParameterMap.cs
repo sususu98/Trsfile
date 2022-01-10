@@ -26,6 +26,7 @@ namespace com.riscure.trs.parameter.traceset
 		public TraceSetParameterMap(TraceSetParameterMap toCopy) : this()
 		{
 			toCopy.forEach((key, value) => put(key, value.copy()));
+			
 		}
 
 		/// <returns> a new instance of a TraceParameterMap containing all the same values as this one </returns>
