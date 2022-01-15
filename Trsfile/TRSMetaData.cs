@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace com.riscure.trs
 {
-	using TRSTag = com.riscure.trs.enums.TRSTag;
-	using TraceParameterDefinitionMap = com.riscure.trs.parameter.trace.definition.TraceParameterDefinitionMap;
-	using UnmodifiableTraceParameterDefinitionMap = com.riscure.trs.parameter.trace.definition.UnmodifiableTraceParameterDefinitionMap;
-	using TraceSetParameterMap = com.riscure.trs.parameter.traceset.TraceSetParameterMap;
-	using UnmodifiableTraceSetParameterMap = com.riscure.trs.parameter.traceset.UnmodifiableTraceSetParameterMap;
+    using TRSTag = enums.TRSTag;
+    using TraceParameterDefinitionMap = parameter.trace.definition.TraceParameterDefinitionMap;
+    using UnmodifiableTraceParameterDefinitionMap = parameter.trace.definition.UnmodifiableTraceParameterDefinitionMap;
+    using TraceSetParameterMap = parameter.traceset.TraceSetParameterMap;
+    using UnmodifiableTraceSetParameterMap = parameter.traceset.UnmodifiableTraceSetParameterMap;
 
 
-	public class TRSMetaData
+    public class TRSMetaData
 	{
 		private const string IGNORING_NEW_VALUE = "%s: Ignoring new value (%s) because previously defined value is non-default (%s) and overwrite is disabled.%n";
 		private const string INCOMPATIBLE_TYPES = "Failed to add tag %s: Expected type (%s) does not match actual type (%s).";
