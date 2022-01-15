@@ -11,7 +11,7 @@
 
 		public override TraceParameter createParameter(bool? value)
 		{
-			checkLength(value.Value);
+			CheckLength(value.Value);
 			return new BooleanArrayParameter(new bool[]{value.Value});
 		}
 	}

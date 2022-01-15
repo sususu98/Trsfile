@@ -11,7 +11,7 @@
 
 		public override TraceParameter createParameter(short? value)
 		{
-			checkLength(value.Value);
+			CheckLength(value.Value);
 			return new ShortArrayParameter(new short[]{value.Value});
 		}
 	}

@@ -11,7 +11,7 @@
 
 		public override TraceParameter createParameter(long? value)
 		{
-			checkLength(value.Value);
+			CheckLength(value.Value);
 			return new LongArrayParameter(new long[]{value.Value});
 		}
 	}

@@ -9,9 +9,9 @@
 		{
 		}
 
-		public override TraceParameter createParameter(float[] value)
+		public override TraceParameter CreateParameter(float[] value)
 		{
-			checkLength(value);
+			CheckLength(value);
 			return new FloatArrayParameter(value);
 		}
 	}

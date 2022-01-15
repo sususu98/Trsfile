@@ -9,9 +9,9 @@
 		{
 		}
 
-		public override TraceParameter createParameter(bool[] value)
+		public override TraceParameter CreateParameter(bool[] value)
 		{
-			checkLength(value);
+			CheckLength(value);
 			return new BooleanArrayParameter(value);
 		}
 	}

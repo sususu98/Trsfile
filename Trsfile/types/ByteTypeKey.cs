@@ -11,7 +11,7 @@
 
 		public override TraceParameter createParameter(sbyte? value)
 		{
-			checkLength(value.Value);
+			CheckLength(value.Value);
 			return new ByteArrayParameter(new sbyte[]{value});
 		}
 	}

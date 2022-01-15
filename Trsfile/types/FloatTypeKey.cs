@@ -11,7 +11,7 @@
 
 		public override TraceParameter createParameter(float? value)
 		{
-			checkLength(value.Value);
+			CheckLength(value.Value);
 			return new FloatArrayParameter(new float[]{value.Value});
 		}
 	}

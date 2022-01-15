@@ -102,7 +102,7 @@ namespace com.riscure.trs.parameter.traceset
 		/// <exception cref="IllegalArgumentException"> if the value is not valid </exception>
 		public virtual void put<T>(TypedKey<T> typedKey, T value)
 		{
-			put(typedKey.Key, new TraceSetParameter(typedKey.createParameter(value)));
+			put(typedKey.Key, new TraceSetParameter(typedKey.CreateParameter(value)));
 		}
 
 		/// <summary>
@@ -118,11 +118,11 @@ namespace com.riscure.trs.parameter.traceset
 			{
 				if (parameter.Value.length() == 1 && !typedKey.Cls.IsArray)
 				{
-					return typedKey.cast(parameter.Value.ScalarValue);
+					return typedKey.Cast(parameter.Value.ScalarValue);
 				}
 				else
 				{
-					return typedKey.cast(parameter.Value.Value);
+					return typedKey.Cast(parameter.Value.Value);
 				}
 			}
 			return null;

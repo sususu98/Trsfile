@@ -9,9 +9,9 @@
 		{
 		}
 
-		public override TraceParameter createParameter(short[] value)
+		public override TraceParameter CreateParameter(short[] value)
 		{
-			checkLength(value);
+			CheckLength(value);
 			return new ShortArrayParameter(value);
 		}
 	}
