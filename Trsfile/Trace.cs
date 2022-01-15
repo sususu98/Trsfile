@@ -175,13 +175,7 @@ namespace com.riscure.trs
         /// Get the length of the sample array.
         /// </summary>
         /// <returns> the length of the sample array </returns>
-        public virtual int NumberOfSamples
-        {
-            get
-            {
-                return sample.Length;
-            }
-        }
+        public virtual int NumberOfSamples => sample.Length;
 
         /// <returns> the trace set containing this trace, or null if not set </returns>
         public virtual TraceSet? TraceSet { get; set; }
@@ -194,19 +188,19 @@ namespace com.riscure.trs
 
         /// <summary>
         /// A map of all custom named trace parameters </summary>
-        private TraceParameterMap parameters = new TraceParameterMap();
+        private readonly TraceParameterMap parameters = new();
         /// <summary>
         /// list of samples </summary>
         private readonly float[] sample;
         /// <summary>
         /// trace title </summary>
-        private string? title = null;
+        private readonly string? title = null;
         /// <summary>
         /// number of samples shifted </summary>
-        private int shifted = 0;
+        private readonly int shifted = 0;
         /// <summary>
         /// trace set including this trace </summary>
-        private TraceSet? traceSet = null;
+        private readonly TraceSet? traceSet = null;
         /// <summary>
         /// Indicates whether the aggregates (<seealso cref="Trace.hasIllegalValues"/>, <seealso cref="Trace.isReal"/> <seealso cref="Trace.max"/>, <seealso cref="Trace.min"/>) are valid. </summary>
         private bool aggregatesValid = false;

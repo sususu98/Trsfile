@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace com.riscure.trs.enums
 {
-    using TRSFormatException = com.riscure.trs.TRSFormatException;
-    using TraceParameterDefinitionMap = com.riscure.trs.parameter.trace.definition.TraceParameterDefinitionMap;
-    using UnmodifiableTraceParameterDefinitionMap = com.riscure.trs.parameter.trace.definition.UnmodifiableTraceParameterDefinitionMap;
-    using TraceSetParameterMap = com.riscure.trs.parameter.traceset.TraceSetParameterMap;
-    using UnmodifiableTraceSetParameterMap = com.riscure.trs.parameter.traceset.UnmodifiableTraceSetParameterMap;
+    using TRSFormatException = TRSFormatException;
+    using TraceParameterDefinitionMap = parameter.trace.definition.TraceParameterDefinitionMap;
+    using UnmodifiableTraceParameterDefinitionMap = parameter.trace.definition.UnmodifiableTraceParameterDefinitionMap;
+    using TraceSetParameterMap = parameter.traceset.TraceSetParameterMap;
+    using UnmodifiableTraceSetParameterMap = parameter.traceset.UnmodifiableTraceSetParameterMap;
 
     public sealed class TRSTag
     {
@@ -57,8 +57,8 @@ namespace com.riscure.trs.enums
         public static readonly TRSTag XY_SCAN_WIDTH = new TRSTag("XY_SCAN_WIDTH", InnerEnum.XY_SCAN_WIDTH, 0x73, "WI", false, typeof(int), 4, 0, "Number of steps in the \"x\" direction during XY scan");
         public static readonly TRSTag XY_SCAN_HEIGHT = new TRSTag("XY_SCAN_HEIGHT", InnerEnum.XY_SCAN_HEIGHT, 0x74, "HE", false, typeof(int), 4, 0, "Number of steps in the \"y\" direction during XY scan");
         public static readonly TRSTag XY_MEASUREMENTS_PER_SPOT = new TRSTag("XY_MEASUREMENTS_PER_SPOT", InnerEnum.XY_MEASUREMENTS_PER_SPOT, 0x75, "ME", false, typeof(int), 4, 0, "Number of consecutive measurements done per spot during XY scan");
-        public static readonly TRSTag TRACE_SET_PARAMETERS = new TRSTag("TRACE_SET_PARAMETERS", InnerEnum.TRACE_SET_PARAMETERS, 0x76, "GP", false, typeof(com.riscure.trs.parameter.traceset.TraceSetParameterMap), 0, com.riscure.trs.parameter.traceset.UnmodifiableTraceSetParameterMap.of(new com.riscure.trs.parameter.traceset.TraceSetParameterMap()), "The set of custom global trace set parameters");
-        public static readonly TRSTag TRACE_PARAMETER_DEFINITIONS = new TRSTag("TRACE_PARAMETER_DEFINITIONS", InnerEnum.TRACE_PARAMETER_DEFINITIONS, 0x77, "LP", false, typeof(com.riscure.trs.parameter.trace.definition.TraceParameterDefinitionMap), 0, com.riscure.trs.parameter.trace.definition.UnmodifiableTraceParameterDefinitionMap.of(new com.riscure.trs.parameter.trace.definition.TraceParameterDefinitionMap()), "The set of custom local trace parameters");
+        public static readonly TRSTag TRACE_SET_PARAMETERS = new TRSTag("TRACE_SET_PARAMETERS", InnerEnum.TRACE_SET_PARAMETERS, 0x76, "GP", false, typeof(parameter.traceset.TraceSetParameterMap), 0, parameter.traceset.UnmodifiableTraceSetParameterMap.of(new parameter.traceset.TraceSetParameterMap()), "The set of custom global trace set parameters");
+        public static readonly TRSTag TRACE_PARAMETER_DEFINITIONS = new TRSTag("TRACE_PARAMETER_DEFINITIONS", InnerEnum.TRACE_PARAMETER_DEFINITIONS, 0x77, "LP", false, typeof(parameter.trace.definition.TraceParameterDefinitionMap), 0, parameter.trace.definition.UnmodifiableTraceParameterDefinitionMap.of(new parameter.trace.definition.TraceParameterDefinitionMap()), "The set of custom local trace parameters");
 
         private static readonly List<TRSTag> valueList = new List<TRSTag>();
 
@@ -253,7 +253,7 @@ namespace com.riscure.trs.enums
         }
 
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: public static TRSTag fromValue(byte value) throws com.riscure.trs.TRSFormatException
+        //ORIGINAL LINE: public static TRSTag fromValue(byte value) throws TRSFormatException
         public static TRSTag FromValue(byte value)
         {
             foreach (TRSTag tag in TRSTag.Values())
