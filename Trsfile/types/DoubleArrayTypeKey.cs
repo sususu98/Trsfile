@@ -9,9 +9,9 @@
 		{
 		}
 
-		public override TraceParameter createParameter(double[] value)
+		public override TraceParameter CreateParameter(double[] value)
 		{
-			checkLength(value);
+			CheckLength(value);
 			return new DoubleArrayParameter(value);
 		}
 	}

@@ -4,8 +4,7 @@ using com.riscure.trs.parameter;
 
 namespace com.riscure.trs.types
 {
-
-	public abstract class TypedKey<T> where T : struct
+	public abstract class TypedKey<T>
 	{
 		public const string INCORRECT_TYPE = "Tried to retrieve a value of type %s, but the actual value was of type %s";
 
@@ -19,7 +18,17 @@ namespace com.riscure.trs.types
 
 		public virtual string Key { get; }
 
-		public virtual T cast(object value)
+		public virtual T Cast<T2>(T2 value) where T2 : struct
+		{
+			if (Cls.IsAssignableFrom(value.GetType()))
+			{
+				return (T)value;
+			}
+			if (typeof(T) == typeof(T2)) return (T)value;
+			throw new InvalidCastException(string.Format(INCORRECT_TYPE, Cls.FullName, value.GetType().FullName));
+		}
+
+		public virtual T Cast<T2>(T2[] value) where T2 : struct
 		{
 			_ = value ?? throw new ArgumentNullException();
 			if (Cls.IsAssignableFrom(value.GetType()))
@@ -29,7 +38,17 @@ namespace com.riscure.trs.types
 			throw new InvalidCastException(string.Format(INCORRECT_TYPE, Cls.FullName, value.GetType().FullName));
 		}
 
-		public abstract TraceParameter createParameter(T value);
+		public virtual T Cast(string value)
+		{
+			_ = value ?? throw new ArgumentNullException();
+			if (Cls.IsAssignableFrom(value.GetType()))
+			{
+				return (T)value;
+			}
+			throw new InvalidCastException(string.Format(INCORRECT_TYPE, Cls.FullName, value.GetType().FullName));
+		}
+
+		public abstract TraceParameter CreateParameter(T value);
 
 		public virtual ParameterType Type
 		{
@@ -39,7 +58,7 @@ namespace com.riscure.trs.types
 			}
 		}
 
-		protected internal virtual void checkLength(T value)
+		protected internal virtual void CheckLength(T value)
 		{
 			if (Cls.IsArray && Array.getLength(value) <= 0)
 			{

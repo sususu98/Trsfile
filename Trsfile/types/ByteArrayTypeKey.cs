@@ -9,9 +9,9 @@
 		{
 		}
 
-		public override TraceParameter createParameter(sbyte[] value)
+		public override TraceParameter CreateParameter(sbyte[] value)
 		{
-			checkLength(value);
+			CheckLength(value);
 			return new ByteArrayParameter(value);
 		}
 	}

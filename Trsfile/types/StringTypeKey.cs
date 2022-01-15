@@ -9,9 +9,9 @@
 		{
 		}
 
-		public override TraceParameter createParameter(string value)
+		public override TraceParameter CreateParameter(string value)
 		{
-			checkLength(value);
+			CheckLength(value);
 			return new StringParameter(value);
 		}
 	}

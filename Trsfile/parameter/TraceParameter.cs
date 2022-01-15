@@ -10,8 +10,8 @@
 	/// </summary>
 	public abstract class TraceParameter
 	{
-		public const string SAMPLES = "SAMPLES";
-		public const string TITLE = "TITLE";
+		public const string SAMPLES = nameof(SAMPLES);
+		public const string TITLE = nameof(TITLE);
 
 		/// <summary>
 		/// The number of values of this type in this parameter

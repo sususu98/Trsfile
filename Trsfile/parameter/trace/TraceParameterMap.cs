@@ -100,7 +100,7 @@ namespace com.riscure.trs.parameter.trace
 		/// <exception cref="IllegalArgumentException"> if the value is not valid </exception>
 		public virtual void Add<T>(TypedKey<T> typedKey, T value) where T : struct
 		{
-			Add(typedKey.Key, typedKey.createParameter(value));
+			Add(typedKey.Key, typedKey.CreateParameter(value));
 		}
 
 		/// <summary>
@@ -116,11 +116,11 @@ namespace com.riscure.trs.parameter.trace
 			{
 				if (parameter.length() == 1 && !typedKey.Cls.IsArray)
 				{
-					return typedKey.cast(parameter.ScalarValue);
+					return typedKey.Cast(parameter.ScalarValue);
 				}
 				else
 				{
-					return typedKey.cast(parameter.Value);
+					return typedKey.Cast(parameter.Value);
 				}
 			}
 			return default(T);

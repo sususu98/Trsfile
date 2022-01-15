@@ -11,7 +11,7 @@
 
 		public override TraceParameter createParameter(int? value)
 		{
-			checkLength(value.Value);
+			CheckLength(value.Value);
 			return new IntegerArrayParameter(new int[]{value.Value});
 		}
 	}
