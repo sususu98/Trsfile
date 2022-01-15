@@ -1,34 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace com.riscure.trs.enums
+﻿namespace com.riscure.trs.enums
 {
 	public sealed class ParameterType
 	{
-		public static readonly ParameterType BYTE = new ParameterType("BYTE", InnerEnum.BYTE, 0x01, Byte.BYTES, typeof(Byte), typeof(sbyte[]));
-		public static readonly ParameterType SHORT = new ParameterType("SHORT", InnerEnum.SHORT, 0x02, Short.BYTES, typeof(Short), typeof(short[]));
-		public static readonly ParameterType INT = new ParameterType("INT", InnerEnum.INT, 0x04, Integer.BYTES, typeof(Integer), typeof(int[]));
-		public static readonly ParameterType FLOAT = new ParameterType("FLOAT", InnerEnum.FLOAT, 0x14, Float.BYTES, typeof(Float), typeof(float[]));
-		public static readonly ParameterType LONG = new ParameterType("LONG", InnerEnum.LONG, 0x08, Long.BYTES, typeof(Long), typeof(long[]));
-		public static readonly ParameterType DOUBLE = new ParameterType("DOUBLE", InnerEnum.DOUBLE, 0x18, Double.BYTES, typeof(Double), typeof(double[]));
-		public static readonly ParameterType STRING = new ParameterType("STRING", InnerEnum.STRING, 0x20, Byte.BYTES, typeof(string), typeof(string));
-		public static readonly ParameterType BOOL = new ParameterType("BOOL", InnerEnum.BOOL, 0x31, Byte.BYTES, typeof(Boolean), typeof(bool[]));
+		public static readonly ParameterType BYTE 
+			= new ParameterType("BYTE", ParameterTypeEnum.BYTE, 0x01, sizeof(byte), typeof(byte), typeof(sbyte[]));
+		public static readonly ParameterType SHORT 
+			= new ParameterType("SHORT", ParameterTypeEnum.SHORT, 0x02, sizeof(short), typeof(short), typeof(short[]));
+		public static readonly ParameterType INT 
+			= new ParameterType("INT", ParameterTypeEnum.INT, 0x04, sizeof(int), typeof(int), typeof(int[]));
+		public static readonly ParameterType FLOAT 
+			= new ParameterType("FLOAT", ParameterTypeEnum.FLOAT, 0x14, sizeof(float), typeof(float), typeof(float[]));
+		public static readonly ParameterType LONG 
+			= new ParameterType("LONG", ParameterTypeEnum.LONG, 0x08, sizeof(long), typeof(long), typeof(long[]));
+		public static readonly ParameterType DOUBLE 
+			= new ParameterType("DOUBLE", ParameterTypeEnum.DOUBLE, 0x18, sizeof(double), typeof(double), typeof(double[]));
+		public static readonly ParameterType STRING 
+			= new ParameterType("STRING", ParameterTypeEnum.STRING, 0x20, sizeof(byte), typeof(string), typeof(string));
+		public static readonly ParameterType BOOL 
+			= new ParameterType("BOOL", ParameterTypeEnum.BOOL, 0x31, sizeof(byte), typeof(bool), typeof(bool[]));
 
-		private static readonly List<ParameterType> valueList = new List<ParameterType>();
+		private static readonly ParameterType[] Values = new ParameterType[]
+        {
+			BYTE,
+			SHORT,
+			INT,
+			FLOAT,
+			LONG,
+			DOUBLE,
+			STRING,
+			BOOL
+		};
 
 		static ParameterType()
 		{
-			valueList.Add(BYTE);
-			valueList.Add(SHORT);
-			valueList.Add(INT);
-			valueList.Add(FLOAT);
-			valueList.Add(LONG);
-			valueList.Add(DOUBLE);
-			valueList.Add(STRING);
-			valueList.Add(BOOL);
+
 		}
 
-		public enum InnerEnum
+		public enum ParameterTypeEnum
 		{
 			BYTE,
 			SHORT,
@@ -40,49 +48,35 @@ namespace com.riscure.trs.enums
 			BOOL
 		}
 
-		public readonly InnerEnum innerEnumValue;
+		public ParameterTypeEnum TypeEnum { get; }
 		private readonly string nameValue;
-		private readonly int ordinalValue;
+		public int Ordinal { get; }
 		private static int nextOrdinal = 0;
 
-		private readonly sbyte value;
-		private readonly int byteSize;
 		private readonly Type cls;
 		private readonly Type arrayCls;
 
-		internal ParameterType(string name, InnerEnum innerEnum, int value, int byteSize, Type cls, Type arrayCls)
+		internal ParameterType(string name, ParameterTypeEnum innerEnum, int value, int byteSize, Type cls, Type arrayCls)
 		{
-			this.value = (sbyte)value;
-			this.byteSize = byteSize;
+			Value = (byte)value;
+			ByteSize = byteSize;
 			this.cls = cls;
 			this.arrayCls = arrayCls;
 
 			nameValue = name;
-			ordinalValue = nextOrdinal++;
-			innerEnumValue = innerEnum;
+			Ordinal = nextOrdinal++;
+			TypeEnum = innerEnum;
 		}
 
-		public sbyte Value
-		{
-			get
-			{
-				return value;
-			}
-		}
+		public byte Value { get; }
 
-		public int ByteSize
-		{
-			get
-			{
-				return byteSize;
-			}
-		}
+		public int ByteSize { get; }
 
-		public static ParameterType fromValue(sbyte value)
+		public static ParameterType FromValue(sbyte value)
 		{
-			foreach (ParameterType parameterType in ParameterType.values())
+			foreach (var parameterType in Values)
 			{
-				if (parameterType.value == value)
+				if (parameterType.Value == value)
 				{
 					return parameterType;
 				}
@@ -90,9 +84,9 @@ namespace com.riscure.trs.enums
 			throw new System.ArgumentException("Unknown parameter type: " + value);
 		}
 
-		public static ParameterType fromClass(Type cls)
+		public static ParameterType FromClass(Type cls)
 		{
-			foreach (ParameterType parameterType in ParameterType.values())
+			foreach (var parameterType in Values)
 			{
 				if (parameterType.cls.IsAssignableFrom(cls) || parameterType.arrayCls.IsAssignableFrom(cls))
 				{
@@ -102,24 +96,14 @@ namespace com.riscure.trs.enums
 			throw new System.ArgumentException("Unknown parameter type: " + cls);
 		}
 
-		public static ParameterType[] values()
-		{
-			return valueList.ToArray();
-		}
-
-		public int ordinal()
-		{
-			return ordinalValue;
-		}
-
 		public override string ToString()
 		{
 			return nameValue;
 		}
 
-		public static ParameterType valueOf(string name)
+		public static ParameterType ValueOf(string name)
 		{
-			foreach (ParameterType enumInstance in ParameterType.valueList)
+			foreach (var enumInstance in Values)
 			{
 				if (enumInstance.nameValue == name)
 				{

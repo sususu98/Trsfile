@@ -39,7 +39,7 @@
 //ORIGINAL LINE: public static TraceParameterDefinition<com.riscure.trs.parameter.TraceParameter> deserialize(com.riscure.trs.io.LittleEndianInputStream dis) throws java.io.IOException
 		public static TraceParameterDefinition deserialize(LittleEndianInputStream dis)
 		{
-			ParameterType type = ParameterType.fromValue(dis.readByte());
+			ParameterType type = ParameterType.FromValue(dis.readByte());
 			short length = dis.readShort();
 			short offset = dis.readShort();
 			return new TraceParameterDefinition(type, length, offset);

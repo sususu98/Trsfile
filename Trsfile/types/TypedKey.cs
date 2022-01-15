@@ -1,10 +1,9 @@
 ﻿using System;
+using com.riscure.trs.enums;
+using com.riscure.trs.parameter;
 
 namespace com.riscure.trs.types
 {
-	using ParameterType = com.riscure.trs.enums.ParameterType;
-	using TraceParameter = com.riscure.trs.parameter.TraceParameter;
-
 
 	public abstract class TypedKey<T> where T : struct
 	{
@@ -36,7 +35,7 @@ namespace com.riscure.trs.types
 		{
 			get
 			{
-				return ParameterType.fromClass(Cls);
+				return ParameterType.FromClass(Cls);
 			}
 		}
 

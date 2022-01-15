@@ -616,7 +616,7 @@ public class TestTraceSet
 	{
 		int errors = 0;
 		byte[] empty = new byte[1];
-		foreach (ParameterType type in ParameterType.values())
+		foreach (ParameterType type in ParameterType.Values())
 		{
 			try
 			{
@@ -630,7 +630,7 @@ public class TestTraceSet
 				errors++;
 			}
 		}
-		Assert.Equals(ParameterType.values().Length, errors);
+		Assert.Equals(ParameterType.Values().Length, errors);
 	}
 
 	/// <summary>

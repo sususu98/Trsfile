@@ -52,16 +52,16 @@
 //ORIGINAL LINE: public static TraceParameter deserialize(com.riscure.trs.enums.ParameterType type, int length, com.riscure.trs.io.LittleEndianInputStream dis) throws java.io.IOException
 		public static TraceParameter deserialize(ParameterType type, int length, LittleEndianInputStream dis)
 		{
-            return type.innerEnumValue switch
+            return type.TypeEnum switch
             {
-                ParameterType.InnerEnum.BYTE => ByteArrayParameter.deserialize(dis, length),
-                ParameterType.InnerEnum.SHORT => ShortArrayParameter.deserialize(dis, length),
-                ParameterType.InnerEnum.INT => IntegerArrayParameter.deserialize(dis, length),
-                ParameterType.InnerEnum.FLOAT => FloatArrayParameter.deserialize(dis, length),
-                ParameterType.InnerEnum.LONG => LongArrayParameter.deserialize(dis, length),
-                ParameterType.InnerEnum.DOUBLE => DoubleArrayParameter.deserialize(dis, length),
-                ParameterType.InnerEnum.STRING => StringParameter.deserialize(dis, length),
-                ParameterType.InnerEnum.BOOL => BooleanArrayParameter.deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.BYTE => ByteArrayParameter.deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.SHORT => ShortArrayParameter.deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.INT => IntegerArrayParameter.deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.FLOAT => FloatArrayParameter.deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.LONG => LongArrayParameter.deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.DOUBLE => DoubleArrayParameter.deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.STRING => StringParameter.deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.BOOL => BooleanArrayParameter.deserialize(dis, length),
                 _ => throw new System.ArgumentException("Unknown parameter type: " + type.ToString()),
             };
         }
