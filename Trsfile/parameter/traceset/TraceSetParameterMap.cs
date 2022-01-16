@@ -216,7 +216,7 @@ namespace com.riscure.trs.parameter.traceset
 
 		public virtual void put(string key, bool value)
 		{
-			put(new BooleanTypeKey(key), value);
+			put(new BoolTypeKey(key), value);
 		}
 
 		public virtual void put(string key, bool[] value)
@@ -291,7 +291,7 @@ namespace com.riscure.trs.parameter.traceset
 
 		public virtual bool getBoolean(string key)
 		{
-			return getOrElseThrow(new BooleanTypeKey(key));
+			return getOrElseThrow(new BoolTypeKey(key));
 		}
 
 		public virtual bool[] getBooleanArray(string key)

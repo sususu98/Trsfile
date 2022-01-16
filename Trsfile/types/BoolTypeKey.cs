@@ -3,9 +3,9 @@ using com.riscure.trs.parameter.primitive;
 
 namespace com.riscure.trs.types
 {
-	public class BooleanTypeKey : TypedKey<bool>
+	public class BoolTypeKey : TypedKey<bool>
 	{
-		public BooleanTypeKey(string key) : base(typeof(Boolean), key)
+		public BoolTypeKey(string key) : base(typeof(bool), key)
 		{
 		}
 
