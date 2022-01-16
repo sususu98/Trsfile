@@ -1,18 +1,23 @@
-﻿namespace com.riscure.trs.types
-{
-	using TraceParameter = com.riscure.trs.parameter.TraceParameter;
-	using BooleanArrayParameter = com.riscure.trs.parameter.primitive.BoolArrayParameter;
+﻿using com.riscure.trs.parameter;
+using com.riscure.trs.parameter.primitive;
 
+namespace com.riscure.trs.types
+{
 	public class BooleanTypeKey : TypedKey<bool>
 	{
 		public BooleanTypeKey(string key) : base(typeof(Boolean), key)
 		{
 		}
 
-		public override TraceParameter createParameter(bool? value)
+		public override TraceParameter CreateParameter(bool value)
 		{
-			CheckLength(value.Value);
-			return new BooleanArrayParameter(new bool[]{value.Value});
+			CheckLength(value);
+			return new BoolArrayParameter(value);
+		}
+
+		protected internal override void CheckLength(bool value)
+		{
+			
 		}
 	}
 

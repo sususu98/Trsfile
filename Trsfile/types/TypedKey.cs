@@ -35,7 +35,10 @@ namespace com.riscure.trs.types
 
 		// T, T[], string
 
-		protected internal abstract void CheckLength(T value);
+		protected internal virtual void CheckLength(T value)
+        {
+
+        }
 
 		public override bool Equals(object? o)
 		{
