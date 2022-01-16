@@ -1,5 +1,4 @@
 ﻿using com.riscure.trs.enums;
-using com.riscure.trs.io;
 
 namespace com.riscure.trs.parameter
 {
@@ -53,6 +52,26 @@ namespace com.riscure.trs.parameter
         public override int Length => Value.Length;
 
         public abstract object Clone();
+
+        public override bool Equals(object o)
+        {
+            if (this == o)
+            {
+                return true;
+            }
+            if (o == null || this.GetType() != o.GetType())
+            {
+                return false;
+            }
+
+            TraceParameter<T> that = (TraceParameter<T>)o;
+            return Value.SequenceEqual(that.Value);
+        }
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+
     }
 
 }

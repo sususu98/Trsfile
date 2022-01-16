@@ -54,13 +54,13 @@ namespace com.riscure.trs.parameter
         {
             return type.TypeEnum switch
             {
-                ParameterType.ParameterTypeEnum.BYTE => ByteArrayParameter.deserialize(dis, length),
-                ParameterType.ParameterTypeEnum.SHORT => ShortArrayParameter.deserialize(dis, length),
-                ParameterType.ParameterTypeEnum.INT => IntegerArrayParameter.deserialize(dis, length),
-                ParameterType.ParameterTypeEnum.FLOAT => FloatArrayParameter.deserialize(dis, length),
-                ParameterType.ParameterTypeEnum.LONG => LongArrayParameter.deserialize(dis, length),
-                ParameterType.ParameterTypeEnum.DOUBLE => DoubleArrayParameter.deserialize(dis, length),
-                ParameterType.ParameterTypeEnum.STRING => StringParameter.deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.BYTE => ByteArrayParameter.Deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.SHORT => ShortArrayParameter.Deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.INT => IntegerArrayParameter.Deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.FLOAT => FloatArrayParameter.Deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.LONG => LongArrayParameter.Deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.DOUBLE => DoubleArrayParameter.Deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.STRING => StringParameter.Deserialize(dis, length),
                 ParameterType.ParameterTypeEnum.BOOL => BoolArrayParameter.Deserialize(dis, length),
                 _ => throw new System.ArgumentException("Unknown parameter type: " + type.ToString()),
             };

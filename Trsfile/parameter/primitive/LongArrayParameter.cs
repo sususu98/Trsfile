@@ -2,115 +2,59 @@
 
 namespace com.riscure.trs.parameter.primitive
 {
-	using ParameterType = com.riscure.trs.enums.ParameterType;
-	using LittleEndianInputStream = com.riscure.trs.io.LittleEndianInputStream;
-	using LittleEndianOutputStream = com.riscure.trs.io.LittleEndianOutputStream;
-	using TraceParameter = com.riscure.trs.parameter.TraceParameter;
+    using ParameterType = enums.ParameterType;
+    using LittleEndianInputStream = io.LittleEndianInputStream;
+    using LittleEndianOutputStream = io.LittleEndianOutputStream;
+    using TraceParameter = TraceParameter;
 
 
-	public class LongArrayParameter : TraceParameter
-	{
-		private readonly long[] value;
+    public class LongArrayParameter : TraceParameter<long>
+    {
 
-		public LongArrayParameter(int length)
-		{
-			value = new long[length];
-		}
+        public LongArrayParameter(int length) : this(new long[length])
+        {
 
-		public LongArrayParameter(long[] value)
-		{
-			this.value = value;
-		}
+        }
 
-		public LongArrayParameter(LongArrayParameter toCopy) : this((long[])toCopy.Value.Clone())
-		{
-		}
+        public LongArrayParameter(long[] value) : base(value)
+        {
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: public void serialize(com.riscure.trs.io.LittleEndianOutputStream dos) throws java.io.IOException
-		public override void Serialize(LittleEndianOutputStream dos)
-		{
-			foreach (long i in value)
-			{
-				dos.writeLong(i);
-			}
-		}
+        }
 
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: public static LongArrayParameter deserialize(com.riscure.trs.io.LittleEndianInputStream dis, int length) throws java.io.IOException
-		public static LongArrayParameter deserialize(LittleEndianInputStream dis, int length)
-		{
-			LongArrayParameter result = new LongArrayParameter(length);
-			for (int k = 0; k < length; k++)
-			{
-				result.value[k] = dis.readLong();
-			}
-			return result;
-		}
+        public LongArrayParameter(LongArrayParameter toCopy) : this((long[])toCopy.Value.Clone())
+        {
+        }
 
-		public override int Length()
-		{
-			return value.Length;
-		}
+        public override void Serialize(LittleEndianOutputStream dos)
+        {
+            foreach (long i in Value)
+            {
+                dos.writeLong(i);
+            }
+        }
 
-		public override ParameterType Type
-		{
-			get
-			{
-				return ParameterType.LONG;
-			}
-		}
+        public static LongArrayParameter Deserialize(LittleEndianInputStream dis, int length)
+        {
+            LongArrayParameter result = new LongArrayParameter(length);
+            for (int k = 0; k < length; k++)
+            {
+                result.Value[k] = dis.readLong();
+            }
+            return result;
+        }
 
-		public override long[] Value
-		{
-			get
-			{
-				return value;
-			}
-		}
 
-		public override LongArrayParameter copy()
-		{
-			return new LongArrayParameter(this);
-		}
 
-		public override long? ScalarValue
-		{
-			get
-			{
-				if (Length() > 1)
-				{
-					throw new System.ArgumentException("Parameter represents an array value of length " + Length());
-				}
-				return Value[0];
-			}
-		}
+        public override LongArrayParameter Clone()
+        {
+            return new LongArrayParameter(this);
+        }
 
-		public override string ToString()
-		{
-			return Arrays.toString(value);
-		}
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
 
-		public override bool Equals(object o)
-		{
-			if (this == o)
-			{
-				return true;
-			}
-			if (o == null || this.GetType() != o.GetType())
-			{
-				return false;
-			}
-
-			LongArrayParameter that = (LongArrayParameter) o;
-
-			return value.SequenceEqual(that.value);
-		}
-
-		public override int GetHashCode()
-		{
-			return Arrays.hashCode(value);
-		}
-	}
+    }
 
 }
