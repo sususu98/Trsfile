@@ -66,9 +66,9 @@ namespace com.riscure.trs.parameter.trace
 			TraceParameterMap result = new TraceParameterMap();
 			if (bytes != null)
 			{
-				if (bytes.Length != definitions.totalSize())
+				if (bytes.Length != definitions.TotalByteSize())
 				{
-					throw new ArgumentException(string.Format(DATA_LENGTH_DEFINITIONS_MISMATCH, bytes.Length, definitions.totalSize()));
+					throw new ArgumentException(string.Format(DATA_LENGTH_DEFINITIONS_MISMATCH, bytes.Length, definitions.TotalByteSize()));
 				}
 				try
 				{
@@ -85,7 +85,7 @@ namespace com.riscure.trs.parameter.trace
 					throw new Exception(ex.Message, ex);
 				}
 			}
-			else if (definitions.totalSize() != 0)
+			else if (definitions.TotalByteSize() != 0)
 			{
 				throw new System.ArgumentException(EMPTY_DATA_BUT_NONEMPTY_DEFINITIONS);
 			}

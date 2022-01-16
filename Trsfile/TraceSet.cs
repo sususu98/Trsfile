@@ -177,7 +177,7 @@ namespace com.riscure.trs
                 if (metaData.getInt(TRS_VERSION) > 1)
                 {
                     TraceParameterDefinitionMap traceParameterDefinitionMap = metaData.TraceParameterDefinitions;
-                    int size = traceParameterDefinitionMap.totalSize();
+                    int size = traceParameterDefinitionMap.TotalByteSize();
                     byte[] data = new byte[size];
                     buffer.Read(data, 0, size); 
                     traceParameterMap = TraceParameterMap.deserialize(data, traceParameterDefinitionMap);
@@ -224,7 +224,7 @@ namespace com.riscure.trs
                 metaData.put(DATA_LENGTH, dataLength, false);
                 metaData.put(TITLE_SPACE, titleLength, false);
                 metaData.put(SAMPLE_CODING, trace.PreferredCoding, false);
-                metaData.put(TRACE_PARAMETER_DEFINITIONS, TraceParameterDefinitionMap.createFrom(trace.Parameters));
+                metaData.put(TRACE_PARAMETER_DEFINITIONS, TraceParameterDefinitionMap.CreateFrom(trace.Parameters));
                 TRSMetaDataUtils.writeTRSMetaData(writeStream, metaData);
                 firstTrace = false;
             }
