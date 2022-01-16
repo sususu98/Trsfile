@@ -3,10 +3,10 @@
 namespace com.riscure.trs.parameter.primitive
 {
 
-    public class BoolArrayParameter : TraceParameter<bool>
-    {
-        public BoolArrayParameter(int length) : this(new bool[length])
-        {
+	public class BoolArrayParameter : TraceParameter<bool>
+	{
+		public BoolArrayParameter(bool value) : base(value)
+		{
 
         }
 
@@ -15,9 +15,10 @@ namespace com.riscure.trs.parameter.primitive
 
         }
 
-        public BoolArrayParameter(BoolArrayParameter toCopy) : this((bool[])toCopy.Value.Clone())
-        {
-        }
+		public BoolArrayParameter(BoolArrayParameter toCopy) : this((bool[])toCopy.Value.Clone())
+		{
+
+		}
 
 
         public override void Serialize(LittleEndianOutputStream dos)
@@ -28,15 +29,15 @@ namespace com.riscure.trs.parameter.primitive
             }
         }
 
-        public static BoolArrayParameter Deserialize(LittleEndianInputStream dis, int length)
-        {
-            BoolArrayParameter result = new(length);
-            for (int k = 0; k < length; k++)
-            {
-                result.Value[k] = dis.readByte() != 0;
-            }
-            return result;
-        }
+		public static BoolArrayParameter Deserialize(LittleEndianInputStream dis, int length)
+		{
+			BoolArrayParameter result = new(new bool[length]);
+			for (int k = 0; k < length; k++)
+			{
+				result.Value[k] = dis.readByte() != 0;
+			}
+			return result;
+		}
 
         public override BoolArrayParameter Clone()
         {

@@ -5,7 +5,7 @@ namespace com.riscure.trs.parameter
     /// <summary>
     /// This interface represents a parameter with generic that is used in the trace data or the trace set header
     /// </summary>
-    public abstract class TraceParameter<T> : TraceParameter, ICloneable
+    public abstract class TraceParameter<T> : TraceParameter
     {
         public T[] Value { get; }
 
@@ -51,7 +51,6 @@ namespace com.riscure.trs.parameter
 
         public override int Length => Value.Length;
 
-        public abstract object Clone();
 
         public override bool Equals(object o)
         {

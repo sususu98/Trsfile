@@ -80,7 +80,7 @@ namespace com.riscure.trs
                 }
                 else if (tag.Type == typeof(TraceParameterDefinitionMap))
                 {
-                    byte[] serialized = metaData.TraceParameterDefinitions.serialize();
+                    byte[] serialized = metaData.TraceParameterDefinitions.Serialize();
                     writeLength(fos, serialized.Length);
                     fos.Write(serialized, 0, serialized.Length);
                 }
@@ -271,7 +271,7 @@ namespace com.riscure.trs
         {
             byte[] ba = new byte[length];
             buffer.get(ba);
-            return TraceParameterDefinitionMap.deserialize(ba);
+            return TraceParameterDefinitionMap.Deserialize(ba);
         }
     }
 

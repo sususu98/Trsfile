@@ -7,7 +7,7 @@ namespace com.riscure.trs.parameter
     /// <summary>
     /// This interface represents a parameter that is used in the trace data or the trace set header
     /// </summary>
-    public abstract partial class TraceParameter
+    public abstract partial class TraceParameter : ICloneable
     {
         public const string SAMPLES = nameof(SAMPLES);
         public const string TITLE = nameof(TITLE);
@@ -65,6 +65,8 @@ namespace com.riscure.trs.parameter
                 _ => throw new System.ArgumentException("Unknown parameter type: " + type.ToString()),
             };
         }
+
+        public abstract object Clone();
 
     }
 

@@ -216,12 +216,12 @@ namespace com.riscure.trs.parameter.traceset
 
 		public virtual void put(string key, bool value)
 		{
-			put(new BooleanTypeKey(key), value);
+			put(new BoolTypeKey(key), value);
 		}
 
 		public virtual void put(string key, bool[] value)
 		{
-			put(new BooleanArrayTypeKey(key), value);
+			put(new BoolArrayTypeKey(key), value);
 		}
 
 		public virtual sbyte getByte(string key)
@@ -291,12 +291,12 @@ namespace com.riscure.trs.parameter.traceset
 
 		public virtual bool getBoolean(string key)
 		{
-			return getOrElseThrow(new BooleanTypeKey(key));
+			return getOrElseThrow(new BoolTypeKey(key));
 		}
 
 		public virtual bool[] getBooleanArray(string key)
 		{
-			return getOrElseThrow(new BooleanArrayTypeKey(key));
+			return getOrElseThrow(new BoolArrayTypeKey(key));
 		}
 
 		public override bool Equals(object? obj)

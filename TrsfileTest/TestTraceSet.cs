@@ -746,7 +746,7 @@ public class TestTraceSet
 	{
 		TraceParameterMap tpm = new TraceParameterMap();
 		tpm.put("EMPTY_STRING", "");
-		TraceParameterDefinitionMap tpdm = TraceParameterDefinitionMap.createFrom(tpm);
+		TraceParameterDefinitionMap tpdm = TraceParameterDefinitionMap.CreateFrom(tpm);
 		byte[] serialized = tpm.ToByteArray();
 
 		TraceParameterMap deserialized = TraceParameterMap.deserialize(serialized, tpdm);
