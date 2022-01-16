@@ -7,7 +7,7 @@
     public class ShortArrayParameter : TraceParameter<short>
     {
 
-        public ShortArrayParameter(int length) : this(new short[length])
+        public ShortArrayParameter(short value) : base(value)
         {
 
         }
@@ -29,7 +29,7 @@
 
         public static ShortArrayParameter Deserialize(LittleEndianInputStream dis, int length)
         {
-            ShortArrayParameter result = new ShortArrayParameter(length);
+            ShortArrayParameter result = new(new short[length]);
             for (int k = 0; k < length; k++)
             {
                 result.Value[k] = dis.readShort();

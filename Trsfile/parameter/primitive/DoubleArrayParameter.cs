@@ -6,7 +6,7 @@ namespace com.riscure.trs.parameter.primitive
     public class DoubleArrayParameter : TraceParameter<double>
     {
 
-        public DoubleArrayParameter(int length) : this(new double[length])
+        public DoubleArrayParameter(double value) : base(value)
         {
 
         }
@@ -32,7 +32,7 @@ namespace com.riscure.trs.parameter.primitive
 
         public static DoubleArrayParameter Deserialize(LittleEndianInputStream dis, int length)
         {
-            DoubleArrayParameter result = new(length);
+            DoubleArrayParameter result = new(new double[length]);
             for (int k = 0; k < length; k++)
             {
                 result.Value[k] = dis.readDouble();
@@ -47,7 +47,7 @@ namespace com.riscure.trs.parameter.primitive
 
         public override string ToString()
         {
-            return Value.ToString();
+            return string.Join(", ", Value);
         }
     }
 

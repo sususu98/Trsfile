@@ -7,7 +7,7 @@ namespace com.riscure.trs.parameter.primitive
     {
         private const string INVALID_LENGTH = "Error parsing byte array: Expected (%d) bytes but found (%d)";
 
-        public ByteArrayParameter(int length) : this(new byte[length])
+        public ByteArrayParameter(byte value) : base(value)
         {
 
         }
@@ -27,7 +27,7 @@ namespace com.riscure.trs.parameter.primitive
 
         public static ByteArrayParameter Deserialize(LittleEndianInputStream dis, int length)
         {
-            ByteArrayParameter result = new(length);
+            ByteArrayParameter result = new(new byte[length]);
             int bytesRead = dis.read(result.Value);
             if (bytesRead != length)
             {

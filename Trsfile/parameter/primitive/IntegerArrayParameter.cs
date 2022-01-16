@@ -6,7 +6,7 @@
 
     public class IntegerArrayParameter : TraceParameter<int>
     {
-        public IntegerArrayParameter(int length) : this(new int[length])
+        public IntegerArrayParameter(int value) : base(value)
         {
 
         }
@@ -29,7 +29,7 @@
         }
         public static IntegerArrayParameter Deserialize(LittleEndianInputStream dis, int length)
         {
-            IntegerArrayParameter result = new(length);
+            IntegerArrayParameter result = new(new int[length]);
             for (int k = 0; k < length; k++)
             {
                 result.Value[k] = dis.readInt();

@@ -14,7 +14,7 @@ namespace com.riscure.trs.parameter.primitive
         {
         }
 
-        public StringParameter(StringParameter toCopy) : this(toCopy.Value)
+        public StringParameter(StringParameter toCopy) : this(toCopy.ScalarValue)
         {
         }
 
@@ -22,7 +22,7 @@ namespace com.riscure.trs.parameter.primitive
         //ORIGINAL LINE: public void serialize(com.riscure.trs.io.LittleEndianOutputStream dos) throws java.io.IOException
         public override void Serialize(LittleEndianOutputStream dos)
         {
-            dos.write(Value.GetBytes(Encoding.UTF8));
+            dos.write(ScalarValue.GetBytes(Encoding.UTF8));
         }
 
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
@@ -35,10 +35,10 @@ namespace com.riscure.trs.parameter.primitive
                 int bytesRead = dis.read(bytes);
                 if (bytesRead != length)
                 {
-                    throw new IOException(String.Format(INVALID_LENGTH, length, bytesRead));
+                    throw new IOException(string.Format(INVALID_LENGTH, length, bytesRead));
                 }
             }
-            return new StringParameter(StringHelper.NewString(bytes, System.Text.Encoding.UTF8));
+            return new StringParameter(StringHelper.NewString(bytes, Encoding.UTF8));
         }
 
 
@@ -54,7 +54,7 @@ namespace com.riscure.trs.parameter.primitive
 
         public override string ToString()
         {
-            return Value;
+            return ScalarValue;
         }
 
     }

@@ -8,7 +8,7 @@
     {
 
 
-        public FloatArrayParameter(int length) : this(new float[length])
+        public FloatArrayParameter(float value) : base(value)
         {
 
         }
@@ -33,7 +33,7 @@
 
         public static FloatArrayParameter Deserialize(LittleEndianInputStream dis, int length)
         {
-            FloatArrayParameter result = new(length);
+            FloatArrayParameter result = new(new float[length]);
             for (int k = 0; k < length; k++)
             {
                 result.Value[k] = dis.readFloat();

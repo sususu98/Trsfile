@@ -11,7 +11,7 @@ namespace com.riscure.trs.parameter.primitive
     public class LongArrayParameter : TraceParameter<long>
     {
 
-        public LongArrayParameter(int length) : this(new long[length])
+        public LongArrayParameter(long value) : base(value)
         {
 
         }
@@ -35,7 +35,7 @@ namespace com.riscure.trs.parameter.primitive
 
         public static LongArrayParameter Deserialize(LittleEndianInputStream dis, int length)
         {
-            LongArrayParameter result = new LongArrayParameter(length);
+            LongArrayParameter result = new(new long[length]);
             for (int k = 0; k < length; k++)
             {
                 result.Value[k] = dis.readLong();
