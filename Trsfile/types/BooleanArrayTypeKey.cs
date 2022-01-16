@@ -1,7 +1,7 @@
 ﻿namespace com.riscure.trs.types
 {
 	using TraceParameter = com.riscure.trs.parameter.TraceParameter;
-	using BooleanArrayParameter = com.riscure.trs.parameter.primitive.BooleanArrayParameter;
+	using BooleanArrayParameter = com.riscure.trs.parameter.primitive.BoolArrayParameter;
 
 	public class BooleanArrayTypeKey : TypedKey<bool[]>
 	{

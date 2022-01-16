@@ -4,14 +4,19 @@ using com.riscure.trs.parameter.primitive;
 
 namespace com.riscure.trs.parameter
 {
-
     /// <summary>
     /// This interface represents a parameter that is used in the trace data or the trace set header
     /// </summary>
-    public abstract class TraceParameter : ICloneable
+    public abstract partial class TraceParameter
     {
         public const string SAMPLES = nameof(SAMPLES);
         public const string TITLE = nameof(TITLE);
+
+        protected TraceParameter(ParameterType type, bool isArray)
+        {
+            Type = type;
+            IsArray = isArray;
+        }
 
         /// <summary>
         /// The number of values of this type in this parameter
@@ -19,17 +24,16 @@ namespace com.riscure.trs.parameter
         /// <returns> the number of values of this type in this parameter </returns>
         public abstract int Length { get; }
 
+        public bool IsArray { get; }
+
         /// <returns> The type of the parameter. </returns>
-        public abstract ParameterType Type { get; }
+        public ParameterType Type { get; protected set; }
 
         /// <returns> The value of the parameter. </returns>
-        public abstract object Value { get; }
-
-        /// <returns> a newly created parameter containing the same information as this one. </returns>
-        public abstract object Clone();
+        //public abstract object Value { get; }
 
         /// <returns> The value of the parameter as a simple value. Will cause an exception if called on an array type. </returns>
-        public abstract object ScalarValue { get; }
+        //public abstract object ScalarValue { get; }
 
         /// <summary>
         /// Write this TraceParameter to the specified output stream
@@ -46,7 +50,7 @@ namespace com.riscure.trs.parameter
         /// <param name="dis">    the input stream to read from </param>
         /// <returns> a new TraceParameter of the specified type and length </returns>
         /// <exception cref="IOException"> if any problems arise from reading from the stream </exception>
-        public static TraceParameter<T2> Deserialize<T2>(ParameterType type, int length, LittleEndianInputStream dis)
+        public static TraceParameter Deserialize(ParameterType type, int length, LittleEndianInputStream dis)
         {
             return type.TypeEnum switch
             {
@@ -57,10 +61,11 @@ namespace com.riscure.trs.parameter
                 ParameterType.ParameterTypeEnum.LONG => LongArrayParameter.deserialize(dis, length),
                 ParameterType.ParameterTypeEnum.DOUBLE => DoubleArrayParameter.deserialize(dis, length),
                 ParameterType.ParameterTypeEnum.STRING => StringParameter.deserialize(dis, length),
-                ParameterType.ParameterTypeEnum.BOOL => BooleanArrayParameter.deserialize(dis, length),
+                ParameterType.ParameterTypeEnum.BOOL => BoolArrayParameter.Deserialize(dis, length),
                 _ => throw new System.ArgumentException("Unknown parameter type: " + type.ToString()),
             };
         }
+
     }
 
 }
