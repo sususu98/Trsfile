@@ -12,7 +12,7 @@ namespace com.riscure.trs.parameter.traceset
 	/// 
 	/// This explicitly implements LinkedHashMap to ensure that the data is retrieved in the same order as it was added
 	/// </summary>
-	public class TraceSetParameterMap : Dictionary<string, TraceSetParameter>
+	public class TraceSetParameterMap : Dictionary<string, TraceSetParameter>, ICloneable
 	{
 		private const string KEY_NOT_FOUND = "TraceSetParameter %s was not found in the trace set.";
 
@@ -29,14 +29,11 @@ namespace com.riscure.trs.parameter.traceset
 		}
 
 		/// <returns> a new instance of a TraceParameterMap containing all the same values as this one </returns>
-		public virtual TraceSetParameterMap copy()
-		{
-			return new TraceSetParameterMap(this);
-		}
+		public virtual object Clone() => new TraceSetParameterMap(this);
 
 		/// <returns> this map converted to a byte array, serialized according to the TRS V2 standard definition </returns>
 		/// <exception cref="RuntimeException"> if the map failed to serialize correctly </exception>
-		public virtual byte[] serialize()
+		public virtual byte[] Serialize()
 		{
 			MemoryStream baos = new MemoryStream();
 			try
@@ -66,7 +63,7 @@ namespace com.riscure.trs.parameter.traceset
 		/// <param name="bytes"> a valid serialized Trace set parameter map </param>
 		/// <returns> a new populated Trace set parameter map as represented by the provided byte array </returns>
 		/// <exception cref="RuntimeException"> if the provided byte array does not represent a valid parameter map </exception>
-		public static TraceSetParameterMap deserialize(byte[] bytes)
+		public static TraceSetParameterMap Deserialize(byte[] bytes)
 		{
 			TraceSetParameterMap result = new TraceSetParameterMap();
 			if (bytes != null && bytes.Length > 0)
@@ -116,7 +113,7 @@ namespace com.riscure.trs.parameter.traceset
 			TraceSetParameter parameter = get(typedKey.Key);
 			if (parameter != null)
 			{
-				if (parameter.Value.length() == 1 && !typedKey.Cls.IsArray)
+				if (parameter.Value.Length() == 1 && !typedKey.Cls.IsArray)
 				{
 					return typedKey.Cast(parameter.Value.ScalarValue);
 				}

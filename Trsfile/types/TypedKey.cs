@@ -1,6 +1,7 @@
 ﻿using System;
 using com.riscure.trs.enums;
 using com.riscure.trs.parameter;
+using System.Text.Json;
 
 namespace com.riscure.trs.types
 {
@@ -18,80 +19,37 @@ namespace com.riscure.trs.types
 
 		public virtual string Key { get; }
 
-		public virtual T Cast<T2>(T2 value) where T2 : struct
+        public virtual T Cast(object value)
+        {
+            _ = value ?? throw new ArgumentNullException();
+            if (Cls.IsAssignableFrom(value.GetType()))
+            {
+                return (T)value;
+            }
+            throw new InvalidCastException(string.Format(INCORRECT_TYPE, Cls.FullName, value.GetType().FullName));
+        }
+
+        public abstract TraceParameter CreateParameter(T value);
+
+		public virtual ParameterType Type { get => ParameterType.FromClass(Cls); }
+
+		// T, T[], string
+
+		protected internal abstract void CheckLength(T value);
+
+		public override bool Equals(object? o)
 		{
-			if (Cls.IsAssignableFrom(value.GetType()))
-			{
-				return (T)value;
-			}
-			if (typeof(T) == typeof(T2)) return (T)value;
-			throw new InvalidCastException(string.Format(INCORRECT_TYPE, Cls.FullName, value.GetType().FullName));
-		}
-
-		public virtual T Cast<T2>(T2[] value) where T2 : struct
-		{
-			_ = value ?? throw new ArgumentNullException();
-			if (Cls.IsAssignableFrom(value.GetType()))
-			{
-				return (T)value;
-			}
-			throw new InvalidCastException(string.Format(INCORRECT_TYPE, Cls.FullName, value.GetType().FullName));
-		}
-
-		public virtual T Cast(string value)
-		{
-			_ = value ?? throw new ArgumentNullException();
-			if (Cls.IsAssignableFrom(value.GetType()))
-			{
-				return (T)value;
-			}
-			throw new InvalidCastException(string.Format(INCORRECT_TYPE, Cls.FullName, value.GetType().FullName));
-		}
-
-		public abstract TraceParameter CreateParameter(T value);
-
-		public virtual ParameterType Type
-		{
-			get
-			{
-				return ParameterType.FromClass(Cls);
-			}
-		}
-
-		protected internal virtual void CheckLength(T value)
-		{
-			if (Cls.IsArray && Array.getLength(value) <= 0)
-			{
-				throw new System.ArgumentException("Array length must be positive and non-zero.");
-			}
-		}
-
-		public override bool Equals(object o)
-		{
-			if (this == o)
-			{
-				return true;
-			}
-			if (o == null || this.GetType() != o.GetType())
-			{
-				return false;
-			}
-
-//JAVA TO C# CONVERTER WARNING: Java wildcard generics have no direct equivalent in C#:
-//ORIGINAL LINE: TypedKey<?> typedKey = (TypedKey<?>) o;
-			TypedKey<object> typedKey = (TypedKey<object>) o;
-
-			if (!Objects.equals(Cls, typedKey.Cls))
-			{
-				return false;
-			}
-			return Objects.equals(Key, typedKey.Key);
+			if (o is null) return false;
+			if (this == o) return true;
+			if (GetType() != o.GetType()) return false;
+            if (o is not TypedKey<T> typedKey) return false;
+            return typedKey.Key == Key;
 		}
 
 		public override int GetHashCode()
 		{
 			int result = Cls != null ? Cls.GetHashCode() : 0;
-			result = 31 * result + (!string.ReferenceEquals(Key, null) ? Key.GetHashCode() : 0);
+			result = 31 * result + Key.GetHashCode();
 			return result;
 		}
 

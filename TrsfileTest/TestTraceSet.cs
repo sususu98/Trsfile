@@ -622,7 +622,7 @@ public class TestTraceSet
 			{
 				using (LittleEndianInputStream dis = new LittleEndianInputStream(new MemoryStream(empty)))
 				{
-					TraceParameter.deserialize(type, (short) 4, dis);
+					TraceParameter.Deserialize(type, (short) 4, dis);
 				}
 			}
 			catch (IOException)
@@ -773,8 +773,8 @@ public class TestTraceSet
 		IntegerArrayTypeKey key = new IntegerArrayTypeKey("JUST_SMALL_ENOUGH_ARRAY");
 		TraceSetParameterMap tspm = new TraceSetParameterMap();
 		tspm.put(key, new int[arrayLength]);
-		byte[] serialize = tspm.serialize();
-		TraceSetParameterMap deserialize = TraceSetParameterMap.deserialize(serialize);
+		byte[] serialize = tspm.Serialize();
+		TraceSetParameterMap deserialize = TraceSetParameterMap.Deserialize(serialize);
 		Assert.Equals(arrayLength, deserialize.getOrElseThrow(key).length);
 	}
 }

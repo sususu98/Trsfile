@@ -28,7 +28,7 @@ namespace com.riscure.trs.parameter.primitive
 
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 //ORIGINAL LINE: public void serialize(com.riscure.trs.io.LittleEndianOutputStream dos) throws java.io.IOException
-		public override void serialize(LittleEndianOutputStream dos)
+		public override void Serialize(LittleEndianOutputStream dos)
 		{
 			foreach (bool i in value)
 			{
@@ -48,7 +48,7 @@ namespace com.riscure.trs.parameter.primitive
 			return result;
 		}
 
-		public override int length()
+		public override int Length()
 		{
 			return value.Length;
 		}
@@ -78,9 +78,9 @@ namespace com.riscure.trs.parameter.primitive
 		{
 			get
 			{
-				if (length() > 1)
+				if (Length() > 1)
 				{
-					throw new System.ArgumentException("Parameter represents an array value of length " + length());
+					throw new System.ArgumentException("Parameter represents an array value of length " + Length());
 				}
 				return Value[0];
 			}

@@ -74,7 +74,7 @@ namespace com.riscure.trs
                 }
                 else if (tag.Type == typeof(TraceSetParameterMap))
                 {
-                    byte[] serialized = metaData.TraceSetParameters.serialize();
+                    byte[] serialized = metaData.TraceSetParameters.Serialize();
                     writeLength(fos, serialized.Length);
                     fos.Write(serialized, 0, serialized.Length);
                 }
@@ -264,7 +264,7 @@ namespace com.riscure.trs
         {
             byte[] ba = new byte[length];
             buffer.get(ba);
-            return TraceSetParameterMap.deserialize(ba);
+            return TraceSetParameterMap.Deserialize(ba);
         }
 
         private static TraceParameterDefinitionMap readTraceParameterDefinitions(MemoryMappedViewStream buffer, int length)

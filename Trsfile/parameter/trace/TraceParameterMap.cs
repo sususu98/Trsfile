@@ -46,7 +46,7 @@ namespace com.riscure.trs.parameter.trace
                 using LittleEndianOutputStream dos = new LittleEndianOutputStream(baos);
                 foreach (TraceParameter parameter in Values)
                 {
-                    parameter.serialize(dos);
+                    parameter.Serialize(dos);
                 }
                 dos.flush();
                 return baos.ToArray();
@@ -76,7 +76,7 @@ namespace com.riscure.trs.parameter.trace
                     LittleEndianInputStream dis = new LittleEndianInputStream(bais);
                     foreach (var entry in definitions)
                     {
-                        TraceParameter traceParameter = TraceParameter.deserialize(entry.Value.Type, entry.Value.Length, dis);
+                        TraceParameter traceParameter = TraceParameter.Deserialize(entry.Value.Type, entry.Value.Length, dis);
                         result.Add(entry.Key, traceParameter);
                     }
                 }
@@ -114,7 +114,7 @@ namespace com.riscure.trs.parameter.trace
 			TraceParameter parameter = this[typedKey.Key];
 			if (parameter != null)
 			{
-				if (parameter.length() == 1 && !typedKey.Cls.IsArray)
+				if (parameter.Length() == 1 && !typedKey.Cls.IsArray)
 				{
 					return typedKey.Cast(parameter.ScalarValue);
 				}

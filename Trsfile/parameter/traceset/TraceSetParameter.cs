@@ -31,13 +31,13 @@
 //ORIGINAL LINE: public void serialize(com.riscure.trs.io.LittleEndianOutputStream dos) throws java.io.IOException
 		public virtual void serialize(LittleEndianOutputStream dos)
 		{
-			if (value.length() != (value.length() & MAX_LENGTH))
+			if (value.Length() != (value.Length() & MAX_LENGTH))
 			{
-				throw new IOException(String.format(LENGTH_ERROR, value.length(), MAX_LENGTH));
+				throw new IOException(String.format(LENGTH_ERROR, value.Length(), MAX_LENGTH));
 			}
 			dos.writeByte(value.Type.getValue());
-			dos.writeShort(value.length());
-			value.serialize(dos);
+			dos.writeShort(value.Length());
+			value.Serialize(dos);
 		}
 
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
@@ -46,7 +46,7 @@
 		{
 			ParameterType type = ParameterType.FromValue(dis.readByte());
 			int length = dis.readShort() & MAX_LENGTH;
-			return new TraceSetParameter(TraceParameter.deserialize(type, length, dis));
+			return new TraceSetParameter(TraceParameter.Deserialize(type, length, dis));
 		}
 
 		public virtual TraceParameter Value

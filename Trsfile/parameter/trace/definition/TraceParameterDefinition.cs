@@ -16,7 +16,7 @@
 		{
 			this.type = instance.Type;
 			this.offset = offset;
-			this.length = (short) instance.length();
+			this.length = (short) instance.Length;
 		}
 
 		public TraceParameterDefinition(ParameterType type, short length, short offset)

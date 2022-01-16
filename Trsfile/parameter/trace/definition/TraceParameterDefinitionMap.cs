@@ -119,7 +119,7 @@ namespace com.riscure.trs.parameter.trace.definition
 				foreach (var entry in parameters)
 				{
 					definitions.Add(entry.Key, new TraceParameterDefinition(entry.Value, offset));
-					offset += (short)(entry.Value.length() * entry.Value.Type.ByteSize);
+					offset += (short)(entry.Value.Length() * entry.Value.Type.ByteSize);
 				}
 			}
 			return definitions;

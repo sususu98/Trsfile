@@ -9,11 +9,21 @@
 		{
 		}
 
-		public override TraceParameter CreateParameter(bool[] value)
+        public override bool[] Cast(bool value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override TraceParameter CreateParameter(bool[] value)
 		{
 			CheckLength(value);
 			return new BooleanArrayParameter(value);
 		}
-	}
+
+        protected internal override void CheckLength(bool[] value)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
 }
