@@ -3,21 +3,21 @@
 	public sealed class ParameterType
 	{
 		public static readonly ParameterType BYTE 
-			= new ParameterType("BYTE", ParameterTypeEnum.BYTE, 0x01, sizeof(byte), typeof(byte), typeof(sbyte[]));
+			= new("BYTE", ParameterTypeEnum.BYTE, 0x01, sizeof(byte), typeof(byte), typeof(sbyte[]));
 		public static readonly ParameterType SHORT 
-			= new ParameterType("SHORT", ParameterTypeEnum.SHORT, 0x02, sizeof(short), typeof(short), typeof(short[]));
+			= new("SHORT", ParameterTypeEnum.SHORT, 0x02, sizeof(short), typeof(short), typeof(short[]));
 		public static readonly ParameterType INT 
-			= new ParameterType("INT", ParameterTypeEnum.INT, 0x04, sizeof(int), typeof(int), typeof(int[]));
+			= new("INT", ParameterTypeEnum.INT, 0x04, sizeof(int), typeof(int), typeof(int[]));
 		public static readonly ParameterType FLOAT 
-			= new ParameterType("FLOAT", ParameterTypeEnum.FLOAT, 0x14, sizeof(float), typeof(float), typeof(float[]));
+			= new("FLOAT", ParameterTypeEnum.FLOAT, 0x14, sizeof(float), typeof(float), typeof(float[]));
 		public static readonly ParameterType LONG 
-			= new ParameterType("LONG", ParameterTypeEnum.LONG, 0x08, sizeof(long), typeof(long), typeof(long[]));
+			= new("LONG", ParameterTypeEnum.LONG, 0x08, sizeof(long), typeof(long), typeof(long[]));
 		public static readonly ParameterType DOUBLE 
-			= new ParameterType("DOUBLE", ParameterTypeEnum.DOUBLE, 0x18, sizeof(double), typeof(double), typeof(double[]));
+			= new("DOUBLE", ParameterTypeEnum.DOUBLE, 0x18, sizeof(double), typeof(double), typeof(double[]));
 		public static readonly ParameterType STRING 
-			= new ParameterType("STRING", ParameterTypeEnum.STRING, 0x20, sizeof(byte), typeof(string), typeof(string));
+			= new("STRING", ParameterTypeEnum.STRING, 0x20, sizeof(byte), typeof(string), typeof(string));
 		public static readonly ParameterType BOOL 
-			= new ParameterType("BOOL", ParameterTypeEnum.BOOL, 0x31, sizeof(byte), typeof(bool), typeof(bool[]));
+			= new("BOOL", ParameterTypeEnum.BOOL, 0x31, sizeof(byte), typeof(bool), typeof(bool[]));
 
 		private static readonly ParameterType[] Values = new ParameterType[]
         {
@@ -81,7 +81,7 @@
 					return parameterType;
 				}
 			}
-			throw new System.ArgumentException("Unknown parameter type: " + value);
+			throw new ArgumentException("Unknown parameter type: " + value);
 		}
 
 		public static ParameterType FromClass(Type cls)
@@ -93,7 +93,7 @@
 					return parameterType;
 				}
 			}
-			throw new System.ArgumentException("Unknown parameter type: " + cls);
+			throw new ArgumentException("Unknown parameter type: " + cls);
 		}
 
 		public override string ToString()

@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-
-namespace com.riscure.trs.enums
+﻿namespace com.riscure.trs.enums
 {
     public sealed class Encoding
     {
-        public static readonly Encoding ILLEGAL = new Encoding("ILLEGAL", InnerEnum.ILLEGAL, 0x00, -1);
-        public static readonly Encoding BYTE = new Encoding("BYTE", InnerEnum.BYTE, 0x01, 1);
-        public static readonly Encoding SHORT = new Encoding("SHORT", InnerEnum.SHORT, 0x02, 2);
-        public static readonly Encoding INT = new Encoding("INT", InnerEnum.INT, 0x04, 4);
-        public static readonly Encoding FLOAT = new Encoding("FLOAT", InnerEnum.FLOAT, 0x14, 4);
+        public static readonly Encoding ILLEGAL = new("ILLEGAL", InnerEnum.ILLEGAL, 0x00, -1);
+        public static readonly Encoding BYTE = new("BYTE", InnerEnum.BYTE, 0x01, 1);
+        public static readonly Encoding SHORT = new("SHORT", InnerEnum.SHORT, 0x02, 2);
+        public static readonly Encoding INT = new("INT", InnerEnum.INT, 0x04, 4);
+        public static readonly Encoding FLOAT = new("FLOAT", InnerEnum.FLOAT, 0x14, 4);
 
         private static readonly List<Encoding> valueList = new List<Encoding>();
 
@@ -32,66 +30,49 @@ namespace com.riscure.trs.enums
 
         public readonly InnerEnum innerEnumValue;
         private readonly string nameValue;
-        private readonly int ordinalValue;
         private static int nextOrdinal = 0;
 
-        private readonly int value;
-        private readonly int size;
 
         internal Encoding(string name, InnerEnum innerEnum, int value, int size)
         {
-            this.value = value;
-            this.size = size;
+            Value = value;
+            Size = size;
 
             nameValue = name;
-            ordinalValue = nextOrdinal++;
+            Ordinal = nextOrdinal++;
             innerEnumValue = innerEnum;
         }
 
-        public int Size
-        {
-            get
-            {
-                return size;
-            }
-        }
+        public int Size { get; }
 
-        public int Value
-        {
-            get
-            {
-                return value;
-            }
-        }
+        public int Value { get; }
+        public int Ordinal { get; }
 
         public static Encoding FromValue(int value)
         {
-            foreach (Encoding encoding in Encoding.values())
+            foreach (Encoding encoding in Values())
             {
                 if (encoding.Value == value)
                 {
                     return encoding;
                 }
             }
-            throw new System.ArgumentException("Unknown Trace encoding: " + value);
+            throw new ArgumentException("Unknown Trace encoding: " + value);
         }
 
-        public static Encoding[] values()
+        public static Encoding[] Values()
         {
             return valueList.ToArray();
         }
 
-        public int ordinal()
-        {
-            return ordinalValue;
-        }
+
 
         public override string ToString()
         {
             return nameValue;
         }
 
-        public static Encoding valueOf(string name)
+        public static Encoding ValueOf(string name)
         {
             foreach (Encoding enumInstance in Encoding.valueList)
             {
@@ -100,7 +81,7 @@ namespace com.riscure.trs.enums
                     return enumInstance;
                 }
             }
-            throw new System.ArgumentException(name);
+            throw new ArgumentException(name);
         }
     }
 
