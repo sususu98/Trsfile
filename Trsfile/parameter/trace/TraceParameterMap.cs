@@ -48,7 +48,7 @@ namespace com.riscure.trs.parameter.trace
                 {
                     parameter.Serialize(dos);
                 }
-                dos.flush();
+                dos.Flush();
                 return baos.ToArray();
             }
 			catch (IOException ex)

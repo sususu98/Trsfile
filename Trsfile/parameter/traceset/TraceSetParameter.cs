@@ -44,8 +44,8 @@
 //ORIGINAL LINE: public static TraceSetParameter deserialize(com.riscure.trs.io.LittleEndianInputStream dis) throws java.io.IOException
 		public static TraceSetParameter deserialize(LittleEndianInputStream dis)
 		{
-			ParameterType type = ParameterType.FromValue(dis.readByte());
-			int length = dis.readShort() & MAX_LENGTH;
+			ParameterType type = ParameterType.FromValue(dis.ReadByte());
+			int length = dis.ReadShort() & MAX_LENGTH;
 			return new TraceSetParameter(TraceParameter.Deserialize(type, length, dis));
 		}
 

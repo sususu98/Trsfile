@@ -27,7 +27,7 @@
         {
             foreach (float i in Value)
             {
-                dos.writeFloat(i);
+                dos.WriteFloat(i);
             }
         }
 
@@ -36,7 +36,7 @@
             FloatArrayParameter result = new(length);
             for (int k = 0; k < length; k++)
             {
-                result.Value[k] = dis.readFloat();
+                result.Value[k] = dis.ReadFloat();
             }
             return result;
         }

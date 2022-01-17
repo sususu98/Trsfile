@@ -151,7 +151,7 @@ namespace com.riscure.trs
                         length |= (buffer.ReadByte() & 0xFF) << (i * 8);
                     }
                 }
-                readAndStoreData(buffer, tag, length, trs);
+                ReadAndStoreData(buffer, tag, length, trs);
             } while (tag != TRSTag.TRACE_BLOCK.Value);
             return trs;
         }
@@ -161,9 +161,9 @@ namespace com.riscure.trs
         public static string readName(LittleEndianInputStream dis)
         {
             //Read NL
-            short nameLength = dis.readShort();
+            short nameLength = dis.ReadShort();
             byte[] nameBytes = new byte[nameLength];
-            int read = dis.read(nameBytes, 0, nameLength);
+            int read = dis.Read(nameBytes, 0, nameLength);
             if (read != nameLength)
             {
                 throw new IOException("Error reading parameter name");
@@ -174,7 +174,7 @@ namespace com.riscure.trs
 
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: private static void readAndStoreData(ByteBuffer buffer, byte tag, int length, TRSMetaData trsMD) throws TRSFormatException
-        private static void readAndStoreData(MemoryMappedViewStream buffer, byte tag, int length, TRSMetaData trsMD)
+        private static void ReadAndStoreData(MemoryMappedViewStream buffer, byte tag, int length, TRSMetaData trsMD)
         {
             bool hasValidLength = 0 <= length && length <= 0xffff;
             TRSTag trsTag;
@@ -201,29 +201,27 @@ namespace com.riscure.trs
 
             if (trsTag.Type == typeof(string))
             {
-                trsMD.put(trsTag, readString(buffer, length));
+                trsMD.put(trsTag, ReadString(buffer, length));
             }
             else if (trsTag.Type == typeof(float))
             {
-                trsMD.put(trsTag, readFloat(buffer));
+                trsMD.put(trsTag, ReadFloat(buffer));
             }
             else if (trsTag.Type == typeof(bool))
             {
-                trsMD.put(trsTag, readBoolean(buffer));
+                trsMD.put(trsTag, ReadBoolean(buffer));
             }
             else if (trsTag.Type == typeof(int))
             {
-                trsMD.put(trsTag, readInt(buffer, length));
-                System.Buffers.Text.Utf8Parser.TryParse()
-
+                trsMD.put(trsTag, ReadInt(buffer, length));
             }
             else if (trsTag.Type == typeof(TraceSetParameterMap))
             {
-                trsMD.put(trsTag, readTraceSetParameters(buffer, length));
+                trsMD.put(trsTag, ReadTraceSetParameters(buffer, length));
             }
             else if (trsTag.Type == typeof(TraceParameterDefinitionMap))
             {
-                trsMD.put(trsTag, readTraceParameterDefinitions(buffer, length));
+                trsMD.put(trsTag, ReadTraceParameterDefinitions(buffer, length));
             }
             else
             {
@@ -231,46 +229,46 @@ namespace com.riscure.trs
             }
         }
 
-        private static bool readBoolean(MemoryMappedViewStream buffer)
+        private static bool ReadBoolean(MemoryMappedViewStream buffer)
         {
-            return (buffer.get() & 0xFF) > 0;
+            return (buffer.ReadByte() & 0xFF) > 0;
         }
 
-        private static int readInt(MemoryMappedViewStream buffer, int length)
+        private static int ReadInt(MemoryMappedViewStream buffer, int length)
         {
             long result = 0;
             for (int i = 0; i < length; i++)
             {
-                result += (buffer.get() & 0xFF) << (8 * i);
+                result += (buffer.ReadByte() & 0xFF) << (8 * i);
             }
             return (int)result;
         }
 
         // Always reads 4 (four) bytes
-        private static float readFloat(MemoryMappedViewStream buffer)
+        private static float ReadFloat(MemoryMappedViewStream buffer)
         {
-            int intValue = readInt(buffer, 4);
+            int intValue = ReadInt(buffer, 4);
             return BitConverter.Int32BitsToSingle(intValue);
         }
 
-        private static string readString(MemoryMappedViewStream buffer, int length)
+        private static string ReadString(MemoryMappedViewStream buffer, int length)
         {
             byte[] ba = new byte[length];
-            buffer.get(ba);
+            buffer.Read(ba);
             return StringHelper.NewString(ba, Encoding.UTF8);
         }
 
-        private static TraceSetParameterMap readTraceSetParameters(MemoryMappedViewStream buffer, int length)
+        private static TraceSetParameterMap ReadTraceSetParameters(MemoryMappedViewStream buffer, int length)
         {
             byte[] ba = new byte[length];
-            buffer.get(ba);
+            buffer.Read(ba);
             return TraceSetParameterMap.Deserialize(ba);
         }
 
-        private static TraceParameterDefinitionMap readTraceParameterDefinitions(MemoryMappedViewStream buffer, int length)
+        private static TraceParameterDefinitionMap ReadTraceParameterDefinitions(MemoryMappedViewStream buffer, int length)
         {
             byte[] ba = new byte[length];
-            buffer.get(ba);
+            buffer.Read(ba);
             return TraceParameterDefinitionMap.Deserialize(ba);
         }
     }

@@ -26,16 +26,16 @@ namespace com.riscure.trs.parameter.trace.definition
 
 		public virtual void Serialize(LittleEndianOutputStream dos)
 		{
-			dos.writeByte(Type.Value);
-			dos.writeShort(Length);
-			dos.writeShort(Offset);
+			dos.WriteByte(Type.Value);
+			dos.WriteShort(Length);
+			dos.WriteShort(Offset);
 		}
 
 		public static TraceParameterDefinition Deserialize(LittleEndianInputStream dis)
 		{
-			ParameterType type = ParameterType.FromValue(dis.readByte());
-			short length = dis.readShort();
-			short offset = dis.readShort();
+			ParameterType type = ParameterType.FromValue(dis.ReadByte());
+			short length = dis.ReadShort();
+			short offset = dis.ReadShort();
 			return new TraceParameterDefinition(type, length, offset);
 		}
 

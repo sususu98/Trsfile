@@ -22,13 +22,13 @@ namespace com.riscure.trs.parameter.primitive
         }
         public override void Serialize(LittleEndianOutputStream dos)
         {
-            dos.write(Value);
+            dos.Write(Value);
         }
 
         public static ByteArrayParameter Deserialize(LittleEndianInputStream dis, int length)
         {
             ByteArrayParameter result = new(length);
-            int bytesRead = dis.read(result.Value);
+            int bytesRead = dis.Read(result.Value);
             if (bytesRead != length)
             {
                 throw new IOException(string.Format(INVALID_LENGTH, length, bytesRead));

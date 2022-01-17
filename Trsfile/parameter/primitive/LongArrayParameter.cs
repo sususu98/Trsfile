@@ -29,7 +29,7 @@ namespace com.riscure.trs.parameter.primitive
         {
             foreach (long i in Value)
             {
-                dos.writeLong(i);
+                dos.WriteLong(i);
             }
         }
 
@@ -38,7 +38,7 @@ namespace com.riscure.trs.parameter.primitive
             LongArrayParameter result = new LongArrayParameter(length);
             for (int k = 0; k < length; k++)
             {
-                result.Value[k] = dis.readLong();
+                result.Value[k] = dis.ReadLong();
             }
             return result;
         }

@@ -25,7 +25,7 @@ namespace com.riscure.trs.parameter.primitive
         {
             foreach (double i in Value)
             {
-                dos.writeDouble(i);
+                dos.WriteDouble(i);
             }
         }
 
@@ -35,7 +35,7 @@ namespace com.riscure.trs.parameter.primitive
             DoubleArrayParameter result = new(length);
             for (int k = 0; k < length; k++)
             {
-                result.Value[k] = dis.readDouble();
+                result.Value[k] = dis.ReadDouble();
             }
             return result;
         }
