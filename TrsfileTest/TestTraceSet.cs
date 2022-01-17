@@ -141,8 +141,8 @@ public class TestTraceSet
 	public virtual void testOpenBytes()
 	{
         using TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + BYTES_TRS);
-        int numberOfTracesRead = readable.MetaData.getInt(TRSTag.NUMBER_OF_TRACES);
-        Encoding encoding = Encoding.fromValue(readable.MetaData.getInt(TRSTag.SAMPLE_CODING));
+        int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
+        Encoding encoding = Encoding.fromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
         Assert.Equals(Encoding.BYTE, encoding);
         Assert.Equals(NUMBER_OF_TRACES, numberOfTracesRead);
         for (int k = 0; k < NUMBER_OF_TRACES; k++)
@@ -160,8 +160,8 @@ public class TestTraceSet
 	{
 		using (TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + SHORTS_TRS))
 		{
-			int numberOfTracesRead = readable.MetaData.getInt(TRSTag.NUMBER_OF_TRACES);
-			Encoding encoding = Encoding.fromValue(readable.MetaData.getInt(TRSTag.SAMPLE_CODING));
+			int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
+			Encoding encoding = Encoding.fromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
 			Assert.Equals(Encoding.SHORT, encoding);
 			Assert.Equals(NUMBER_OF_TRACES, numberOfTracesRead);
 			for (int k = 0; k < NUMBER_OF_TRACES; k++)
@@ -180,8 +180,8 @@ public class TestTraceSet
 	{
 		using (TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + INTS_TRS))
 		{
-			int numberOfTracesRead = readable.MetaData.getInt(TRSTag.NUMBER_OF_TRACES);
-			Encoding encoding = Encoding.fromValue(readable.MetaData.getInt(TRSTag.SAMPLE_CODING));
+			int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
+			Encoding encoding = Encoding.fromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
 			Assert.Equals(Encoding.INT, encoding);
 			Assert.Equals(NUMBER_OF_TRACES, numberOfTracesRead);
 			for (int k = 0; k < NUMBER_OF_TRACES; k++)
@@ -199,8 +199,8 @@ public class TestTraceSet
 	public virtual void testOpenFloats()
 	{
         using TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + FLOATS_TRS);
-        int numberOfTracesRead = readable.MetaData.getInt(TRSTag.NUMBER_OF_TRACES);
-        Encoding encoding = Encoding.fromValue(readable.MetaData.getInt(TRSTag.SAMPLE_CODING));
+        int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
+        Encoding encoding = Encoding.fromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
         Assert.Equals(Encoding.FLOAT, encoding);
         Assert.Equals(NUMBER_OF_TRACES, numberOfTracesRead);
         for (int k = 0; k < NUMBER_OF_TRACES; k++)

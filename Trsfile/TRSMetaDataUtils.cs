@@ -1,14 +1,12 @@
-﻿using System;
-using System.IO;
-using System.IO.MemoryMappedFiles;
+﻿using System.IO.MemoryMappedFiles;
 using System.Text;
 
 namespace com.riscure.trs
 {
-    using TRSTag = com.riscure.trs.enums.TRSTag;
-    using LittleEndianInputStream = com.riscure.trs.io.LittleEndianInputStream;
-    using TraceParameterDefinitionMap = com.riscure.trs.parameter.trace.definition.TraceParameterDefinitionMap;
-    using TraceSetParameterMap = com.riscure.trs.parameter.traceset.TraceSetParameterMap;
+    using TRSTag = enums.TRSTag;
+    using LittleEndianInputStream = io.LittleEndianInputStream;
+    using TraceParameterDefinitionMap = parameter.trace.definition.TraceParameterDefinitionMap;
+    using TraceSetParameterMap = parameter.traceset.TraceSetParameterMap;
 
 
     public class TRSMetaDataUtils
@@ -47,14 +45,14 @@ namespace com.riscure.trs
                 fos.WriteByte(tag.Value);
                 if (tag.Type == typeof(string))
                 {
-                    string s = metaData.getString(tag);
+                    string s = metaData.GetString(tag);
                     byte[] stringBytes = Encoding.UTF8.GetBytes(s);
                     writeLength(fos, stringBytes.Length);
                     fos.Write(stringBytes, 0, stringBytes.Length);
                 }
                 else if (tag.Type == typeof(float))
                 {
-                    float f = metaData.getFloat(tag);
+                    float f = metaData.GetFloat(tag);
                     writeLength(fos, tag.Length);
                     for (int i = 0; i < tag.Length; i++)
                     {
@@ -63,14 +61,14 @@ namespace com.riscure.trs
                 }
                 else if (tag.Type == typeof(bool))
                 {
-                    int value = metaData.getBoolean(tag) ? 1 : 0;
+                    int value = metaData.GetBoolean(tag) ? 1 : 0;
                     writeLength(fos, tag.Length);
                     writeInt(fos, value, tag.Length);
                 }
                 else if (tag.Type == typeof(int))
                 {
                     writeLength(fos, tag.Length);
-                    writeInt(fos, metaData.getInt(tag), tag.Length);
+                    writeInt(fos, metaData.GetInt(tag), tag.Length);
                 }
                 else if (tag.Type == typeof(TraceSetParameterMap))
                 {
@@ -214,7 +212,7 @@ namespace com.riscure.trs
             else if (trsTag.Type == typeof(int))
             {
                 trsMD.put(trsTag, readInt(buffer, length));
-                System.Buffers.Text.Utf8Parser.TryParse()
+                System.Buffers.Text.Utf8Parser.TryParse();
 
             }
             else if (trsTag.Type == typeof(TraceSetParameterMap))

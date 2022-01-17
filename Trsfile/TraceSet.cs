@@ -122,9 +122,9 @@ namespace com.riscure.trs
 
         private long calculateTraceSize()
         {
-            int sampleSize = Encoding.FromValue(metaData.getInt(SAMPLE_CODING)).Size;
-            long sampleSpace = metaData.getInt(NUMBER_OF_SAMPLES) * (long)sampleSize;
-            return sampleSpace + metaData.getInt(DATA_LENGTH) + metaData.getInt(TITLE_SPACE);
+            int sampleSize = Encoding.FromValue(metaData.GetInt(SAMPLE_CODING)).Size;
+            long sampleSpace = metaData.GetInt(NUMBER_OF_SAMPLES) * (long)sampleSize;
+            return sampleSpace + metaData.GetInt(DATA_LENGTH) + metaData.GetInt(TITLE_SPACE);
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace com.riscure.trs
             moveBufferIfNecessary(index);
 
             long traceSize = calculateTraceSize();
-            long nrOfTraces = this.metaData.getInt(NUMBER_OF_TRACES);
+            long nrOfTraces = this.metaData.GetInt(NUMBER_OF_TRACES);
             if (index >= nrOfTraces)
             {
                 string msg = String.Format(TRACE_INDEX_OUT_OF_BOUNDS, index, nrOfTraces);
@@ -168,13 +168,13 @@ namespace com.riscure.trs
             string traceTitle = this.readTraceTitle();
             if (traceTitle.Trim().Length == 0)
             {
-                traceTitle = string.Format("{0} {1:D}", metaData.getString(GLOBAL_TITLE), index);
+                traceTitle = string.Format("{0} {1:D}", metaData.GetString(GLOBAL_TITLE), index);
             }
 
             try
             {
                 TraceParameterMap traceParameterMap;
-                if (metaData.getInt(TRS_VERSION) > 1)
+                if (metaData.GetInt(TRS_VERSION) > 1)
                 {
                     TraceParameterDefinitionMap traceParameterDefinitionMap = metaData.TraceParameterDefinitions;
                     int size = traceParameterDefinitionMap.TotalByteSize();
@@ -220,10 +220,10 @@ namespace com.riscure.trs
             {
                 int dataLength = trace.Data == null ? 0 : trace.Data.Length;
                 int titleLength = string.ReferenceEquals(trace.Title, null) ? 0 : trace.Title.GetBytes(System.Text.Encoding.UTF8).Length;
-                metaData.put(NUMBER_OF_SAMPLES, trace.NumberOfSamples, false);
-                metaData.put(DATA_LENGTH, dataLength, false);
-                metaData.put(TITLE_SPACE, titleLength, false);
-                metaData.put(SAMPLE_CODING, trace.PreferredCoding, false);
+                metaData.Put(NUMBER_OF_SAMPLES, trace.NumberOfSamples, false);
+                metaData.Put(DATA_LENGTH, dataLength, false);
+                metaData.Put(TITLE_SPACE, titleLength, false);
+                metaData.Put(SAMPLE_CODING, trace.PreferredCoding, false);
                 metaData.put(TRACE_PARAMETER_DEFINITIONS, TraceParameterDefinitionMap.CreateFrom(trace.Parameters));
                 TRSMetaDataUtils.writeTRSMetaData(writeStream, metaData);
                 firstTrace = false;
@@ -234,7 +234,7 @@ namespace com.riscure.trs
             trace.TraceSet = this;
             writeTrace(trace);
 
-            int numberOfTraces = metaData.getInt(NUMBER_OF_TRACES);
+            int numberOfTraces = metaData.GetInt(NUMBER_OF_TRACES);
             metaData.put(NUMBER_OF_TRACES, numberOfTraces + 1);
         }
 
@@ -244,7 +244,7 @@ namespace com.riscure.trs
         /// <param name="metaData"> the metadata specifying the maximum string lengths </param>
         private void truncateStrings(Trace trace, TRSMetaData metaData)
         {
-            int titleSpace = metaData.getInt(TITLE_SPACE);
+            int titleSpace = metaData.GetInt(TITLE_SPACE);
             trace.Title = fitUtf8StringToByteLength(trace.Title, titleSpace);
             TraceParameterDefinitionMap traceParameterDefinitionMap = metaData.TraceParameterDefinitions;
             foreach (KeyValuePair<string, TraceParameterDefinition<TraceParameter>> definition in traceParameterDefinitionMap.entrySet())
@@ -299,7 +299,7 @@ namespace com.riscure.trs
             writeStream.WriteBytes(title.GetBytes(System.Text.Encoding.UTF8));
             byte[] data = trace.Data == null ? new byte[0] : trace.Data;
             writeStream.Write(data, 0, data.Length);
-            Encoding encoding = Encoding.FromValue(metaData.getInt(SAMPLE_CODING));
+            Encoding encoding = Encoding.FromValue(metaData.GetInt(SAMPLE_CODING));
             writeStream.Write(toByteArray(trace.Sample, encoding), 0, toByteArray(trace.Sample, encoding).Length);
         }
 
@@ -383,15 +383,15 @@ namespace com.riscure.trs
 
         private void checkValid(Trace trace)
         {
-            int numberOfSamples = metaData.getInt(NUMBER_OF_SAMPLES);
-            if (metaData.getInt(NUMBER_OF_SAMPLES) != trace.NumberOfSamples)
+            int numberOfSamples = metaData.GetInt(NUMBER_OF_SAMPLES);
+            if (metaData.GetInt(NUMBER_OF_SAMPLES) != trace.NumberOfSamples)
             {
                 throw new System.ArgumentException(String.format(TRACE_LENGTH_DIFFERS, trace.NumberOfSamples, numberOfSamples));
             }
 
-            int dataLength = metaData.getInt(DATA_LENGTH);
+            int dataLength = metaData.GetInt(DATA_LENGTH);
             int traceDataLength = trace.Data == null ? 0 : trace.Data.Length;
-            if (metaData.getInt(DATA_LENGTH) != traceDataLength)
+            if (metaData.GetInt(DATA_LENGTH) != traceDataLength)
             {
                 throw new System.ArgumentException(String.format(TRACE_DATA_LENGTH_DIFFERS, traceDataLength, dataLength));
             }
@@ -442,14 +442,14 @@ namespace com.riscure.trs
 
         protected internal virtual string readTraceTitle()
         {
-            byte[] titleArray = new byte[metaData.getInt(TITLE_SPACE)];
+            byte[] titleArray = new byte[metaData.GetInt(TITLE_SPACE)];
             buffer.get(titleArray);
             return StringHelper.NewString(titleArray);
         }
 
         protected internal virtual byte[] readData()
         {
-            int inputSize = metaData.getInt(DATA_LENGTH);
+            int inputSize = metaData.GetInt(DATA_LENGTH);
             byte[] comDataArray = new byte[inputSize];
             buffer.get(comDataArray);
             return comDataArray;
@@ -460,9 +460,9 @@ namespace com.riscure.trs
         protected internal virtual float[] readSamples()
         {
             buffer.order(ByteOrder.LITTLE_ENDIAN);
-            int numberOfSamples = metaData.getInt(NUMBER_OF_SAMPLES);
+            int numberOfSamples = metaData.GetInt(NUMBER_OF_SAMPLES);
             float[] samples;
-            switch (Encoding.FromValue(metaData.getInt(SAMPLE_CODING)))
+            switch (Encoding.FromValue(metaData.GetInt(SAMPLE_CODING)))
             {
                 case BYTE:
                     byte[] byteData = new byte[numberOfSamples];
@@ -487,7 +487,7 @@ namespace com.riscure.trs
                     samples = toFloatArray(intData);
                     break;
                 default:
-                    throw new TRSFormatException(String.format(UNKNOWN_SAMPLE_CODING, metaData.getInt(SAMPLE_CODING)));
+                    throw new TRSFormatException(String.format(UNKNOWN_SAMPLE_CODING, metaData.GetInt(SAMPLE_CODING)));
             }
 
             return samples;
@@ -609,7 +609,7 @@ namespace com.riscure.trs
         //ORIGINAL LINE: public static TraceSet create(String file, TRSMetaData metaData) throws java.io.IOException
         public static TraceSet create(string file, TRSMetaData metaData)
         {
-            metaData.put(TRS_VERSION, 2, false);
+            metaData.Put(TRS_VERSION, 2, false);
             return new TraceSet(file, metaData);
         }
 
