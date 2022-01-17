@@ -24,7 +24,7 @@
         {
             foreach (int i in Value)
             {
-                dos.writeInt(i);
+                dos.WriteInt(i);
             }
         }
         public static IntegerArrayParameter Deserialize(LittleEndianInputStream dis, int length)
@@ -32,7 +32,7 @@
             IntegerArrayParameter result = new(new int[length]);
             for (int k = 0; k < length; k++)
             {
-                result.Value[k] = dis.readInt();
+                result.Value[k] = dis.ReadInt();
             }
             return result;
         }

@@ -1,10 +1,9 @@
-﻿using System.IO;
-using System.Text;
+﻿using System.Text;
 
 namespace com.riscure.trs.io
 {
 
-	public class LittleEndianOutputStream : IDisposable
+    public class LittleEndianOutputStream : IDisposable
 	{
 		/// <summary>
 		/// The number of bytes written to the data output stream so far.
@@ -13,7 +12,7 @@ namespace com.riscure.trs.io
 		protected internal int written;
 
 		private readonly Stream stream;
-		private readonly object obj = new object();
+		private readonly object obj = new();
 
 		/// <summary>
 		/// Creates an output stream filter built on top of the specified
@@ -74,9 +73,7 @@ namespace com.riscure.trs.io
 		/// <param name="b"> the <code>byte</code> to be written. </param>
 		/// <exception cref="IOException"> if an I/O error occurs. </exception>
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: @Override public synchronized void write(int b) throws IOException
-		public void write(int b)
+		public void Write(int b)
 		{
 			lock (obj)
 			{
@@ -96,9 +93,7 @@ namespace com.riscure.trs.io
 		/// <param name="len"> the number of bytes to write. </param>
 		/// <exception cref="IOException"> if an I/O error occurs. </exception>
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: @Override public synchronized void write(byte[] b, int off, int len) throws IOException
-		public void write(byte[] b, int off, int len)
+		public void Write(byte[] b, int off, int len)
 		{
 			lock (obj)
 			{
@@ -107,7 +102,7 @@ namespace com.riscure.trs.io
 			}
 		}
 
-		public void write(ReadOnlySpan<byte> b)
+		public void Write(ReadOnlySpan<byte> b)
         {
             lock (obj)
             {
@@ -128,9 +123,7 @@ namespace com.riscure.trs.io
 		/// <exception cref="IOException"> if an I/O error occurs. </exception>
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
 		/// <seealso cref="java.io.OutputStream.flush()"/>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: @Override public void flush() throws IOException
-		public void flush()
+		public void Flush()
 		{
 			stream.Flush();
 		}
@@ -146,9 +139,7 @@ namespace com.riscure.trs.io
 		/// <param name="v"> a <code>boolean</code> value to be written. </param>
 		/// <exception cref="IOException"> if an I/O error occurs. </exception>
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: @Override public final void writeBoolean(boolean v) throws IOException
-		public void writeBoolean(bool v)
+		public void WriteBoolean(bool v)
 		{
 			stream.WriteByte(v ? (byte)1 : (byte)0);
 			IncCount(1);
@@ -162,9 +153,7 @@ namespace com.riscure.trs.io
 		/// <param name="v"> a <code>byte</code> value to be written. </param>
 		/// <exception cref="IOException"> if an I/O error occurs. </exception>
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: @Override public final void writeByte(int v) throws IOException
-		public void writeByte(int v)
+		public void WriteByte(int v)
 		{
 			stream.WriteByte((byte)v);
 			IncCount(1);
@@ -178,18 +167,16 @@ namespace com.riscure.trs.io
 		/// <param name="v"> a <code>short</code> to be written. </param>
 		/// <exception cref="IOException"> if an I/O error occurs. </exception>
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: @Override public final void writeShort(int v) throws IOException
-		public void writeShort(short v)
+		public void WriteShort(short v)
 		{
 			stream.WriteByte((byte)(((int)((uint)v >> 0)) & 0xFF));
 			stream.WriteByte((byte)(((int)((uint)v >> 8)) & 0xFF));
 			IncCount(2);
 		}
 
-		public void writeShort(int v)
+		public void WriteShort(int v)
         {
-			writeShort((short)v);
+			WriteShort((short)v);
         }
 
 		/// <summary>
@@ -200,9 +187,7 @@ namespace com.riscure.trs.io
 		/// <param name="v"> a <code>char</code> value to be written. </param>
 		/// <exception cref="IOException"> if an I/O error occurs. </exception>
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: @Override public final void writeChar(int v) throws IOException
-		public void writeChar(char v)
+		public void WriteChar(char v)
 		{
 			stream.WriteByte((byte)(((int)((uint)v >> 0)) & 0xFF));
 			stream.WriteByte((byte)(((int)((uint)v >> 8)) & 0xFF));
@@ -217,9 +202,8 @@ namespace com.riscure.trs.io
 		/// <param name="v"> an <code>int</code> to be written. </param>
 		/// <exception cref="IOException"> if an I/O error occurs. </exception>
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: @Override public final void writeInt(int v) throws IOException
-		public void writeInt(int v)
+
+		public void WriteInt(int v)
 		{
 			stream.WriteByte((byte)(((int)((uint)v >> 0)) & 0xFF));
 			stream.WriteByte((byte)(((int)((uint)v >> 8)) & 0xFF));
@@ -238,9 +222,8 @@ namespace com.riscure.trs.io
 		/// <param name="v"> a <code>long</code> to be written. </param>
 		/// <exception cref="IOException"> if an I/O error occurs. </exception>
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: @Override public final void writeLong(long v) throws IOException
-		public void writeLong(long v)
+
+		public void WriteLong(long v)
 		{
 			writeBuffer[0] = (byte)((long)((ulong)v >> 0));
 			writeBuffer[1] = (byte)((long)((ulong)v >> 8));
@@ -266,11 +249,9 @@ namespace com.riscure.trs.io
 		/// <exception cref="IOException"> if an I/O error occurs. </exception>
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
 		/// <seealso cref="java.lang.Float.floatToIntBits(float)"/>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: @Override public final void writeFloat(float v) throws IOException
-		public void writeFloat(float v)
+		public void WriteFloat(float v)
 		{
-			writeInt(BitConverter.SingleToInt32Bits(v));
+			WriteInt(BitConverter.SingleToInt32Bits(v));
 		}
 
 		/// <summary>
@@ -285,11 +266,10 @@ namespace com.riscure.trs.io
 		/// <exception cref="IOException"> if an I/O error occurs. </exception>
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
 		/// <seealso cref="java.lang.Double.doubleToLongBits(double)"/>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: @Override public final void writeDouble(double v) throws IOException
-		public void writeDouble(double v)
+
+		public void WriteDouble(double v)
 		{
-			writeLong(BitConverter.DoubleToInt64Bits(v));
+			WriteLong(BitConverter.DoubleToInt64Bits(v));
 		}
 
 		/// <summary>
@@ -302,9 +282,8 @@ namespace com.riscure.trs.io
 		/// <param name="s"> a string of bytes to be written. </param>
 		/// <exception cref="IOException"> if an I/O error occurs. </exception>
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: @Override public final void writeBytes(String s) throws IOException
-		public void writeBytes(string s)
+
+		public void WriteBytes(string s)
 		{
 			int len = s.Length;
 			for (int i = 0; i < len; i++)
@@ -325,9 +304,8 @@ namespace com.riscure.trs.io
 		/// <exception cref="IOException"> if an I/O error occurs. </exception>
 		/// <seealso cref="java.io.DataOutputStream.writeChar(int)"/>
 		/// <seealso cref="java.io.FilterOutputStream.out"/>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: @Override public final void writeChars(String s) throws IOException
-		public void writeChars(string s)
+
+		public void WriteChars(string s)
 		{
 			int len = s.Length;
 			for (int i = 0; i < len; i++)
@@ -359,12 +337,11 @@ namespace com.riscure.trs.io
 		/// </summary>
 		/// <param name="str"> a string to be written. </param>
 		/// <exception cref="IOException"> if an I/O error occurs. </exception>
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: @Override public final void writeUTF(String str) throws IOException
-		public void writeUTF(string str)
+
+		public void WriteUTF(string str)
 		{
 			byte[] bytes = str.GetBytes(Encoding.UTF8);
-			writeShort((short)bytes.Length);
+			WriteShort((short)bytes.Length);
 			stream.Write(bytes);
 			IncCount(bytes.Length);
 		}

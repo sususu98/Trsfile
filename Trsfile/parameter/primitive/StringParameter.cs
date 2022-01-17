@@ -32,7 +32,7 @@ namespace com.riscure.trs.parameter.primitive
             byte[] bytes = new byte[length];
             if (length > 0)
             {
-                int bytesRead = dis.read(bytes);
+                int bytesRead = dis.Read(bytes);
                 if (bytesRead != length)
                 {
                     throw new IOException(string.Format(INVALID_LENGTH, length, bytesRead));

@@ -23,7 +23,7 @@
         {
             foreach (short i in Value)
             {
-                dos.writeShort(i);
+                dos.WriteShort(i);
             }
         }
 
@@ -32,7 +32,7 @@
             ShortArrayParameter result = new(new short[length]);
             for (int k = 0; k < length; k++)
             {
-                result.Value[k] = dis.readShort();
+                result.Value[k] = dis.ReadShort();
             }
             return result;
         }

@@ -46,18 +46,18 @@ namespace com.riscure.trs.parameter.trace.definition
 			{
                 using LittleEndianOutputStream dos = new LittleEndianOutputStream(baos);
                 //Write NE
-                dos.writeShort(Count);
+                dos.WriteShort(Count);
                 foreach (var entry in this)
                 {
                     byte[] nameBytes = entry.Key.GetBytes(System.Text.Encoding.UTF8);
                     //Write NL
-                    dos.writeShort((short)nameBytes.Length);
+                    dos.WriteShort((short)nameBytes.Length);
                     //Write N
-                    dos.write(nameBytes);
+                    dos.Write(nameBytes);
                     TraceParameterDefinition value = entry.Value;
                     value.Serialize(dos);
                 }
-                dos.flush();
+                dos.Flush();
                 return baos.ToArray();
             }
 			catch (IOException ex)
@@ -79,7 +79,7 @@ namespace com.riscure.trs.parameter.trace.definition
                     using MemoryStream bais = new MemoryStream(bytes);
                     LittleEndianInputStream dis = new LittleEndianInputStream(bais);
                     //Read NE
-                    short numberOfEntries = dis.readShort();
+                    short numberOfEntries = dis.ReadShort();
                     for (int k = 0; k < numberOfEntries; k++)
                     {
                         string name = TRSMetaDataUtils.readName(dis);

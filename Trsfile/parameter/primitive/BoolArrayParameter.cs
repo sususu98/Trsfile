@@ -25,7 +25,7 @@ namespace com.riscure.trs.parameter.primitive
         {
             foreach (bool i in Value)
             {
-                dos.writeByte(i ? 1 : 0);
+                dos.WriteByte(i ? 1 : 0);
             }
         }
 
@@ -34,7 +34,7 @@ namespace com.riscure.trs.parameter.primitive
 			BoolArrayParameter result = new(new bool[length]);
 			for (int k = 0; k < length; k++)
 			{
-				result.Value[k] = dis.readByte() != 0;
+				result.Value[k] = dis.ReadByte() != 0;
 			}
 			return result;
 		}
