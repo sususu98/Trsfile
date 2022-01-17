@@ -1,19 +1,23 @@
 ﻿namespace com.riscure.trs.types
 {
-	using TraceParameter = com.riscure.trs.parameter.TraceParameter;
-	using ByteArrayParameter = com.riscure.trs.parameter.primitive.ByteArrayParameter;
+    using TraceParameter = parameter.TraceParameter;
+    using ByteArrayParameter = parameter.primitive.ByteArrayParameter;
 
-	public class ByteArrayTypeKey : TypedKey<sbyte[]>
-	{
-		public ByteArrayTypeKey(string key) : base(typeof(sbyte[]), key)
-		{
-		}
+    public class ByteArrayTypeKey : TypedKey<byte[]>
+    {
+        public ByteArrayTypeKey(string key) : base(typeof(byte[]), key)
+        {
+        }
 
-		public override TraceParameter CreateParameter(sbyte[] value)
-		{
-			CheckLength(value);
-			return new ByteArrayParameter(value);
-		}
-	}
+        public override TraceParameter CreateParameter(byte[] value)
+        {
+            CheckLength(value);
+            return new ByteArrayParameter(value);
+        }
+        protected internal override void CheckLength(byte[] value)
+        {
+            if (value.Length <= 0) throw new ArgumentException("Value's length below 0");
+        }
+    }
 
 }

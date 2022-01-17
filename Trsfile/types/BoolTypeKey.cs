@@ -1,8 +1,7 @@
-﻿using com.riscure.trs.parameter;
-using com.riscure.trs.parameter.primitive;
-
-namespace com.riscure.trs.types
+﻿namespace com.riscure.trs.types
 {
+	using TraceParameter = parameter.TraceParameter;
+	using BoolArrayParameter = parameter.primitive.BoolArrayParameter;
 	public class BoolTypeKey : TypedKey<bool>
 	{
 		public BoolTypeKey(string key) : base(typeof(bool), key)

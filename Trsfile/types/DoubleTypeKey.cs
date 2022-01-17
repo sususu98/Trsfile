@@ -1,19 +1,22 @@
 ﻿namespace com.riscure.trs.types
 {
-	using TraceParameter = com.riscure.trs.parameter.TraceParameter;
-	using DoubleArrayParameter = com.riscure.trs.parameter.primitive.DoubleArrayParameter;
+    using TraceParameter = parameter.TraceParameter;
+    using DoubleArrayParameter = parameter.primitive.DoubleArrayParameter;
 
-	public class DoubleTypeKey : TypedKey<double>
-	{
-		public DoubleTypeKey(string key) : base(typeof(Double), key)
-		{
-		}
+    public class DoubleTypeKey : TypedKey<double>
+    {
+        public DoubleTypeKey(string key) : base(typeof(double), key)
+        {
+        }
 
-		public override TraceParameter createParameter(double? value)
-		{
-			CheckLength(value.Value);
-			return new DoubleArrayParameter(new double[]{value.Value});
-		}
-	}
+        public override TraceParameter CreateParameter(double value)
+        {
+            CheckLength(value);
+            return new DoubleArrayParameter(new double[] { value });
+        }
+        protected internal override void CheckLength(double value)
+        {
+        }
+    }
 
 }
