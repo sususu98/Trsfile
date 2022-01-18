@@ -33,7 +33,7 @@ namespace com.riscure.trs.parameter.trace
 
 		/// <returns> a concatenation of all trace parameters in this map, individually converted to byte arrays </returns>
 		/// <exception cref="RuntimeException"> if the map failed to serialize correctly </exception>
-		public byte[] ToByteArray()
+		public byte[] Serialize()
 		{
 			MemoryStream baos = new MemoryStream();
 			try
@@ -82,7 +82,7 @@ namespace com.riscure.trs.parameter.trace
 			}
 			else if (definitions.TotalByteSize() != 0)
 			{
-				throw new System.ArgumentException(EMPTY_DATA_BUT_NONEMPTY_DEFINITIONS);
+				throw new ArgumentException(EMPTY_DATA_BUT_NONEMPTY_DEFINITIONS);
 			}
 			return UnmodifiableTraceParameterMap.of(result);
 		}
@@ -185,7 +185,7 @@ namespace com.riscure.trs.parameter.trace
 
 		public void Add(string key, bool[] value) => Add(new BoolArrayTypeKey(key), value);
 
-        public virtual byte GetByte(string key) => Get(new ByteTypeKey(key), out _);
+        public byte GetByte(string key) => Get(new ByteTypeKey(key), out _);
 
         public virtual byte[] getByteArray(string key)
 		{

@@ -252,7 +252,7 @@ public class TestTraceSet
         parameters.put("DOUBLE", (double)6);
         parameters.put("STRING", string.Format("{0,3:D}", 7));
         parameters.put("BOOLEAN", true);
-        parameters.put("BYTEARRAY", new byte[] { 8, 9, 0 });
+        parameters.Add("BYTEARRAY", new byte[] { 8, 9, 0 });
         parameters.put("SHORTARRAY", new short[] { 1, 2, 3 });
         parameters.put("INTARRAY", new int[] { 4, 5, 6 });
         parameters.put("FLOATARRAY", new float[] { 7, 8, 9 });
@@ -676,10 +676,10 @@ public class TestTraceSet
 		string rawKey = "BYTE";
 		ByteTypeKey typedKey = new ByteTypeKey(rawKey);
 		tpm.put(typedKey, (byte)1);
-		tspm.put(typedKey, (byte)2);
+		tspm.Add(typedKey, (byte)2);
 
 		assertTrue(tpm.Get(typedKey).isPresent());
-		assertTrue(tspm.get(typedKey).isPresent());
+		assertTrue(tspm.Get(typedKey).isPresent());
 	}
 
 	/// <summary>
@@ -696,11 +696,11 @@ public class TestTraceSet
 		string rawKey = "BYTE";
 		ByteTypeKey typedKey = new ByteTypeKey(rawKey);
 		tpm.put(typedKey, rawValue);
-		tspm.put(typedKey, rawValue);
+		tspm.Add(typedKey, rawValue);
 
 		ByteArrayTypeKey arrayTypeKey = new ByteArrayTypeKey(rawKey);
 		assertTrue(tpm.get(arrayTypeKey).isPresent());
-		assertTrue(tspm.get(arrayTypeKey).isPresent());
+		assertTrue(tspm.Get(arrayTypeKey).isPresent());
 		AssertArrayEquals(new byte[]{rawValue}, tpm.getByteArray(rawKey));
 		AssertArrayEquals(new byte[]{rawValue}, tspm.getByteArray(rawKey));
 	}
@@ -720,7 +720,7 @@ public class TestTraceSet
 		tspm.put(rawKey, 2); //actually an int
 
 		assertThrows(typeof(System.InvalidCastException), () => tpm.Get(typedKey));
-		assertThrows(typeof(System.InvalidCastException), () => tspm.get(typedKey));
+		assertThrows(typeof(System.InvalidCastException), () => tspm.Get(typedKey));
 	}
 
 	/// <summary>
@@ -747,7 +747,7 @@ public class TestTraceSet
 		TraceParameterMap tpm = new TraceParameterMap();
 		tpm.Add("EMPTY_STRING", "");
 		TraceParameterDefinitionMap tpdm = TraceParameterDefinitionMap.CreateFrom(tpm);
-		byte[] serialized = tpm.ToByteArray();
+		byte[] serialized = tpm.Serialize();
 
 		TraceParameterMap deserialized = TraceParameterMap.Deserialize(serialized, tpdm);
 		string empty_string = deserialized.get("EMPTY_STRING").ToString();
@@ -761,7 +761,7 @@ public class TestTraceSet
 		int arrayLength = 65536;
 		IntegerArrayTypeKey key = new IntegerArrayTypeKey("TOO_LARGE_ARRAY");
 		TraceSetParameterMap tspm = new TraceSetParameterMap();
-		tspm.put(key, new int[arrayLength]);
+		tspm.Add(key, new int[arrayLength]);
 		assertThrows(typeof(Exception), tspm.serialize);
 	}
 
@@ -772,7 +772,7 @@ public class TestTraceSet
 		int arrayLength = 65535;
 		IntegerArrayTypeKey key = new IntegerArrayTypeKey("JUST_SMALL_ENOUGH_ARRAY");
 		TraceSetParameterMap tspm = new TraceSetParameterMap();
-		tspm.put(key, new int[arrayLength]);
+		tspm.Add(key, new int[arrayLength]);
 		byte[] serialize = tspm.Serialize();
 		TraceSetParameterMap deserialize = TraceSetParameterMap.Deserialize(serialize);
 		Assert.Equals(arrayLength, deserialize.getOrElseThrow(key).length);

@@ -142,7 +142,7 @@ namespace com.riscure.trs
         {
             get
             {
-                return parameters.ToByteArray();
+                return parameters.Serialize();
             }
         }
 
