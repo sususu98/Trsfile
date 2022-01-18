@@ -69,7 +69,7 @@ public class TestTraceSet
 	{
 		tempDir = Path.Combine(Path.GetTempPath(), "TestTraceSet");
 
-		using (TraceSet writable = TraceSet.create(tempDir + Path.PathSeparator + BYTES_TRS))
+		using (TraceSet writable = TraceSet.Create(tempDir + Path.PathSeparator + BYTES_TRS))
 		{
 			for (int k = 0; k < NUMBER_OF_TRACES; k++)
 			{
@@ -77,7 +77,7 @@ public class TestTraceSet
 			}
 		}
 
-		using (TraceSet writable = TraceSet.create(tempDir + Path.PathSeparator + SHORTS_TRS))
+		using (TraceSet writable = TraceSet.Create(tempDir + Path.PathSeparator + SHORTS_TRS))
 		{
 			for (int k = 0; k < NUMBER_OF_TRACES; k++)
 			{
@@ -85,7 +85,7 @@ public class TestTraceSet
 			}
 		}
 
-		using (TraceSet writable = TraceSet.create(tempDir + Path.PathSeparator + INTS_TRS))
+		using (TraceSet writable = TraceSet.Create(tempDir + Path.PathSeparator + INTS_TRS))
 		{
 			for (int k = 0; k < NUMBER_OF_TRACES; k++)
 			{
@@ -93,7 +93,7 @@ public class TestTraceSet
 			}
 		}
 
-		using (TraceSet writable = TraceSet.create(tempDir + Path.PathSeparator + FLOATS_TRS))
+		using (TraceSet writable = TraceSet.Create(tempDir + Path.PathSeparator + FLOATS_TRS))
 		{
 			for (int k = 0; k < NUMBER_OF_TRACES; k++)
 			{
@@ -140,7 +140,7 @@ public class TestTraceSet
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 	public virtual void testOpenBytes()
 	{
-        using TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + BYTES_TRS);
+        using TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + BYTES_TRS);
         int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
         Encoding encoding = Encoding.fromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
         Assert.Equals(Encoding.BYTE, encoding);
@@ -158,7 +158,7 @@ public class TestTraceSet
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 	public virtual void testOpenShorts()
 	{
-		using (TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + SHORTS_TRS))
+		using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + SHORTS_TRS))
 		{
 			int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
 			Encoding encoding = Encoding.fromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
@@ -178,7 +178,7 @@ public class TestTraceSet
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 	public virtual void testOpenInts()
 	{
-		using (TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + INTS_TRS))
+		using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + INTS_TRS))
 		{
 			int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
 			Encoding encoding = Encoding.fromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
@@ -198,7 +198,7 @@ public class TestTraceSet
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 	public virtual void testOpenFloats()
 	{
-        using TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + FLOATS_TRS);
+        using TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + FLOATS_TRS);
         int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
         Encoding encoding = Encoding.fromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
         Assert.Equals(Encoding.FLOAT, encoding);
@@ -220,14 +220,14 @@ public class TestTraceSet
 		string name = Guid.NewGuid().ToString() + TRS;
 		try
 		{
-            using TraceSet ts = TraceSet.create(tempDir + Path.PathSeparator + name);
+            using TraceSet ts = TraceSet.Create(tempDir + Path.PathSeparator + name);
             ts.add(Trace.create(title, new float[0], new TraceParameterMap()));
         }
 		catch (TRSFormatException e)
 		{
 			throw e;
 		}
-        using TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + name);
+        using TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name);
         Assert.Equals(title, readable.get(0).Title);
     }
 
@@ -264,9 +264,9 @@ public class TestTraceSet
         metaData.put(TRSTag.TRACE_SET_PARAMETERS, parameters);
 		//CREATE TRACE
 		string name = Guid.NewGuid().ToString() + TRS;
-		TraceSet.create(tempDir + Path.PathSeparator + name, metaData).close();
+		TraceSet.Create(tempDir + Path.PathSeparator + name, metaData).close();
 		//READ BACK AND CHECK RESULT
-		using (TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + name))
+		using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
 		{
 			TraceSetParameterMap readTraceSetParameterMap = readable.MetaData.TraceSetParameters;
 			parameters.forEach((s, traceSetParameter) => Assert.Equals(traceSetParameter, readTraceSetParameterMap.get(s)));
@@ -287,14 +287,14 @@ public class TestTraceSet
 		string parameterName = string.Format("{0,100000}", "XYZ");
 		//CREATE TRACE
 		string name = Guid.NewGuid().ToString() + TRS;
-		using (TraceSet traceWithParameters = TraceSet.create(tempDir + Path.PathSeparator + name, metaData))
+		using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.PathSeparator + name, metaData))
 		{
 			TraceParameterMap parameters = new TraceParameterMap();
 			parameters.Add(parameterName, 1);
 			traceWithParameters.add(Trace.create("", FLOAT_SAMPLES, parameters));
 		}
 		//READ BACK AND CHECK RESULT
-		using (TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + name))
+		using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
 		{
 			TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
 			parameterDefinitions.forEach((key, parameter) => Assert.Equals(parameterName, key));
@@ -323,7 +323,7 @@ public class TestTraceSet
 		strings.Add("abcdefgh汉字");
 		//CREATE TRACE
 		string name = Guid.NewGuid().ToString() + TRS;
-		using (TraceSet traceWithParameters = TraceSet.create(tempDir + Path.PathSeparator + name, metaData))
+		using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.PathSeparator + name, metaData))
 		{
 			for (int k = 0; k < 25; k++)
 			{
@@ -353,7 +353,7 @@ public class TestTraceSet
 		IList<TraceParameterMap> testParameters = new List<TraceParameterMap>();
 		//CREATE TRACE
 		string name = Guid.NewGuid().ToString() + TRS;
-		using (TraceSet traceWithParameters = TraceSet.create(tempDir + Path.PathSeparator + name, metaData))
+		using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.PathSeparator + name, metaData))
 		{
 			for (int k = 0; k < 25; k++)
 			{
@@ -386,7 +386,7 @@ public class TestTraceSet
 //ORIGINAL LINE: private void readBackGeneric(List<com.riscure.trs.parameter.trace.TraceParameterMap> testParameters, String name) throws IOException, com.riscure.trs.TRSFormatException
 	private void readBackGeneric(IList<TraceParameterMap> testParameters, string name)
 	{
-		using (TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + name))
+		using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
 		{
 			TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
 			for (int k = 0; k < 25; k++)
@@ -407,7 +407,7 @@ public class TestTraceSet
 //ORIGINAL LINE: private void readBackTyped(List<com.riscure.trs.parameter.trace.TraceParameterMap> testParameters, String name) throws IOException, com.riscure.trs.TRSFormatException
 	private void readBackTyped(IList<TraceParameterMap> testParameters, string name)
 	{
-		using (TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + name))
+		using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
 		{
 			TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
 			for (int k = 0; k < 25; k++)

@@ -24,7 +24,7 @@ namespace com.riscure.trs.parameter.trace
 			TraceParameterMap mutable = new TraceParameterMap();
 			mutable.Add("FOO", 1);
 
-			immutable = UnmodifiableTraceParameterMap.of(mutable);
+			immutable = UnmodifiableTraceParameterMap.Of(mutable);
 		}
 
 		/// <summary>
@@ -38,7 +38,7 @@ namespace com.riscure.trs.parameter.trace
 			ByteArrayParameter bap = new ByteArrayParameter(ba);
 			TraceParameterMap tpm = new TraceParameterMap();
 			tpm.put("BA", bap);
-			TraceParameterMap copy = UnmodifiableTraceParameterMap.of(tpm);
+			TraceParameterMap copy = UnmodifiableTraceParameterMap.Of(tpm);
 			ba[1] = 6;
 			sbyte[] baCopy = (sbyte[]) copy.get("BA").getValue();
 			Assertions.assertFalse(baCopy.SequenceEqual(ba), "Arrays should not be equal, but they are");
