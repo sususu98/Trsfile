@@ -180,14 +180,14 @@ namespace com.riscure.trs
                     int size = traceParameterDefinitionMap.TotalByteSize();
                     byte[] data = new byte[size];
                     buffer.Read(data, 0, size); 
-                    traceParameterMap = TraceParameterMap.deserialize(data, traceParameterDefinitionMap);
+                    traceParameterMap = TraceParameterMap.Deserialize(data, traceParameterDefinitionMap);
                 }
                 else
                 {
                     //legacy mode
                     byte[] data = readData();
                     traceParameterMap = new TraceParameterMap();
-                    traceParameterMap.put("LEGACY_DATA", data);
+                    traceParameterMap.Add("LEGACY_DATA", data);
                 }
 
                 float[] samples = readSamples();
@@ -257,7 +257,7 @@ namespace com.riscure.trs
                     string stringValue = ((StringParameter)trace.Parameters.Get(key)).Value;
                     if (stringLength != stringValue.GetBytes(System.Text.Encoding.UTF8).Length)
                     {
-                        trace.Parameters.put(key, fitUtf8StringToByteLength(stringValue, stringLength));
+                        trace.Parameters.Add(key, fitUtf8StringToByteLength(stringValue, stringLength));
                     }
                 }
             }

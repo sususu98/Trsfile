@@ -290,7 +290,7 @@ public class TestTraceSet
 		using (TraceSet traceWithParameters = TraceSet.create(tempDir + Path.PathSeparator + name, metaData))
 		{
 			TraceParameterMap parameters = new TraceParameterMap();
-			parameters.put(parameterName, 1);
+			parameters.Add(parameterName, 1);
 			traceWithParameters.add(Trace.create("", FLOAT_SAMPLES, parameters));
 		}
 		//READ BACK AND CHECK RESULT
@@ -328,9 +328,9 @@ public class TestTraceSet
 			for (int k = 0; k < 25; k++)
 			{
 				TraceParameterMap parameters = new TraceParameterMap();
-				parameters.put("BYTEARRAY", new byte[]{(byte) k, (byte) k, (byte) k});
-				parameters.put(TraceParameter.SAMPLES, new float[]{(float) k, (float) k, (float) k});
-				parameters.put(TraceParameter.TITLE, strings[k % strings.Count]);
+				parameters.Add("BYTEARRAY", new byte[]{(byte) k, (byte) k, (byte) k});
+				parameters.Add(TraceParameter.SAMPLES, new float[]{(float) k, (float) k, (float) k});
+				parameters.Add(TraceParameter.TITLE, strings[k % strings.Count]);
 				traceWithParameters.add(Trace.create(strings[k % strings.Count], FLOAT_SAMPLES, parameters));
 				testParameters.Add(parameters);
 			}
@@ -358,21 +358,21 @@ public class TestTraceSet
 			for (int k = 0; k < 25; k++)
 			{
 				TraceParameterMap parameters = new TraceParameterMap();
-				parameters.put("BYTE", (byte) k);
-				parameters.put("SHORT", (short) k);
-				parameters.put("INT", k);
-				parameters.put("FLOAT", (float) k);
-				parameters.put("LONG", (long) k);
-				parameters.put("DOUBLE", (double) k);
-				parameters.put("STRING", string.Format("{0,3:D}", k));
-				parameters.put("BOOLEAN", true);
-				parameters.put("BYTEARRAY", new byte[]{(byte) k, (byte) k, (byte) k});
-				parameters.put("SHORTARRAY", new short[]{(short) k, (short) k, (short) k});
-				parameters.put("INTARRAY", new int[]{k, k, k});
-				parameters.put("FLOATARRAY", new float[]{(float) k, (float) k, (float) k});
-				parameters.put("LONGARRAY", new long[]{k, k, k});
-				parameters.put("DOUBLEARRAY", new double[]{k, k, k});
-				parameters.put("BOOLEANARRAY", new bool[]{true, false, true, false, true, true});
+				parameters.Add("BYTE", (byte) k);
+				parameters.Add("SHORT", (short) k);
+				parameters.Add("INT", k);
+				parameters.Add("FLOAT", (float) k);
+				parameters.Add("LONG", (long) k);
+				parameters.Add("DOUBLE", (double) k);
+				parameters.Add("STRING", string.Format("{0,3:D}", k));
+				parameters.Add("BOOLEAN", true);
+				parameters.Add("BYTEARRAY", new byte[]{(byte) k, (byte) k, (byte) k});
+				parameters.Add("SHORTARRAY", new short[]{(short) k, (short) k, (short) k});
+				parameters.Add("INTARRAY", new int[]{k, k, k});
+				parameters.Add("FLOATARRAY", new float[]{(float) k, (float) k, (float) k});
+				parameters.Add("LONGARRAY", new long[]{k, k, k});
+				parameters.Add("DOUBLEARRAY", new double[]{k, k, k});
+				parameters.Add("BOOLEANARRAY", new bool[]{true, false, true, false, true, true});
 				traceWithParameters.add(Trace.create("", FLOAT_SAMPLES, parameters));
 				testParameters.Add(parameters);
 			}
@@ -572,7 +572,7 @@ public class TestTraceSet
 		using (TraceSet traceWithParameters = TraceSet.create(tempDir + Path.PathSeparator + name, metaData))
 		{
 			TraceParameterMap parameters = new TraceParameterMap();
-			parameters.put("BYTE", (byte) 1);
+			parameters.Add("BYTE", (byte) 1);
 			traceWithParameters.add(Trace.create("", FLOAT_SAMPLES, parameters));
 		}
 		//READ BACK AND CHECK RESULT
@@ -648,7 +648,7 @@ public class TestTraceSet
 			for (int k = 0; k < NUMBER_OF_TRACES; k++)
 			{
 				Trace t = readable.get(k);
-				assertThrows(typeof(System.NotSupportedException), () => t.Parameters.put("SHOULD_FAIL", 0));
+				assertThrows(typeof(System.NotSupportedException), () => t.Parameters.Add("SHOULD_FAIL", 0));
 			}
 		}
 	}
@@ -661,7 +661,7 @@ public class TestTraceSet
 //ORIGINAL LINE: @Test public void testEmptyArrayParameter()
 	public virtual void testEmptyArrayParameter()
 	{
-		assertThrows(typeof(System.ArgumentException), () => (new TraceParameterMap()).put("EMPTY", new byte[0]));
+		assertThrows(typeof(System.ArgumentException), () => (new TraceParameterMap()).Add("EMPTY", new byte[0]));
 	}
 
 	/// <summary>
@@ -678,7 +678,7 @@ public class TestTraceSet
 		tpm.put(typedKey, (byte)1);
 		tspm.put(typedKey, (byte)2);
 
-		assertTrue(tpm.get(typedKey).isPresent());
+		assertTrue(tpm.Get(typedKey).isPresent());
 		assertTrue(tspm.get(typedKey).isPresent());
 	}
 
@@ -716,10 +716,10 @@ public class TestTraceSet
 		TraceSetParameterMap tspm = new TraceSetParameterMap();
 		string rawKey = "BYTE";
 		ByteTypeKey typedKey = new ByteTypeKey(rawKey);
-		tpm.put(rawKey, new byte[]{1, 2}); //actually a byte array
+		tpm.Add(rawKey, new byte[]{1, 2}); //actually a byte array
 		tspm.put(rawKey, 2); //actually an int
 
-		assertThrows(typeof(System.InvalidCastException), () => tpm.get(typedKey));
+		assertThrows(typeof(System.InvalidCastException), () => tpm.Get(typedKey));
 		assertThrows(typeof(System.InvalidCastException), () => tspm.get(typedKey));
 	}
 
@@ -745,11 +745,11 @@ public class TestTraceSet
 	public virtual void testEmptyString()
 	{
 		TraceParameterMap tpm = new TraceParameterMap();
-		tpm.put("EMPTY_STRING", "");
+		tpm.Add("EMPTY_STRING", "");
 		TraceParameterDefinitionMap tpdm = TraceParameterDefinitionMap.CreateFrom(tpm);
 		byte[] serialized = tpm.ToByteArray();
 
-		TraceParameterMap deserialized = TraceParameterMap.deserialize(serialized, tpdm);
+		TraceParameterMap deserialized = TraceParameterMap.Deserialize(serialized, tpdm);
 		string empty_string = deserialized.get("EMPTY_STRING").ToString();
 		Assert.Equals("", empty_string);
 	}

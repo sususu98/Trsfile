@@ -22,7 +22,7 @@ namespace com.riscure.trs.parameter.trace
 		public virtual void setup()
 		{
 			TraceParameterMap mutable = new TraceParameterMap();
-			mutable.put("FOO", 1);
+			mutable.Add("FOO", 1);
 
 			immutable = UnmodifiableTraceParameterMap.of(mutable);
 		}
@@ -49,7 +49,7 @@ namespace com.riscure.trs.parameter.trace
 //ORIGINAL LINE: @Test public void put()
 		public virtual void put()
 		{
-			Exception e = assertThrows(typeof(System.NotSupportedException), () => immutable.put("BLA", 2));
+			Exception e = assertThrows(typeof(System.NotSupportedException), () => immutable.Add("BLA", 2));
 
 			string expectedMessage = "Unable to set parameter `BLA` to `[2]`: This trace set is in read mode and cannot be modified.";
 			string actualMessage = e.Message;
@@ -74,8 +74,8 @@ namespace com.riscure.trs.parameter.trace
 		public virtual void putAll()
 		{
 			TraceParameterMap source = new TraceParameterMap();
-			source.put("BEEP", 5);
-			source.put("BOOP", 7);
+			source.Add("BEEP", 5);
+			source.Add("BOOP", 7);
 
 			Exception e = assertThrows(typeof(System.NotSupportedException), () => immutable.putAll(source));
 
