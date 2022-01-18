@@ -701,7 +701,7 @@ public class TestTraceSet
 		ByteArrayTypeKey arrayTypeKey = new ByteArrayTypeKey(rawKey);
 		assertTrue(tpm.get(arrayTypeKey).isPresent());
 		assertTrue(tspm.Get(arrayTypeKey).isPresent());
-		AssertArrayEquals(new byte[]{rawValue}, tpm.getByteArray(rawKey));
+		AssertArrayEquals(new byte[]{rawValue}, tpm.GetByteArray(rawKey));
 		AssertArrayEquals(new byte[]{rawValue}, tspm.getByteArray(rawKey));
 	}
 
