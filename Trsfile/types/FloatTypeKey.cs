@@ -12,7 +12,7 @@
         public override TraceParameter CreateParameter(float value)
         {
             CheckLength(value);
-            return new FloatArrayParameter(new float[] { value });
+            return new FloatArrayParameter(value);
         }
         protected internal override void CheckLength(float value)
         {

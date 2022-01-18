@@ -13,7 +13,7 @@ namespace com.riscure.trs.types
         public override TraceParameter CreateParameter(byte value)
         {
             CheckLength(value);
-            return new ByteArrayParameter(new byte[] { value });
+            return new ByteArrayParameter(value);
         }
         protected internal override void CheckLength(byte value)
         {

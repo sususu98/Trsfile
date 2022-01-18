@@ -12,7 +12,7 @@
         public override TraceParameter CreateParameter(short value)
         {
             CheckLength(value);
-            return new ShortArrayParameter(new short[] { value });
+            return new ShortArrayParameter(value);
         }
         protected internal override void CheckLength(short value)
         {

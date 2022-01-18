@@ -12,7 +12,7 @@
         public override TraceParameter CreateParameter(double value)
         {
             CheckLength(value);
-            return new DoubleArrayParameter(new double[] { value });
+            return new DoubleArrayParameter(value);
         }
         protected internal override void CheckLength(double value)
         {
