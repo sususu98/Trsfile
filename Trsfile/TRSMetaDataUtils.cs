@@ -211,7 +211,7 @@ namespace com.riscure.trs
             }
             else if (trsTag.Type == typeof(int))
             {
-                trsMD.put(trsTag, readInt(buffer, length));
+                trsMD.put(trsTag, ReadInt(buffer, length));
 
             }
             else if (trsTag.Type == typeof(TraceSetParameterMap))

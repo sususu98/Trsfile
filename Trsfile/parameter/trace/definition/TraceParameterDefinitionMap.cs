@@ -76,8 +76,8 @@ namespace com.riscure.trs.parameter.trace.definition
 			{
 				try
 				{
-                    using MemoryStream bais = new MemoryStream(bytes);
-                    LittleEndianInputStream dis = new LittleEndianInputStream(bais);
+                    MemoryStream bais = new MemoryStream(bytes);
+					using LittleEndianInputStream dis = new LittleEndianInputStream(bais);
                     //Read NE
                     short numberOfEntries = dis.ReadShort();
                     for (int k = 0; k < numberOfEntries; k++)

@@ -2,18 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using com.riscure.trs.enums;
+using com.riscure.trs.parameter;
+using com.riscure.trs.parameter.primitive;
+using com.riscure.trs.parameter.trace;
+using com.riscure.trs.parameter.trace.definition;
 
 namespace com.riscure.trs
 {
     using Encoding = enums.Encoding;
-    using ParameterType = enums.ParameterType;
-    using TraceParameter = parameter.TraceParameter;
-    using StringParameter = parameter.primitive.StringParameter;
-    using TraceParameterMap = parameter.trace.TraceParameterMap;
-    using com.riscure.trs.parameter.trace.definition;
-    using TraceParameterDefinitionMap = parameter.trace.definition.TraceParameterDefinitionMap;
-
-
     using static enums.TRSTag;
     using System.IO.MemoryMappedFiles;
 
@@ -29,8 +26,10 @@ namespace com.riscure.trs
         private const string UNKNOWN_SAMPLE_CODING = "Error reading TRS file: unknown sample coding '%d'";
         private static readonly long MAX_BUFFER_SIZE = int.MaxValue;
         private const string PARAMETER_NOT_DEFINED = "Parameter %s is saved in the trace, but was not found in the header definition";
-        //UTF8_DECODER 注释了先
-        //private static readonly CharsetDecoder UTF8_DECODER = StandardCharsets.UTF_8.newDecoder();
+        private static readonly System.Text.Encoding UTF8_IGNORE_DECODER =
+            System.Text.Encoding.GetEncoding(System.Text.Encoding.UTF8.CodePage,
+                System.Text.Encoding.UTF8.EncoderFallback,
+                new DecoderReplacementFallback(""));
 
         //Reading variables
         private int metaDataSize;
@@ -49,8 +48,6 @@ namespace com.riscure.trs
 
         private bool firstTrace = true;
 
-        //Shared variables
-        private readonly TRSMetaData metaData;
         //JAVA TO C# CONVERTER NOTE: Fields cannot have the same name as methods of the current type:
         private bool open_Conflict;
         private readonly bool writing; //whether the trace is opened in write mode
@@ -72,8 +69,8 @@ namespace com.riscure.trs
             this.bufferStart = 0L;
             this.bufferSize = Math.Min(fileSize, MAX_BUFFER_SIZE);
 
-            mapBuffer();
-            this.metaData = TRSMetaDataUtils.readTRSMetaData(buffer);
+            MapBuffer();
+            this.MetaData = TRSMetaDataUtils.readTRSMetaData(buffer);
             this.metaDataSize = (int)buffer.Position;
         }
 
@@ -83,7 +80,7 @@ namespace com.riscure.trs
         {
             this.open_Conflict = true;
             this.writing = true;
-            this.metaData = metaData;
+            this.MetaData = metaData;
             this.filePath = Path.GetFullPath(outputFileName);
             this.writeStream = new FileStream(outputFileName, FileMode.Create, FileAccess.Write);
         }
@@ -94,7 +91,7 @@ namespace com.riscure.trs
 
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: private void mapBuffer() throws java.io.IOException
-        private void mapBuffer()
+        private void MapBuffer()
         {
             MemoryMappedFile mmf = MemoryMappedFile.CreateFromFile(filePath, FileMode.Open);
             this.buffer = mmf.CreateViewStream(bufferStart, bufferSize, MemoryMappedFileAccess.Read);
@@ -116,15 +113,15 @@ namespace com.riscure.trs
             {
                 this.bufferStart = start;
                 this.bufferSize = Math.Min(this.fileSize - start, MAX_BUFFER_SIZE);
-                this.mapBuffer();
+                this.MapBuffer();
             }
         }
 
         private long calculateTraceSize()
         {
-            int sampleSize = Encoding.FromValue(metaData.GetInt(SAMPLE_CODING)).Size;
-            long sampleSpace = metaData.GetInt(NUMBER_OF_SAMPLES) * (long)sampleSize;
-            return sampleSpace + metaData.GetInt(DATA_LENGTH) + metaData.GetInt(TITLE_SPACE);
+            int sampleSize = Encoding.FromValue(MetaData.GetInt(SAMPLE_CODING)).Size;
+            long sampleSpace = MetaData.GetInt(NUMBER_OF_SAMPLES) * (long)sampleSize;
+            return sampleSpace + MetaData.GetInt(DATA_LENGTH) + MetaData.GetInt(TITLE_SPACE);
         }
 
         /// <summary>
@@ -149,7 +146,7 @@ namespace com.riscure.trs
             moveBufferIfNecessary(index);
 
             long traceSize = calculateTraceSize();
-            long nrOfTraces = this.metaData.GetInt(NUMBER_OF_TRACES);
+            long nrOfTraces = this.MetaData.GetInt(NUMBER_OF_TRACES);
             if (index >= nrOfTraces)
             {
                 string msg = String.Format(TRACE_INDEX_OUT_OF_BOUNDS, index, nrOfTraces);
@@ -168,15 +165,15 @@ namespace com.riscure.trs
             string traceTitle = this.readTraceTitle();
             if (traceTitle.Trim().Length == 0)
             {
-                traceTitle = string.Format("{0} {1:D}", metaData.GetString(GLOBAL_TITLE), index);
+                traceTitle = string.Format("{0} {1:D}", MetaData.GetString(GLOBAL_TITLE), index);
             }
 
             try
             {
                 TraceParameterMap traceParameterMap;
-                if (metaData.GetInt(TRS_VERSION) > 1)
+                if (MetaData.GetInt(TRS_VERSION) > 1)
                 {
-                    TraceParameterDefinitionMap traceParameterDefinitionMap = metaData.TraceParameterDefinitions;
+                    TraceParameterDefinitionMap traceParameterDefinitionMap = MetaData.TraceParameterDefinitions;
                     int size = traceParameterDefinitionMap.TotalByteSize();
                     byte[] data = new byte[size];
                     buffer.Read(data, 0, size); 
@@ -220,22 +217,22 @@ namespace com.riscure.trs
             {
                 int dataLength = trace.Data == null ? 0 : trace.Data.Length;
                 int titleLength = string.ReferenceEquals(trace.Title, null) ? 0 : trace.Title.GetBytes(System.Text.Encoding.UTF8).Length;
-                metaData.Put(NUMBER_OF_SAMPLES, trace.NumberOfSamples, false);
-                metaData.Put(DATA_LENGTH, dataLength, false);
-                metaData.Put(TITLE_SPACE, titleLength, false);
-                metaData.Put(SAMPLE_CODING, trace.PreferredCoding, false);
-                metaData.put(TRACE_PARAMETER_DEFINITIONS, TraceParameterDefinitionMap.CreateFrom(trace.Parameters));
-                TRSMetaDataUtils.writeTRSMetaData(writeStream, metaData);
+                MetaData.Put(NUMBER_OF_SAMPLES, trace.NumberOfSamples, false);
+                MetaData.Put(DATA_LENGTH, dataLength, false);
+                MetaData.Put(TITLE_SPACE, titleLength, false);
+                MetaData.Put(SAMPLE_CODING, trace.PreferredCoding, false);
+                MetaData.put(TRACE_PARAMETER_DEFINITIONS, TraceParameterDefinitionMap.CreateFrom(trace.Parameters));
+                TRSMetaDataUtils.writeTRSMetaData(writeStream, MetaData);
                 firstTrace = false;
             }
-            truncateStrings(trace, metaData);
+            truncateStrings(trace, MetaData);
             checkValid(trace);
 
             trace.TraceSet = this;
             writeTrace(trace);
 
-            int numberOfTraces = metaData.GetInt(NUMBER_OF_TRACES);
-            metaData.put(NUMBER_OF_TRACES, numberOfTraces + 1);
+            int numberOfTraces = MetaData.GetInt(NUMBER_OF_TRACES);
+            MetaData.put(NUMBER_OF_TRACES, numberOfTraces + 1);
         }
 
         /// <summary>
@@ -247,14 +244,16 @@ namespace com.riscure.trs
             int titleSpace = metaData.GetInt(TITLE_SPACE);
             trace.Title = fitUtf8StringToByteLength(trace.Title, titleSpace);
             TraceParameterDefinitionMap traceParameterDefinitionMap = metaData.TraceParameterDefinitions;
-            foreach (KeyValuePair<string, TraceParameterDefinition<TraceParameter>> definition in traceParameterDefinitionMap.entrySet())
+            foreach (var definition in traceParameterDefinitionMap)
             {
-                TraceParameterDefinition<TraceParameter> value = definition.Value;
+                var value = definition.Value;
                 string key = definition.Key;
                 if (value.Type == ParameterType.STRING)
                 {
                     short stringLength = value.Length;
-                    string stringValue = ((StringParameter)trace.Parameters.Get(key)).Value;
+                    if (trace.Parameters[key] is not StringParameter sp)
+                        throw new ArgumentException(nameof(trace.Parameters));
+                    string stringValue = sp.ScalarValue;
                     if (stringLength != stringValue.GetBytes(System.Text.Encoding.UTF8).Length)
                     {
                         trace.Parameters.Add(key, fitUtf8StringToByteLength(stringValue, stringLength));
@@ -269,37 +268,34 @@ namespace com.riscure.trs
         /// character. If the string is too long, it is truncated. If it's too short, it's padded with NUL characters. </summary>
         /// <param name="s"> the string to fit </param>
         /// <param name="maxBytes"> the number of bytes required </param>
-        private string fitUtf8StringToByteLength(string s, int maxBytes)
+        private string? fitUtf8StringToByteLength(string s, int maxBytes)
         {
-            if (string.ReferenceEquals(s, null))
+            if (s is null)
             {
                 return null;
             }
             byte[] sba = s.GetBytes(System.Text.Encoding.UTF8);
             if (sba.Length <= maxBytes)
             {
-                return new string(Arrays.CopyOf(sba, maxBytes));
+                return System.Text.Encoding.UTF8.GetString(sba[..maxBytes]);
             }
             // Ensure truncation by having byte buffer = maxBytes
-            global::MemoryMappedViewStream bb = global::MemoryMappedViewStream.wrap(sba, 0, maxBytes);
-            CharBuffer cb = CharBuffer.allocate(maxBytes);
-            // Ignore an incomplete character
-            UTF8_DECODER.reset();
-            UTF8_DECODER.onMalformedInput(CodingErrorAction.IGNORE);
-            UTF8_DECODER.decode(bb, cb, true);
-            UTF8_DECODER.flush(cb);
-            return new string(cb.array(), 0, cb.position());
+            var bb = sba.AsSpan(0, maxBytes);
+            var u8 = System.Text.Encoding.GetEncoding(System.Text.Encoding.UTF8.CodePage,
+                System.Text.Encoding.UTF8.EncoderFallback,
+                new DecoderReplacementFallback(""));
+            return UTF8_IGNORE_DECODER.GetString(bb);
         }
 
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: private void writeTrace(Trace trace) throws TRSFormatException, java.io.IOException
         private void writeTrace(Trace trace)
         {
-            string title = string.ReferenceEquals(trace.Title, null) ? "" : trace.Title;
-            writeStream.WriteBytes(title.GetBytes(System.Text.Encoding.UTF8));
-            byte[] data = trace.Data == null ? new byte[0] : trace.Data;
+            string title = trace.Title is null ? "" : trace.Title;
+            writeStream.Write(title.GetBytes(System.Text.Encoding.UTF8));
+            byte[] data = trace.Data is null ? Array.Empty<byte>() : trace.Data;
             writeStream.Write(data, 0, data.Length);
-            Encoding encoding = Encoding.FromValue(metaData.GetInt(SAMPLE_CODING));
+            Encoding encoding = Encoding.FromValue(MetaData.GetInt(SAMPLE_CODING));
             writeStream.Write(toByteArray(trace.Sample, encoding), 0, toByteArray(trace.Sample, encoding).Length);
         }
 
@@ -351,7 +347,7 @@ namespace com.riscure.trs
                     result = new byte[samples.Length * 4];
                     for (int k = 0; k < samples.Length; k++)
                     {
-                        int value = Float.floatToIntBits(samples[k]);
+                        int value = BitConverter.SingleToInt32Bits(samples[k]);
                         result[4 * k] = (byte)value;
                         result[4 * k + 1] = (byte)(value >> 8);
                         result[4 * k + 2] = (byte)(value >> 16);
@@ -367,60 +363,60 @@ namespace com.riscure.trs
         private bool closed = false;
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: @Override public void close() throws IOException, TRSFormatException
-        public void close()
+        private void Close()
         {
             open_Conflict = false;
             if (writing)
             {
-                closeWriter();
+                CloseWriter();
             }
             else
             {
-                closeReader();
+                CloseReader();
             }
             closed = true;
         }
 
         private void checkValid(Trace trace)
         {
-            int numberOfSamples = metaData.GetInt(NUMBER_OF_SAMPLES);
-            if (metaData.GetInt(NUMBER_OF_SAMPLES) != trace.NumberOfSamples)
+            int numberOfSamples = MetaData.GetInt(NUMBER_OF_SAMPLES);
+            if (MetaData.GetInt(NUMBER_OF_SAMPLES) != trace.NumberOfSamples)
             {
-                throw new System.ArgumentException(String.format(TRACE_LENGTH_DIFFERS, trace.NumberOfSamples, numberOfSamples));
+                throw new System.ArgumentException(string.Format(TRACE_LENGTH_DIFFERS, trace.NumberOfSamples, numberOfSamples));
             }
 
-            int dataLength = metaData.GetInt(DATA_LENGTH);
+            int dataLength = MetaData.GetInt(DATA_LENGTH);
             int traceDataLength = trace.Data == null ? 0 : trace.Data.Length;
-            if (metaData.GetInt(DATA_LENGTH) != traceDataLength)
+            if (MetaData.GetInt(DATA_LENGTH) != traceDataLength)
             {
-                throw new System.ArgumentException(String.format(TRACE_DATA_LENGTH_DIFFERS, traceDataLength, dataLength));
+                throw new System.ArgumentException(string.Format(TRACE_DATA_LENGTH_DIFFERS, traceDataLength, dataLength));
             }
 
-            foreach (KeyValuePair<string, TraceParameter> entry in trace.Parameters.entrySet())
+            foreach (var entry in trace.Parameters)
             {
-                if (!metaData.TraceParameterDefinitions.containsKey(entry.Key))
+                if (!MetaData.TraceParameterDefinitions.ContainsKey(entry.Key))
                 {
-                    throw new System.ArgumentException(String.format(PARAMETER_NOT_DEFINED, entry.Key));
+                    throw new System.ArgumentException(string.Format(PARAMETER_NOT_DEFINED, entry.Key));
                 }
             }
         }
 
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: private void closeReader() throws java.io.IOException
-        private void closeReader()
+        private void CloseReader()
         {
             readStream.Close();
         }
 
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: private void closeWriter() throws IOException, TRSFormatException
-        private void closeWriter()
+        private void CloseWriter()
         {
             try
             {
                 //reset writer to start of file and overwrite header
                 writeStream.Position = 0;
-                TRSMetaDataUtils.writeTRSMetaData(writeStream, metaData);
+                TRSMetaDataUtils.writeTRSMetaData(writeStream, MetaData);
                 writeStream.Flush();
             }
             finally
@@ -432,26 +428,20 @@ namespace com.riscure.trs
         /// <summary>
         /// Get the metadata associated with this trace set </summary>
         /// <returns> the metadata associated with this trace set </returns>
-        public virtual TRSMetaData MetaData
-        {
-            get
-            {
-                return metaData;
-            }
-        }
+        public virtual TRSMetaData MetaData { get; }
 
         protected internal virtual string readTraceTitle()
         {
-            byte[] titleArray = new byte[metaData.GetInt(TITLE_SPACE)];
-            buffer.get(titleArray);
+            byte[] titleArray = new byte[MetaData.GetInt(TITLE_SPACE)];
+            buffer.Read(titleArray);
             return StringHelper.NewString(titleArray);
         }
 
         protected internal virtual byte[] readData()
         {
-            int inputSize = metaData.GetInt(DATA_LENGTH);
+            int inputSize = MetaData.GetInt(DATA_LENGTH);
             byte[] comDataArray = new byte[inputSize];
-            buffer.get(comDataArray);
+            buffer.Read(comDataArray);
             return comDataArray;
         }
 
@@ -459,41 +449,45 @@ namespace com.riscure.trs
         //ORIGINAL LINE: protected float[] readSamples() throws TRSFormatException
         protected internal virtual float[] readSamples()
         {
-            buffer.order(ByteOrder.LITTLE_ENDIAN);
-            int numberOfSamples = metaData.GetInt(NUMBER_OF_SAMPLES);
+            //buffer.order(ByteOrder.LITTLE_ENDIAN);
+            int numberOfSamples = MetaData.GetInt(NUMBER_OF_SAMPLES);
             float[] samples;
-            switch (Encoding.FromValue(metaData.GetInt(SAMPLE_CODING)))
+            byte[] temp;
+            switch (Encoding.FromValue(MetaData.GetInt(SAMPLE_CODING)))
             {
-                case BYTE:
+                case Encoding e when e == Encoding.BYTE:
                     byte[] byteData = new byte[numberOfSamples];
-                    buffer.get(byteData);
-                    samples = toFloatArray(byteData);
+                    buffer.Read(byteData);
+                    samples = ToFloatArray(byteData);
                     break;
-                case SHORT:
-                    ShortBuffer shortView = buffer.asShortBuffer();
+                case Encoding e when e == Encoding.SHORT:
                     short[] shortData = new short[numberOfSamples];
-                    shortView.get(shortData);
-                    samples = toFloatArray(shortData);
+                    temp = new byte[numberOfSamples * sizeof(short)];
+                    buffer.Read(temp);
+                    Buffer.BlockCopy(temp, 0, shortData, 0, temp.Length);
+                    samples = ToFloatArray(shortData);
                     break;
-                case FLOAT:
-                    FloatBuffer floatView = buffer.asFloatBuffer();
+                case Encoding e when e == Encoding.FLOAT:
                     samples = new float[numberOfSamples];
-                    floatView.get(samples);
+                    temp = new byte[numberOfSamples * sizeof(float)];
+                    buffer.Read(temp);
+                    Buffer.BlockCopy(temp, 0, samples, 0, temp.Length);
                     break;
-                case INT:
-                    IntBuffer intView = buffer.asIntBuffer();
+                case Encoding e when e == Encoding.INT:
                     int[] intData = new int[numberOfSamples];
-                    intView.get(intData);
-                    samples = toFloatArray(intData);
+                    temp = new byte[numberOfSamples * sizeof(int)];
+                    buffer.Read(temp);
+                    Buffer.BlockCopy(temp, 0, intData, 0, temp.Length);
+                    samples = ToFloatArray(intData);
                     break;
                 default:
-                    throw new TRSFormatException(String.format(UNKNOWN_SAMPLE_CODING, metaData.GetInt(SAMPLE_CODING)));
+                    throw new TRSFormatException(string.Format(UNKNOWN_SAMPLE_CODING, MetaData.GetInt(SAMPLE_CODING)));
             }
 
             return samples;
         }
 
-        private float[] toFloatArray(byte[] numbers)
+        private float[] ToFloatArray(byte[] numbers)
         {
             float[] result = new float[numbers.Length];
             for (int k = 0; k < numbers.Length; k++)
@@ -503,7 +497,7 @@ namespace com.riscure.trs
             return result;
         }
 
-        private float[] toFloatArray(int[] numbers)
+        private float[] ToFloatArray(int[] numbers)
         {
             float[] result = new float[numbers.Length];
             for (int k = 0; k < numbers.Length; k++)
@@ -513,7 +507,7 @@ namespace com.riscure.trs
             return result;
         }
 
-        private float[] toFloatArray(short[] numbers)
+        private float[] ToFloatArray(short[] numbers)
         {
             float[] result = new float[numbers.Length];
             for (int k = 0; k < numbers.Length; k++)
@@ -533,7 +527,7 @@ namespace com.riscure.trs
         /// <exception cref="TRSFormatException"> when any incorrect formatting of the TRS file is encountered </exception>
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: public static TraceSet open(String file) throws IOException, TRSFormatException
-        public static TraceSet open(string file)
+        public static TraceSet Open(string file)
         {
             return new TraceSet(file);
         }
@@ -546,10 +540,10 @@ namespace com.riscure.trs
         /// <exception cref="TRSFormatException"> when any TRS formatting issues arise from saving the provided traces </exception>
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: public static void save(String file, java.util.List<Trace> traces) throws IOException, TRSFormatException
-        public static void save(string file, IList<Trace> traces)
+        public static void Save(string file, IList<Trace> traces)
         {
             TRSMetaData trsMetaData = TRSMetaData.create();
-            save(file, traces, trsMetaData);
+            Save(file, traces, trsMetaData);
         }
 
         /// <summary>
@@ -561,14 +555,14 @@ namespace com.riscure.trs
         /// <exception cref="TRSFormatException"> when any TRS formatting issues arise from saving the provided traces </exception>
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: public static void save(String file, java.util.List<Trace> traces, TRSMetaData metaData) throws IOException, TRSFormatException
-        public static void save(string file, IList<Trace> traces, TRSMetaData metaData)
+        public static void Save(string file, IList<Trace> traces, TRSMetaData metaData)
         {
-            TraceSet traceSet = create(file, metaData);
+            TraceSet traceSet = Create(file, metaData);
             foreach (Trace trace in traces)
             {
                 traceSet.add(trace);
             }
-            traceSet.close();
+            traceSet.Close();
         }
 
         /// <summary>
@@ -585,10 +579,10 @@ namespace com.riscure.trs
         /// <exception cref="IOException"> if the file creation failed </exception>
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: public static TraceSet create(String file) throws java.io.IOException
-        public static TraceSet create(string file)
+        public static TraceSet Create(string file)
         {
             TRSMetaData trsMetaData = TRSMetaData.create();
-            return create(file, trsMetaData);
+            return Create(file, trsMetaData);
         }
 
         /// <summary>
@@ -607,7 +601,7 @@ namespace com.riscure.trs
         /// <exception cref="IOException"> if the file creation failed </exception>
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: public static TraceSet create(String file, TRSMetaData metaData) throws java.io.IOException
-        public static TraceSet create(string file, TRSMetaData metaData)
+        public static TraceSet Create(string file, TRSMetaData metaData)
         {
             metaData.Put(TRS_VERSION, 2, false);
             return new TraceSet(file, metaData);
@@ -625,7 +619,8 @@ namespace com.riscure.trs
             {
                 if (!closed)
                 {
-                    close();
+                    Close();
+                    closed = true;
                 }
             }
         }

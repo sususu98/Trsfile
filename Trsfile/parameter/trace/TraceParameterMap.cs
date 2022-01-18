@@ -84,7 +84,7 @@ namespace com.riscure.trs.parameter.trace
 			{
 				throw new System.ArgumentException(EMPTY_DATA_BUT_NONEMPTY_DEFINITIONS);
 			}
-			return UnmodifiableTraceParameterMap.of(result);
+			return UnmodifiableTraceParameterMap.Of(result);
 		}
 
 		/// <summary>
