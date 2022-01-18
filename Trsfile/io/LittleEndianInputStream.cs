@@ -4,7 +4,7 @@
     public class LittleEndianInputStream : IDisposable
     {
 
-        private readonly Stream stream;
+        private Stream stream;
 
         /// <summary>
         /// 
@@ -27,6 +27,7 @@
                 if (stream is not null)
                 {
                     stream.Close();
+                    stream = null;
                 }
             }
         }

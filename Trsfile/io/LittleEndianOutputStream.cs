@@ -11,7 +11,7 @@ namespace com.riscure.trs.io
 		/// </summary>
 		protected internal int written;
 
-		private readonly Stream stream;
+		private Stream stream;
 		private readonly object obj = new();
 
 		/// <summary>
@@ -40,6 +40,7 @@ namespace com.riscure.trs.io
 				if (stream is not null)
 				{
 					stream.Close();
+					stream = null;
 				}
 			}
 		}
