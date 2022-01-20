@@ -38,7 +38,7 @@ namespace com.riscure.trs
                 {
                     continue; //TRACE BLOCK should be the last write
                 }
-                if (!tag.Required && metaData.hasDefaultValue(tag))
+                if (!tag.Required && metaData.HasDefaultValue(tag))
                 {
                     continue; //ignore if default and not required
                 }
@@ -131,7 +131,7 @@ namespace com.riscure.trs
         //ORIGINAL LINE: public static TRSMetaData readTRSMetaData(ByteBuffer buffer) throws TRSFormatException
         public static TRSMetaData readTRSMetaData(MemoryMappedViewStream buffer)
         {
-            TRSMetaData trs = TRSMetaData.create();
+            TRSMetaData trs = TRSMetaData.Create();
             byte tag;
 
             //We keep on reading meta data until we hit tag TB=0x5f
@@ -199,28 +199,28 @@ namespace com.riscure.trs
 
             if (trsTag.Type == typeof(string))
             {
-                trsMD.put(trsTag, ReadString(buffer, length));
+                trsMD.Add(trsTag, ReadString(buffer, length));
             }
             else if (trsTag.Type == typeof(float))
             {
-                trsMD.put(trsTag, ReadFloat(buffer));
+                trsMD.Add(trsTag, ReadFloat(buffer));
             }
             else if (trsTag.Type == typeof(bool))
             {
-                trsMD.put(trsTag, ReadBoolean(buffer));
+                trsMD.Add(trsTag, ReadBoolean(buffer));
             }
             else if (trsTag.Type == typeof(int))
             {
-                trsMD.put(trsTag, ReadInt(buffer, length));
+                trsMD.Add(trsTag, ReadInt(buffer, length));
 
             }
             else if (trsTag.Type == typeof(TraceSetParameterMap))
             {
-                trsMD.put(trsTag, ReadTraceSetParameters(buffer, length));
+                trsMD.Add(trsTag, ReadTraceSetParameters(buffer, length));
             }
             else if (trsTag.Type == typeof(TraceParameterDefinitionMap))
             {
-                trsMD.put(trsTag, ReadTraceParameterDefinitions(buffer, length));
+                trsMD.Add(trsTag, ReadTraceParameterDefinitions(buffer, length));
             }
             else
             {

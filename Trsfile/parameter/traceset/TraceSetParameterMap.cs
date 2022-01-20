@@ -20,9 +20,15 @@ namespace com.riscure.trs.parameter.traceset
         {
             foreach (var (key, value) in toCopy)
             {
-                Add(key, value.Clone());
+                Add(key, (TraceSetParameter)value.Clone());
             }
         }
+
+        public virtual new void Add(string t, TraceSetParameter p) => base.Add(t, p);
+
+        public virtual new void Remove(string t) => base.Remove(t);
+
+        public virtual new void Clear() => base.Clear();
 
         /// <returns> a new instance of a TraceParameterMap containing all the same values as this one </returns>
         public virtual object Clone() => new TraceSetParameterMap(this);
@@ -39,7 +45,6 @@ namespace com.riscure.trs.parameter.traceset
                 dos.WriteShort(Count);
                 foreach (var entry in this)
                 {
-
                     byte[] nameBytes = entry.Key.GetBytes(System.Text.Encoding.UTF8);
                     //Write NL
                     dos.WriteShort(nameBytes.Length);
@@ -85,7 +90,7 @@ namespace com.riscure.trs.parameter.traceset
                     throw new Exception(ex.Message, ex);
                 }
             }
-            return UnmodifiableTraceSetParameterMap.of(result);
+            return UnmodifiableTraceSetParameterMap.Of(result);
         }
 
         /// <summary>
@@ -146,82 +151,37 @@ namespace com.riscure.trs.parameter.traceset
             return Get(typedKey).orElse(defaultValue);
         }
 
-        public virtual void Add(string key, sbyte value)
-        {
-            Add(new ByteTypeKey(key), value);
-        }
+        public void Add(string key, byte value) => Add(new ByteTypeKey(key), value);
 
-        public virtual void Add(string key, byte[] value)
-        {
-            Add(new ByteArrayTypeKey(key), value);
-        }
+        public void Add(string key, byte[] value) => Add(new ByteArrayTypeKey(key), value);
 
-        public virtual void put(string key, short value)
-        {
-            Add(new ShortTypeKey(key), value);
-        }
+        public void Add(string key, short value) => Add(new ShortTypeKey(key), value);
 
-        public virtual void put(string key, short[] value)
-        {
-            Add(new ShortArrayTypeKey(key), value);
-        }
+        public void Add(string key, short[] value) => Add(new ShortArrayTypeKey(key), value);
 
-        public virtual void put(string key, int value)
-        {
-            Add(new IntegerTypeKey(key), value);
-        }
+        public void Add(string key, int value) => Add(new IntegerTypeKey(key), value);
 
-        public virtual void put(string key, int[] value)
-        {
-            Add(new IntegerArrayTypeKey(key), value);
-        }
+        public void Add(string key, int[] value) => Add(new IntegerArrayTypeKey(key), value);
 
-        public virtual void put(string key, float value)
-        {
-            Add(new FloatTypeKey(key), value);
-        }
+        public void Add(string key, float value) => Add(new FloatTypeKey(key), value);
 
-        public virtual void put(string key, float[] value)
-        {
-            Add(new FloatArrayTypeKey(key), value);
-        }
+        public void Add(string key, float[] value) => Add(new FloatArrayTypeKey(key), value);
 
-        public virtual void put(string key, long value)
-        {
-            Add(new LongTypeKey(key), value);
-        }
+        public void Add(string key, long value) => Add(new LongTypeKey(key), value);
 
-        public virtual void put(string key, long[] value)
-        {
-            Add(new LongArrayTypeKey(key), value);
-        }
+        public void Add(string key, long[] value) => Add(new LongArrayTypeKey(key), value);
 
-        public virtual void put(string key, double value)
-        {
-            Add(new DoubleTypeKey(key), value);
-        }
+        public void Add(string key, double value) => Add(new DoubleTypeKey(key), value);
 
-        public virtual void put(string key, double[] value)
-        {
-            Add(new DoubleArrayTypeKey(key), value);
-        }
+        public void Add(string key, double[] value) => Add(new DoubleArrayTypeKey(key), value);
 
-        public virtual void put(string key, string value)
-        {
-            Add(new StringTypeKey(key), value);
-        }
+        public void Add(string key, string value) => Add(new StringTypeKey(key), value);
 
-        public virtual void put(string key, bool value)
-        {
-            Add(new BoolTypeKey(key), value);
-        }
+        public void Add(string key, bool value) => Add(new BoolTypeKey(key), value);
 
-        public virtual void put(string key, bool[] value)
-        {
-            Add(new BoolArrayTypeKey(key), value);
-        }
+        public void Add(string key, bool[] value) => Add(new BoolArrayTypeKey(key), value);
 
-        public virtual sbyte getByte(string key)
+        public virtual byte getByte(string key)
         {
             return getOrElseThrow(new ByteTypeKey(key));
         }

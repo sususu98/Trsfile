@@ -242,7 +242,7 @@ public class TestTraceSet
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 	public virtual void testWriteTraceSetParameters()
 	{
-		TRSMetaData metaData = TRSMetaData.create();
+		TRSMetaData metaData = TRSMetaData.Create();
 		TraceSetParameterMap parameters = new TraceSetParameterMap();
 		parameters.put("BYTE", (byte) 1);
         parameters.put("SHORT", (short)2);
@@ -261,7 +261,7 @@ public class TestTraceSet
         parameters.put("BOOLEANARRAY", new bool[] { true, false, true, false, true, true });
         parameters.put("TVLA", TVLA_STRING_VALUE);
         //parameters.put("XYZ offset", XYZ_TEST_VALUE);
-        metaData.put(TRSTag.TRACE_SET_PARAMETERS, parameters);
+        metaData.Add(TRSTag.TRACE_SET_PARAMETERS, parameters);
 		//CREATE TRACE
 		string name = Guid.NewGuid().ToString() + TRS;
 		TraceSet.Create(tempDir + Path.PathSeparator + name, metaData).close();
@@ -283,7 +283,7 @@ public class TestTraceSet
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 	public virtual void testWriteTraceParametersInvalidName()
 	{
-		TRSMetaData metaData = TRSMetaData.create();
+		TRSMetaData metaData = TRSMetaData.Create();
 		string parameterName = string.Format("{0,100000}", "XYZ");
 		//CREATE TRACE
 		string name = Guid.NewGuid().ToString() + TRS;
@@ -314,7 +314,7 @@ public class TestTraceSet
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 	public virtual void testWriteTraceParametersVaryingStringLength()
 	{
-		TRSMetaData metaData = TRSMetaData.create();
+		TRSMetaData metaData = TRSMetaData.Create();
 		IList<TraceParameterMap> testParameters = new List<TraceParameterMap>();
 		IList<string> strings = new List<string>();
 		strings.Add("abcd");
@@ -349,7 +349,7 @@ public class TestTraceSet
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 	public virtual void testReadTraceParametersTyped()
 	{
-		TRSMetaData metaData = TRSMetaData.create();
+		TRSMetaData metaData = TRSMetaData.Create();
 		IList<TraceParameterMap> testParameters = new List<TraceParameterMap>();
 		//CREATE TRACE
 		string name = Guid.NewGuid().ToString() + TRS;
@@ -566,7 +566,7 @@ public class TestTraceSet
 //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 	public virtual void testExceptionWrongType()
 	{
-		TRSMetaData metaData = TRSMetaData.create();
+		TRSMetaData metaData = TRSMetaData.Create();
 		//CREATE TRACE
 		string name = Guid.NewGuid().ToString() + TRS;
 		using (TraceSet traceWithParameters = TraceSet.create(tempDir + Path.PathSeparator + name, metaData))

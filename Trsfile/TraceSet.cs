@@ -217,11 +217,11 @@ namespace com.riscure.trs
             {
                 int dataLength = trace.Data == null ? 0 : trace.Data.Length;
                 int titleLength = string.ReferenceEquals(trace.Title, null) ? 0 : trace.Title.GetBytes(System.Text.Encoding.UTF8).Length;
-                MetaData.Put(NUMBER_OF_SAMPLES, trace.NumberOfSamples, false);
-                MetaData.Put(DATA_LENGTH, dataLength, false);
-                MetaData.Put(TITLE_SPACE, titleLength, false);
-                MetaData.Put(SAMPLE_CODING, trace.PreferredCoding, false);
-                MetaData.put(TRACE_PARAMETER_DEFINITIONS, TraceParameterDefinitionMap.CreateFrom(trace.Parameters));
+                MetaData.Add(NUMBER_OF_SAMPLES, trace.NumberOfSamples, false);
+                MetaData.Add(DATA_LENGTH, dataLength, false);
+                MetaData.Add(TITLE_SPACE, titleLength, false);
+                MetaData.Add(SAMPLE_CODING, trace.PreferredCoding, false);
+                MetaData.Add(TRACE_PARAMETER_DEFINITIONS, TraceParameterDefinitionMap.CreateFrom(trace.Parameters));
                 TRSMetaDataUtils.writeTRSMetaData(writeStream, MetaData);
                 firstTrace = false;
             }
@@ -232,7 +232,7 @@ namespace com.riscure.trs
             writeTrace(trace);
 
             int numberOfTraces = MetaData.GetInt(NUMBER_OF_TRACES);
-            MetaData.put(NUMBER_OF_TRACES, numberOfTraces + 1);
+            MetaData.Add(NUMBER_OF_TRACES, numberOfTraces + 1);
         }
 
         /// <summary>
@@ -281,9 +281,6 @@ namespace com.riscure.trs
             }
             // Ensure truncation by having byte buffer = maxBytes
             var bb = sba.AsSpan(0, maxBytes);
-            var u8 = System.Text.Encoding.GetEncoding(System.Text.Encoding.UTF8.CodePage,
-                System.Text.Encoding.UTF8.EncoderFallback,
-                new DecoderReplacementFallback(""));
             return UTF8_IGNORE_DECODER.GetString(bb);
         }
 
@@ -542,7 +539,7 @@ namespace com.riscure.trs
         //ORIGINAL LINE: public static void save(String file, java.util.List<Trace> traces) throws IOException, TRSFormatException
         public static void Save(string file, IList<Trace> traces)
         {
-            TRSMetaData trsMetaData = TRSMetaData.create();
+            TRSMetaData trsMetaData = TRSMetaData.Create();
             Save(file, traces, trsMetaData);
         }
 
@@ -581,7 +578,7 @@ namespace com.riscure.trs
         //ORIGINAL LINE: public static TraceSet create(String file) throws java.io.IOException
         public static TraceSet Create(string file)
         {
-            TRSMetaData trsMetaData = TRSMetaData.create();
+            TRSMetaData trsMetaData = TRSMetaData.Create();
             return Create(file, trsMetaData);
         }
 
@@ -603,7 +600,7 @@ namespace com.riscure.trs
         //ORIGINAL LINE: public static TraceSet create(String file, TRSMetaData metaData) throws java.io.IOException
         public static TraceSet Create(string file, TRSMetaData metaData)
         {
-            metaData.Put(TRS_VERSION, 2, false);
+            metaData.Add(TRS_VERSION, 2, false);
             return new TraceSet(file, metaData);
         }
 

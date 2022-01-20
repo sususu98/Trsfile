@@ -6,7 +6,7 @@
     using TraceParameter = TraceParameter;
 
 
-    public class TraceSetParameter
+    public class TraceSetParameter: ICloneable
     {
         private const string LENGTH_ERROR = "length of parameter (%d) exceeds maximum length (%d)";
         private const int MAX_LENGTH = 0x0FFFF;
@@ -47,7 +47,7 @@
         public virtual TraceParameter Value { get; }
 
         /// <returns> a new instance of a TraceSetParameter containing a copy of its trace parameter </returns>
-        public virtual TraceSetParameter Clone()
+        public virtual object Clone()
         {
             return new TraceSetParameter(this);
         }

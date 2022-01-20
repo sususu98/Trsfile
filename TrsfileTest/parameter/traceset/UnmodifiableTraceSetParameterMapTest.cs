@@ -21,7 +21,7 @@ namespace com.riscure.trs.parameter.traceset
 			TraceSetParameterMap mutable = new TraceSetParameterMap();
 			mutable.put("FOO", 1);
 
-			immutable = UnmodifiableTraceSetParameterMap.of(mutable);
+			immutable = UnmodifiableTraceSetParameterMap.Of(mutable);
 		}
 
 
