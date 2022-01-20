@@ -21,14 +21,9 @@
 			return new UnmodifiableTraceParameterMap(t);
 		}
 
-		public new TraceParameter Add(string key, TraceParameter value)
+		public override void Add(string key, TraceParameter value)
 		{
 			throw new System.NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, value.ToString()));
-		}
-
-		public new TraceParameter Remove(string key)
-		{
-			throw new System.NotSupportedException(string.Format(REMOVAL_NOT_SUPPORTED_EXCEPTION, key));
 		}
 
 		public void AddRange(IDictionary<string, TraceParameter> m)
@@ -36,12 +31,12 @@
 			throw new System.NotSupportedException(string.Format(UNABLE_TO_ADD_ALL_OF_S_THIS_TRACE_SET_IS_IN_READ_MODE_AND_CANNOT_BE_MODIFIED, m.ToString()));
 		}
 
-		public new void Clear()
+		public override void Clear()
 		{
 			throw new System.NotSupportedException(MODIFICATION_NOT_SUPPORTED_EXCEPTION);
 		}
 
-		public new bool Remove(string key, out TraceParameter value)
+		public override bool Remove(string key, out TraceParameter value)
 		{
 			throw new System.NotSupportedException(string.Format(REMOVAL_NOT_SUPPORTED_EXCEPTION, key));
 		}

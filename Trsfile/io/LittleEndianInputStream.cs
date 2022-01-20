@@ -27,6 +27,7 @@
                 if (stream is not null)
                 {
                     stream.Close();
+                    stream.Dispose();
                     stream = null;
                 }
             }
