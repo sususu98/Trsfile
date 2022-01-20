@@ -115,7 +115,7 @@ namespace com.riscure.trs.parameter.trace.definition
 			return definitions;
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (this == obj)
 			{

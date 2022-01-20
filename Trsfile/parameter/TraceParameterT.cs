@@ -11,7 +11,7 @@ namespace com.riscure.trs.parameter
 
         public T ScalarValue { get; }
 
-        public TraceParameter(T value) : base(null, false)
+        public TraceParameter(T value) : base(ParameterType.BOOL, false) // set as some default
         {
             Type = typeof(T) switch
             {
@@ -29,7 +29,7 @@ namespace com.riscure.trs.parameter
             ScalarValue = value;
         }
 
-        public TraceParameter(T[] value) : base(null, true)
+        public TraceParameter(T[] value) : base(ParameterType.BOOL, true) // set as some default
         {
             _ = value ?? throw new ArgumentNullException(nameof(value) + " is null");
             Type = value.ElementAtOrDefault(0) switch
@@ -52,7 +52,7 @@ namespace com.riscure.trs.parameter
         public override int Length => Value.Length;
 
 
-        public override bool Equals(object o)
+        public override bool Equals(object? o)
         {
             if (this == o)
             {

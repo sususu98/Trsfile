@@ -14,7 +14,7 @@
             CheckLength(value);
             return new LongArrayParameter(value);
         }
-        protected internal override void CheckLength(double[] value)
+        protected internal override void CheckLength(long[] value)
         {
             if (value.Length <= 0) throw new ArgumentException("Value's length below 0");
         }
