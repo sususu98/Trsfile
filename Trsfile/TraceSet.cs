@@ -131,15 +131,15 @@ namespace com.riscure.trs
         /// <exception cref="IllegalArgumentException"> if this TraceSet is not ready be read from </exception>
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: public Trace get(int index) throws java.io.IOException
-        public virtual Trace get(int index)
+        public virtual Trace Get(int index)
         {
             if (!open_Conflict)
             {
-                throw new System.ArgumentException(TRACE_SET_NOT_OPEN);
+                throw new ArgumentException(TRACE_SET_NOT_OPEN);
             }
             if (writing)
             {
-                throw new System.ArgumentException(TRACE_SET_IN_WRITE_MODE);
+                throw new ArgumentException(TRACE_SET_IN_WRITE_MODE);
             }
 
             moveBufferIfNecessary(index);
@@ -225,7 +225,7 @@ namespace com.riscure.trs
                 firstTrace = false;
             }
             truncateStrings(trace, MetaData);
-            checkValid(trace);
+            CheckValid(trace);
 
             trace.TraceSet = this;
             writeTrace(trace);
@@ -359,7 +359,7 @@ namespace com.riscure.trs
         private bool closed = false;
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: @Override public void close() throws IOException, TRSFormatException
-        private void Close()
+        public void Close()
         {
             open_Conflict = false;
             if (writing)
@@ -373,7 +373,7 @@ namespace com.riscure.trs
             closed = true;
         }
 
-        private void checkValid(Trace trace)
+        private void CheckValid(Trace trace)
         {
             int numberOfSamples = MetaData.GetInt(NUMBER_OF_SAMPLES);
             if (MetaData.GetInt(NUMBER_OF_SAMPLES) != trace.NumberOfSamples)
