@@ -90,7 +90,7 @@ internal static class StringHelper
 	}
 	private static byte[] GetSBytesForEncoding(Encoding encoding, string s)
 	{
-		byte[] sbytes = new sbyte[encoding.GetByteCount(s)];
+		byte[] sbytes = new byte[encoding.GetByteCount(s)];
 		encoding.GetBytes(s, 0, s.Length, (byte[])(object)sbytes, 0);
 		return sbytes;
 	}

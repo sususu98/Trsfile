@@ -92,7 +92,7 @@ namespace com.riscure.trs.parameter.trace.definition
 					throw new Exception(ex.Message, ex);
 				}
 			}
-			return UnmodifiableTraceParameterDefinitionMap.of(result);
+			return UnmodifiableTraceParameterDefinitionMap.Of(result);
 		}
 
 		/// <summary>

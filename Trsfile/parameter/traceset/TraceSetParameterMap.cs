@@ -110,46 +110,30 @@ namespace com.riscure.trs.parameter.traceset
         /// @param <T> the type of the parameter </param>
         /// <returns> the value of the requested parameter </returns>
         /// <exception cref="ClassCastException"> if the requested value is not of the expected type </exception>
-        public T? Get<T>(TypedKey<T> typedKey)
+        public T? Get<T>(TypedKey<T> typedKey, out bool isNull, T? defaultValue = default, bool throwIfNull = false)
         {
-            TraceSetParameter parameter = this[typedKey.Key];
-            if (parameter != null)
+            TraceParameter parameter = this[typedKey.Key].Value;
+            if (parameter is null || parameter is not TraceParameter<T> Tparameter)
             {
-                if (parameter.Value.Length == 1 && !typedKey.Cls.IsArray)
-                {
-                    return typedKey.Cast(parameter.Value.ScalarValue);
-                }
-                else
-                {
-                    return typedKey.Cast(parameter.Value.Value);
-                }
+                isNull = true;
+                if (throwIfNull) throw new ArgumentNullException(
+                    nameof(parameter) + " or " + nameof(Tparameter));
+                else return defaultValue;
             }
-            return default;
+            if (!parameter.IsArray)
+            {
+                isNull = false;
+                return Tparameter.ScalarValue;
+            }
+            else
+            {
+                isNull = true;
+                if (throwIfNull) throw new ArgumentException($"{nameof(parameter)} is array ! Should use GetArray instead.");
+                else return defaultValue;
+            }
         }
 
-        /// <summary>
-        /// Get a parameter from the map </summary>
-        /// <param name="typedKey"> the <seealso cref="TypedKey"/> defining the name and the type of the value to retrieve </param>
-        /// @param <T> the type of the parameter </param>
-        /// <returns> the value of the requested parameter </returns>
-        /// <exception cref="ClassCastException"> if the requested value is not of the expected type </exception>
-        /// <exception cref="NoSuchElementException"> if the requested value does not exist in the map </exception>
-        public virtual T getOrElseThrow<T>(TypedKey<T> typedKey)
-        {
-            return Get(typedKey).orElseThrow(() => new NoSuchElementException(String.format(KEY_NOT_FOUND, typedKey.Key)));
-        }
 
-        /// <summary>
-        /// Get a parameter from the map </summary>
-        /// <param name="typedKey"> the <seealso cref="TypedKey"/> defining the name and the type of the value to retrieve </param>
-        /// @param <T> the type of the parameter </param>
-        /// <param name="defaultValue"> the value to use if the value is not present in the map </param>
-        /// <returns> the value of the requested parameter </returns>
-        /// <exception cref="ClassCastException"> if the requested value is not of the expected type </exception>
-        public virtual T getOrDefault<T>(TypedKey<T> typedKey, T defaultValue)
-        {
-            return Get(typedKey).orElse(defaultValue);
-        }
 
         public void Add(string key, byte value) => Add(new ByteTypeKey(key), value);
 
@@ -181,80 +165,41 @@ namespace com.riscure.trs.parameter.traceset
 
         public void Add(string key, bool[] value) => Add(new BoolArrayTypeKey(key), value);
 
-        public virtual byte getByte(string key)
-        {
-            return getOrElseThrow(new ByteTypeKey(key));
-        }
+        public byte GetByte(string key) => Get(new ByteTypeKey(key), out _);
 
-        public virtual byte[] getByteArray(string key)
-        {
-            return getOrElseThrow(new ByteArrayTypeKey(key));
-        }
+        public byte[]? GetByteArray(string key) => Get(new ByteArrayTypeKey(key), out _);
 
-        public virtual short getShort(string key)
-        {
-            return getOrElseThrow(new ShortTypeKey(key));
-        }
 
-        public virtual short[] getShortArray(string key)
-        {
-            return getOrElseThrow(new ShortArrayTypeKey(key));
-        }
+        public short GetShort(string key) => Get(new ShortTypeKey(key), out _);
 
-        public virtual int getInt(string key)
-        {
-            return getOrElseThrow(new IntegerTypeKey(key));
-        }
+        public short[]? GetShortArray(string key) => Get(new ShortArrayTypeKey(key), out _);
 
-        public virtual int[] getIntArray(string key)
-        {
-            return getOrElseThrow(new IntegerArrayTypeKey(key));
-        }
 
-        public virtual float getFloat(string key)
-        {
-            return getOrElseThrow(new FloatTypeKey(key));
-        }
+        public int GetInt(string key) => Get(new IntegerTypeKey(key), out _);
 
-        public virtual float[] getFloatArray(string key)
-        {
-            return getOrElseThrow(new FloatArrayTypeKey(key));
-        }
+        public int[]? GetIntArray(string key) => Get(new IntegerArrayTypeKey(key), out _);
 
-        public virtual long getLong(string key)
-        {
-            return getOrElseThrow(new LongTypeKey(key));
-        }
+        public float GetFloat(string key) => Get(new FloatTypeKey(key), out _);
 
-        public virtual long[] getLongArray(string key)
-        {
-            return getOrElseThrow(new LongArrayTypeKey(key));
-        }
+        public float[]? GetFloatArray(string key) => Get(new FloatArrayTypeKey(key), out _);
 
-        public virtual double getDouble(string key)
-        {
-            return getOrElseThrow(new DoubleTypeKey(key));
-        }
 
-        public virtual double[] getDoubleArray(string key)
-        {
-            return getOrElseThrow(new DoubleArrayTypeKey(key));
-        }
+        public long GetLong(string key) => Get(new LongTypeKey(key), out _);
 
-        public virtual string getString(string key)
-        {
-            return getOrElseThrow(new StringTypeKey(key));
-        }
+        public long[]? GetLongArray(string key) => Get(new LongArrayTypeKey(key), out _);
 
-        public virtual bool getBoolean(string key)
-        {
-            return getOrElseThrow(new BoolTypeKey(key));
-        }
+        public double GetDouble(string key) => Get(new DoubleTypeKey(key), out _);
 
-        public virtual bool[] getBooleanArray(string key)
-        {
-            return getOrElseThrow(new BoolArrayTypeKey(key));
-        }
+        public double[]? getDoubleArray(string key) => Get(new DoubleArrayTypeKey(key), out _);
+
+
+        public string? GetString(string key) => Get(new StringTypeKey(key), out _);
+
+
+        public bool GetBoolean(string key) => Get(new BoolTypeKey(key), out _);
+
+        public bool[]? GetBooleanArray(string key) => Get(new BoolArrayTypeKey(key), out _);
+
 
         public override bool Equals(object? obj)
         {

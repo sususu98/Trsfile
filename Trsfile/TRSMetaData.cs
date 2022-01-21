@@ -141,7 +141,7 @@ namespace com.riscure.trs
                 {
                     return (TraceParameterDefinitionMap)o;
                 }
-                return UnmodifiableTraceParameterDefinitionMap.of(new TraceParameterDefinitionMap());
+                return UnmodifiableTraceParameterDefinitionMap.Of(new TraceParameterDefinitionMap());
             }
         }
 

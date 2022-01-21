@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-
-namespace com.riscure.trs.parameter.traceset
+﻿namespace com.riscure.trs.parameter.traceset
 {
 
-	/// <summary>
-	/// This class represents the header definitions of all user-added global parameters of the trace set
-	/// 
-	/// This map is read from the file, and is therefore unmodifiable.
-	/// </summary>
-	public class UnmodifiableTraceSetParameterMap : TraceSetParameterMap
+    /// <summary>
+    /// This class represents the header definitions of all user-added global parameters of the trace set
+    /// 
+    /// This map is read from the file, and is therefore unmodifiable.
+    /// </summary>
+    public class UnmodifiableTraceSetParameterMap : TraceSetParameterMap
 	{
 		private const string UNABLE_TO_SET_PARAMETER = "Unable to set parameter `%s` to `%s`: This trace set is in read mode and cannot be modified.";
 		private const string REMOVAL_NOT_SUPPORTED_EXCEPTION = "Unable to remove parameter `%s`: This trace set is in read mode and cannot be modified.";
@@ -29,17 +27,17 @@ namespace com.riscure.trs.parameter.traceset
 
 		public override void Add(string key, TraceSetParameter value)
 		{
-			throw new System.NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, value.Value));
+			throw new NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, value.Value));
 		}
 
 		public override void Remove(string key)
 		{
-			throw new System.NotSupportedException(string.Format(REMOVAL_NOT_SUPPORTED_EXCEPTION, key));
+			throw new NotSupportedException(string.Format(REMOVAL_NOT_SUPPORTED_EXCEPTION, key));
 		}
 
 		public override void Clear()
 		{
-			throw new System.NotSupportedException(MODIFICATION_NOT_SUPPORTED_EXCEPTION);
+			throw new NotSupportedException(MODIFICATION_NOT_SUPPORTED_EXCEPTION);
 		}
 	}
 

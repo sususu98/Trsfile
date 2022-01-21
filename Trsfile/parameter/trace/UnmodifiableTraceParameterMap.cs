@@ -23,32 +23,32 @@
 
 		public override void Add(string key, TraceParameter value)
 		{
-			throw new System.NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, value.ToString()));
+			throw new NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, value.ToString()));
 		}
 
 		public void AddRange(IDictionary<string, TraceParameter> m)
 		{
-			throw new System.NotSupportedException(string.Format(UNABLE_TO_ADD_ALL_OF_S_THIS_TRACE_SET_IS_IN_READ_MODE_AND_CANNOT_BE_MODIFIED, m.ToString()));
+			throw new NotSupportedException(string.Format(UNABLE_TO_ADD_ALL_OF_S_THIS_TRACE_SET_IS_IN_READ_MODE_AND_CANNOT_BE_MODIFIED, m.ToString()));
 		}
 
 		public override void Clear()
 		{
-			throw new System.NotSupportedException(MODIFICATION_NOT_SUPPORTED_EXCEPTION);
+			throw new NotSupportedException(MODIFICATION_NOT_SUPPORTED_EXCEPTION);
 		}
 
 		public override bool Remove(string key, out TraceParameter value)
 		{
-			throw new System.NotSupportedException(string.Format(REMOVAL_NOT_SUPPORTED_EXCEPTION, key));
+			throw new NotSupportedException(string.Format(REMOVAL_NOT_SUPPORTED_EXCEPTION, key));
 		}
 
 		public bool Replace(string key, TraceParameter oldValue, TraceParameter newValue)
 		{
-			throw new System.NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, newValue.ToString()));
+			throw new NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, newValue.ToString()));
 		}
 
 		public TraceParameter Replace(string key, TraceParameter value)
 		{
-			throw new System.NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, value.ToString()));
+			throw new NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, value.ToString()));
 		}
 
 	}
