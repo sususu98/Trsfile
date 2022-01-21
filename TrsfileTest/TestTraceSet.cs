@@ -21,6 +21,7 @@ using TraceParameterDefinitionMap = com.riscure.trs.parameter.trace.definition.T
 using TraceSetParameter = com.riscure.trs.parameter.traceset.TraceSetParameter;
 using TraceSetParameterMap = com.riscure.trs.parameter.traceset.TraceSetParameterMap;
 using com.riscure.trs.types;
+using com.riscure.trs.parameter;
 
 
 //JAVA TO C# CONVERTER TODO TASK: This Java 'import static' statement cannot be converted to C#:
@@ -62,10 +63,7 @@ public class TestTraceSet
         return true;
     }
 
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @BeforeClass public static void createTempDir() throws IOException, com.riscure.trs.TRSFormatException
-    //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-    public static void createTempDir()
+    public static void CreateTempDir()
     {
         tempDir = Path.Combine(Path.GetTempPath(), "TestTraceSet");
 
@@ -135,97 +133,86 @@ public class TestTraceSet
     //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
     //ORIGINAL LINE: @Test public void testOpenBytes() throws IOException, com.riscure.trs.TRSFormatException
     //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-    public virtual void testOpenBytes()
+    public virtual void TestOpenBytes()
     {
         using TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + BYTES_TRS);
         int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
-        Encoding encoding = Encoding.fromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
+        Encoding encoding = Encoding.FromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
         Assert.Equals(Encoding.BYTE, encoding);
         Assert.Equals(NUMBER_OF_TRACES, numberOfTracesRead);
         for (int k = 0; k < NUMBER_OF_TRACES; k++)
         {
-            Trace t = readable.get(k);
-            Assert.Equals(Encoding.BYTE.Value, t.PreferredCoding);
-            AssertArrayEquals(BYTE_SAMPLES, readable.get(k).Sample, 0.01f);
+            Trace t = readable.Get(k);
+            Assert.AreEqual(Encoding.BYTE.Value, t.PreferredCoding);
+            Assert.AreEqual(BYTE_SAMPLES, readable.Get(k).Sample);
         }
     }
 
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Test public void testOpenShorts() throws IOException, com.riscure.trs.TRSFormatException
-    //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-    public virtual void testOpenShorts()
+
+    public virtual void TestOpenShorts()
     {
         using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + SHORTS_TRS))
         {
             int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
-            Encoding encoding = Encoding.fromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
+            Encoding encoding = Encoding.FromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
             Assert.Equals(Encoding.SHORT, encoding);
             Assert.Equals(NUMBER_OF_TRACES, numberOfTracesRead);
             for (int k = 0; k < NUMBER_OF_TRACES; k++)
             {
-                Trace t = readable.get(k);
+                Trace t = readable.Get(k);
                 Assert.Equals(Encoding.SHORT.Value, t.PreferredCoding);
-                AssertArrayEquals(SHORT_SAMPLES, readable.get(k).Sample, 0.01f);
+                AssertArrayEquals(SHORT_SAMPLES, readable.Get(k).Sample, 0.01f);
             }
         }
     }
 
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Test public void testOpenInts() throws IOException, com.riscure.trs.TRSFormatException
-    //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-    public virtual void testOpenInts()
+    public virtual void TestOpenInts()
     {
         using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + INTS_TRS))
         {
             int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
-            Encoding encoding = Encoding.fromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
+            Encoding encoding = Encoding.FromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
             Assert.Equals(Encoding.INT, encoding);
             Assert.Equals(NUMBER_OF_TRACES, numberOfTracesRead);
             for (int k = 0; k < NUMBER_OF_TRACES; k++)
             {
-                Trace t = readable.get(k);
+                Trace t = readable.Get(k);
                 Assert.Equals(Encoding.INT.Value, t.PreferredCoding);
-                AssertArrayEquals(INT_SAMPLES, readable.get(k).Sample, 0.01f);
+                AssertArrayEquals(INT_SAMPLES, readable.Get(k).Sample, 0.01f);
             }
         }
     }
 
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Test public void testOpenFloats() throws IOException, com.riscure.trs.TRSFormatException
-    //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-    public virtual void testOpenFloats()
+    public virtual void TestOpenFloats()
     {
         using TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + FLOATS_TRS);
         int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
-        Encoding encoding = Encoding.fromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
+        Encoding encoding = Encoding.FromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
         Assert.Equals(Encoding.FLOAT, encoding);
         Assert.Equals(NUMBER_OF_TRACES, numberOfTracesRead);
         for (int k = 0; k < NUMBER_OF_TRACES; k++)
         {
-            Trace t = readable.get(k);
+            Trace t = readable.Get(k);
             Assert.Equals(Encoding.FLOAT.Value, t.PreferredCoding);
-            AssertArrayEquals(FLOAT_SAMPLES, readable.get(k).Sample, 0.01f);
+            AssertArrayEquals(FLOAT_SAMPLES, readable.Get(k).Sample, 0.01f);
         }
     }
 
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Test public void testUTF8Title() throws IOException, com.riscure.trs.TRSFormatException
-    //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-    public virtual void testUTF8Title()
+    public virtual void TestUTF8Title()
     {
         string title = "씨브 크레그스만";
         string name = Guid.NewGuid().ToString() + TRS;
         try
         {
             using TraceSet ts = TraceSet.Create(tempDir + Path.PathSeparator + name);
-            ts.add(Trace.create(title, new float[0], new TraceParameterMap()));
+            ts.add(Trace.create(title, Array.Empty<float>(), new TraceParameterMap()));
         }
         catch (TRSFormatException e)
         {
             throw e;
         }
         using TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name);
-        Assert.Equals(title, readable.get(0).Title);
+        Assert.Equals(title, readable.Get(0).Title);
     }
 
     /// <summary>
@@ -234,39 +221,39 @@ public class TestTraceSet
     /// </summary>
     /// <exception cref="IOException"> </exception>
     /// <exception cref="TRSFormatException"> </exception>
-    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-    //ORIGINAL LINE: @Test public void testWriteTraceSetParameters() throws IOException, com.riscure.trs.TRSFormatException
-    //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-    public virtual void testWriteTraceSetParameters()
+    public virtual void TestWriteTraceSetParameters()
     {
         TRSMetaData metaData = TRSMetaData.Create();
-        TraceSetParameterMap parameters = new TraceSetParameterMap();
-        parameters.put("BYTE", (byte)1);
-        parameters.put("SHORT", (short)2);
-        parameters.put("INT", 3);
-        parameters.put("FLOAT", (float)4);
-        parameters.put("LONG", (long)5);
-        parameters.put("DOUBLE", (double)6);
-        parameters.put("STRING", string.Format("{0,3:D}", 7));
-        parameters.put("BOOLEAN", true);
+        TraceSetParameterMap parameters = new();
+        parameters.Add("BYTE", (byte)1);
+        parameters.Add("SHORT", (short)2);
+        parameters.Add("INT", 3);
+        parameters.Add("FLOAT", (float)4);
+        parameters.Add("LONG", (long)5);
+        parameters.Add("DOUBLE", (double)6);
+        parameters.Add("STRING", string.Format("{0,3:D}", 7));
+        parameters.Add("BOOLEAN", true);
         parameters.Add("BYTEARRAY", new byte[] { 8, 9, 0 });
-        parameters.put("SHORTARRAY", new short[] { 1, 2, 3 });
-        parameters.put("INTARRAY", new int[] { 4, 5, 6 });
-        parameters.put("FLOATARRAY", new float[] { 7, 8, 9 });
-        parameters.put("LONGARRAY", new long[] { 0, 1, 2 });
-        parameters.put("DOUBLEARRAY", new double[] { 3, 4, 5 });
-        parameters.put("BOOLEANARRAY", new bool[] { true, false, true, false, true, true });
-        parameters.put("TVLA", TVLA_STRING_VALUE);
-        //parameters.put("XYZ offset", XYZ_TEST_VALUE);
+        parameters.Add("SHORTARRAY", new short[] { 1, 2, 3 });
+        parameters.Add("INTARRAY", new int[] { 4, 5, 6 });
+        parameters.Add("FLOATARRAY", new float[] { 7, 8, 9 });
+        parameters.Add("LONGARRAY", new long[] { 0, 1, 2 });
+        parameters.Add("DOUBLEARRAY", new double[] { 3, 4, 5 });
+        parameters.Add("BOOLEANARRAY", new bool[] { true, false, true, false, true, true });
+        parameters.Add("TVLA", TVLA_STRING_VALUE);
+        //parameters.Add("XYZ offset", XYZ_TEST_VALUE);
         metaData.Add(TRSTag.TRACE_SET_PARAMETERS, parameters);
         //CREATE TRACE
         string name = Guid.NewGuid().ToString() + TRS;
-        TraceSet.Create(tempDir + Path.PathSeparator + name, metaData).close();
+        TraceSet.Create(tempDir + Path.PathSeparator + name, metaData).Close();
         //READ BACK AND CHECK RESULT
         using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
         {
             TraceSetParameterMap readTraceSetParameterMap = readable.MetaData.TraceSetParameters;
-            parameters.forEach((s, traceSetParameter) => Assert.Equals(traceSetParameter, readTraceSetParameterMap.get(s)));
+            foreach (var (s, traceSetParameter) in parameters)
+            {
+                Assert.Equals(traceSetParameter, readTraceSetParameterMap[s]);
+            }
         }
     }
 
@@ -278,7 +265,7 @@ public class TestTraceSet
     //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
     //ORIGINAL LINE: @Test(expected = com.riscure.trs.TRSFormatException.class) public void testWriteTraceParametersInvalidName() throws IOException, com.riscure.trs.TRSFormatException
     //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-    public virtual void testWriteTraceParametersInvalidName()
+    public virtual void TestWriteTraceParametersInvalidName()
     {
         TRSMetaData metaData = TRSMetaData.Create();
         string parameterName = string.Format("{0,100000}", "XYZ");
@@ -286,7 +273,7 @@ public class TestTraceSet
         string name = Guid.NewGuid().ToString() + TRS;
         using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.PathSeparator + name, metaData))
         {
-            TraceParameterMap parameters = new TraceParameterMap();
+            TraceParameterMap parameters = new();
             parameters.Add(parameterName, 1);
             traceWithParameters.add(Trace.create("", FLOAT_SAMPLES, parameters));
         }
@@ -294,7 +281,10 @@ public class TestTraceSet
         using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
         {
             TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
-            parameterDefinitions.forEach((key, parameter) => Assert.Equals(parameterName, key));
+            foreach (var (key, parameter) in parameterDefinitions)
+            {
+                Assert.Equals(parameterName, key);
+            }
         }
     }
 
@@ -309,15 +299,17 @@ public class TestTraceSet
     //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
     //ORIGINAL LINE: @Test public void testWriteTraceParametersVaryingStringLength() throws IOException, com.riscure.trs.TRSFormatException
     //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-    public virtual void testWriteTraceParametersVaryingStringLength()
+    public virtual void TestWriteTraceParametersVaryingStringLength()
     {
         TRSMetaData metaData = TRSMetaData.Create();
         IList<TraceParameterMap> testParameters = new List<TraceParameterMap>();
-        IList<string> strings = new List<string>();
-        strings.Add("abcd");
-        strings.Add("abcdefgh");
-        strings.Add("ab");
-        strings.Add("abcdefgh汉字");
+        IList<string> strings = new List<string>
+        {
+            "abcd",
+            "abcdefgh",
+            "ab",
+            "abcdefgh汉字"
+        };
         //CREATE TRACE
         string name = Guid.NewGuid().ToString() + TRS;
         using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.PathSeparator + name, metaData))
@@ -333,7 +325,7 @@ public class TestTraceSet
             }
         }
         //READ BACK AND CHECK RESULT
-        readBackGeneric(testParameters, name);
+        ReadBackGeneric(testParameters, name);
     }
 
     /// <summary>
@@ -344,7 +336,7 @@ public class TestTraceSet
     //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
     //ORIGINAL LINE: @Test public void testReadTraceParametersTyped() throws IOException, com.riscure.trs.TRSFormatException
     //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-    public virtual void testReadTraceParametersTyped()
+    public virtual void TestReadTraceParametersTyped()
     {
         TRSMetaData metaData = TRSMetaData.Create();
         IList<TraceParameterMap> testParameters = new List<TraceParameterMap>();
@@ -354,7 +346,7 @@ public class TestTraceSet
         {
             for (int k = 0; k < 25; k++)
             {
-                TraceParameterMap parameters = new TraceParameterMap();
+                TraceParameterMap parameters = new();
                 parameters.Add("BYTE", (byte)k);
                 parameters.Add("SHORT", (short)k);
                 parameters.Add("INT", k);
@@ -374,418 +366,461 @@ public class TestTraceSet
                 testParameters.Add(parameters);
             }
         }
-        readBackGeneric(testParameters, name);
+        ReadBackGeneric(testParameters, name);
         ReadBackTyped(testParameters, name);
-        readBackTypedKeys(testParameters, name);
+        ReadBackTypedKeys(testParameters, name);
     }
 
     //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
     //ORIGINAL LINE: private void readBackGeneric(List<com.riscure.trs.parameter.trace.TraceParameterMap> testParameters, String name) throws IOException, com.riscure.trs.TRSFormatException
-    private void readBackGeneric(IList<TraceParameterMap> testParameters, string name)
+    private void ReadBackGeneric(IList<TraceParameterMap> testParameters, string name)
     {
         using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
         {
             TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
             for (int k = 0; k < 25; k++)
             {
-                Assert.Equals(parameterDefinitions.size(), testParameters[k].size());
-                Trace trace = readable.get(k);
+                Assert.Equals(parameterDefinitions.Count, testParameters[k].Count);
+                Trace trace = readable.Get(k);
                 TraceParameterMap correctValue = testParameters[k];
-                parameterDefinitions.ForEach((key, parameter) =>
+                foreach (var (key, parameter) in parameterDefinitions)
                 {
-                    TraceParameter traceParameter = trace.Parameters.get(key);
-                    Assert.Equals(traceParameter, correctValue.get(key));
-                });
+                    TraceParameter traceParameter = trace.Parameters[key];
+                    Assert.Equals(traceParameter, correctValue[key]);
+                }
+
             }
         }
     }
 
     //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
     //ORIGINAL LINE: private void readBackTyped(List<com.riscure.trs.parameter.trace.TraceParameterMap> testParameters, String name) throws IOException, com.riscure.trs.TRSFormatException
-    private void ReadBackTyped(IList<TraceParameterMap> testParameters, string name)
+    private static void ReadBackTyped(IList<TraceParameterMap> testParameters, string name)
     {
         using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
         {
             TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
             for (int k = 0; k < 25; k++)
             {
-                Assert.Equals(parameterDefinitions.size(), testParameters[k].size());
-                Trace trace = readable.get(k);
+                Assert.Equals(parameterDefinitions.Count, testParameters[k].Count);
+                Trace trace = readable.Get(k);
                 TraceParameterMap correctValue = testParameters[k];
-                parameterDefinitions.ForEach((key, parameter) =>
+                foreach (var (key, parameter) in parameterDefinitions)
                 {
-                    parameter.getType() switch
+                    if (parameter.Type == ParameterType.BYTE)
                     {
-                    BYTE =>
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetByte(key), trace.Parameters.GetByte(key));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(correctValue.GetByteArray(key), trace.Parameters.GetByteArray(key));
+                        }
+                    }
+                    if (parameter.Type == ParameterType.SHORT)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetShort(key), trace.Parameters.GetShort(key));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(correctValue.GetShortArray(key), trace.Parameters.GetShortArray(key));
+                        }
+                    }
+                    if (parameter.Type == ParameterType.INT)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetInt(key), trace.Parameters.GetInt(key));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(correctValue.GetIntArray(key), trace.Parameters.GetIntArray(key));
+                        }
+                    }
+                    if (parameter.Type == ParameterType.FLOAT)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetFloat(key), trace.Parameters.GetFloat(key));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(correctValue.GetFloatArray(key), trace.Parameters.GetFloatArray(key));
+                        }
+                    }
+                    if (parameter.Type == ParameterType.LONG)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetLong(key), trace.Parameters.GetLong(key));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(correctValue.GetLongArray(key), trace.Parameters.GetLongArray(key));
+                        }
+                    }
+                    if (parameter.Type == ParameterType.DOUBLE)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetDouble(key), trace.Parameters.GetDouble(key));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(correctValue.GetDoubleArray(key), trace.Parameters.GetDoubleArray(key));
+                        }
+                    }
+                    if (parameter.Type == ParameterType.STRING)
+                    {
+                        Assert.AreEqual(correctValue.GetString(key), trace.Parameters.GetString(key));
+                    }
+                    if (parameter.Type == ParameterType.BOOL)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetBool(key), trace.Parameters.GetBool(key));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(correctValue.GetBoolArray(key), trace.Parameters.GetBoolArray(key));
+                        }
+                    }
+                    else throw new Exception("Unexpected type: " + parameter.Type);
 
-                            if (parameter.getLength() == 1)
-                    {
-                        Assert.Equals(correctValue.getByte(key), trace.Parameters.getByte(key));
-                    }
-                    else
-                    {
-                        AssertArrayEquals(correctValue.getByteArray(key), trace.Parameters.getByteArray(key));
-                    }
-                    break;
-                    SHORT =>
-
-                            if (parameter.getLength() == 1)
-                    {
-                        Assert.Equals(correctValue.getShort(key), trace.Parameters.getShort(key));
-                    }
-                    else
-                    {
-                        AssertArrayEquals(correctValue.getShortArray(key), trace.Parameters.getShortArray(key));
-                    }
-                    break;
-                    INT =>
-
-                            if (parameter.getLength() == 1)
-                    {
-                        Assert.Equals(correctValue.getInt(key), trace.Parameters.getInt(key));
-                    }
-                    else
-                    {
-                        AssertArrayEquals(correctValue.getIntArray(key), trace.Parameters.getIntArray(key));
-                    }
-                    break;
-                    FLOAT =>
-
-                            if (parameter.getLength() == 1)
-                    {
-                        Assert.Equals(correctValue.getFloat(key), trace.Parameters.getFloat(key), 0.01f);
-                    }
-                    else
-                    {
-                        AssertArrayEquals(correctValue.getFloatArray(key), trace.Parameters.getFloatArray(key), 0.01f);
-                    }
-                    break;
-                    LONG =>
-
-                            if (parameter.getLength() == 1)
-                    {
-                        Assert.Equals(correctValue.getLong(key), trace.Parameters.getLong(key));
-                    }
-                    else
-                    {
-                        AssertArrayEquals(correctValue.getLongArray(key), trace.Parameters.getLongArray(key));
-                    }
-                    break;
-                    DOUBLE =>
-
-                            if (parameter.getLength() == 1)
-                    {
-                        Assert.Equals(correctValue.getDouble(key), trace.Parameters.getDouble(key), 0.01);
-                    }
-                    else
-                    {
-                        AssertArrayEquals(correctValue.getDoubleArray(key), trace.Parameters.getDoubleArray(key), 0.01);
-                    }
-                    break;
-                    STRING =>
-                        Assert.Equals(correctValue.getString(key), trace.Parameters.getString(key));
-                    break;
-                    BOOL =>
-
-                            if (parameter.getLength() == 1)
-                    {
-                        Assert.Equals(correctValue.getBoolean(key), trace.Parameters.getBoolean(key));
-                    }
-                    else
-                    {
-                        AssertArrayEquals(correctValue.getBooleanArray(key), trace.Parameters.getBooleanArray(key));
-                    }
-                    break;
-                    _ =>
-                        throw new Exception("Unexpected type: " + parameter.getType());
                 }
-
             }
-				);
+
         }
     }
-}
-
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-//ORIGINAL LINE: private void readBackTypedKeys(List<com.riscure.trs.parameter.trace.TraceParameterMap> testParameters, String name) throws IOException, com.riscure.trs.TRSFormatException
-private void readBackTypedKeys(IList<TraceParameterMap> testParameters, string name)
-{
-    using (TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + name))
+    //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+    //ORIGINAL LINE: private void readBackTypedKeys(List<com.riscure.trs.parameter.trace.TraceParameterMap> testParameters, String name) throws IOException, com.riscure.trs.TRSFormatException
+    private void ReadBackTypedKeys(IList<TraceParameterMap> testParameters, string name)
     {
-        TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
-        for (int k = 0; k < 25; k++)
+        using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
         {
-            Assert.Equals(parameterDefinitions.size(), testParameters[k].size());
-            Trace trace = readable.get(k);
-            TraceParameterMap correctValue = testParameters[k];
-            //JAVA TO C# CONVERTER WARNING: Java wildcard generics have no direct equivalent in C#:
-            //ORIGINAL LINE: parameterDefinitions.forEach((key, parameter) -> { TypedKey<?> typedKey; switch(parameter.getType())
-            parameterDefinitions.forEach((key, parameter) =>
+            TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
+            for (int k = 0; k < 25; k++)
             {
-                TypedKey<object> typedKey; parameter.getType() switch
+                Assert.Equals(parameterDefinitions.Count, testParameters[k].Count);
+                Trace trace = readable.Get(k);
+                TraceParameterMap correctValue = testParameters[k];
+                foreach (var (key, parameter) in parameterDefinitions)
                 {
-                    BYTE =>
-                        typedKey = parameter.getLength() > 1 ? new ByteArrayTypeKey(key) : new ByteTypeKey(key);
+                    if (parameter.Type == ParameterType.BYTE)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetByte(key), trace.Parameters.GetByte(key));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(correctValue.GetByteArray(key), trace.Parameters.GetByteArray(key));
+                        }
+                    }
+                    if (parameter.Type == ParameterType.SHORT)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetShort(key), trace.Parameters.GetShort(key));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(correctValue.GetShortArray(key), trace.Parameters.GetShortArray(key));
+                        }
+                    }
+                    if (parameter.Type == ParameterType.INT)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetInt(key), trace.Parameters.GetInt(key));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(correctValue.GetIntArray(key), trace.Parameters.GetIntArray(key));
+                        }
+                    }
+                    if (parameter.Type == ParameterType.FLOAT)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetFloat(key), trace.Parameters.GetFloat(key));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(correctValue.GetFloatArray(key), trace.Parameters.GetFloatArray(key));
+                        }
+                    }
+                    if (parameter.Type == ParameterType.LONG)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetLong(key), trace.Parameters.GetLong(key));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(correctValue.GetLongArray(key), trace.Parameters.GetLongArray(key));
+                        }
+                    }
+                    if (parameter.Type == ParameterType.DOUBLE)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetDouble(key), trace.Parameters.GetDouble(key));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(correctValue.GetDoubleArray(key), trace.Parameters.GetDoubleArray(key));
+                        }
+                    }
+                    if (parameter.Type == ParameterType.STRING)
+                    {
+                        Assert.AreEqual(correctValue.GetString(key), trace.Parameters.GetString(key));
+                    }
+                    if (parameter.Type == ParameterType.BOOL)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetBool(key), trace.Parameters.GetBool(key));
+                        }
+                        else
+                        {
+                            Assert.AreEqual(correctValue.GetBoolArray(key), trace.Parameters.GetBoolArray(key));
+                        }
+                    }
+                    else throw new Exception("Unexpected type: " + parameter.Type);
 
-                            break;
-                SHORT =>
-                    typedKey = parameter.getLength() > 1 ? new ShortArrayTypeKey(key) : new ShortTypeKey(key);
-                break;
-                INT =>
-                    typedKey = parameter.getLength() > 1 ? new IntegerArrayTypeKey(key) : new IntegerTypeKey(key);
-                break;
-                FLOAT =>
-                    typedKey = parameter.getLength() > 1 ? new FloatArrayTypeKey(key) : new FloatTypeKey(key);
-                break;
-                LONG =>
-                    typedKey = parameter.getLength() > 1 ? new LongArrayTypeKey(key) : new LongTypeKey(key);
-                break;
-                DOUBLE =>
-                    typedKey = parameter.getLength() > 1 ? new DoubleArrayTypeKey(key) : new DoubleTypeKey(key);
-                break;
-                STRING =>
-                    typedKey = new StringTypeKey(key);
-                break;
-                BOOL =>
-                    typedKey = parameter.getLength() > 1 ? new BooleanArrayTypeKey(key) : new BooleanTypeKey(key);
-                break;
-                _ =>
-                    throw new Exception("Unexpected type: " + parameter.getType());
+                }
             }
 
-                    if (parameter.getLength() > 1 && typedKey.getCls().isArray())
-            {
-                AssertArrayEquals(java.util.Arrays.asList(correctValue.getOrElseThrow(typedKey)).toArray(), java.util.Arrays.asList(trace.Parameters.getOrElseThrow(typedKey)).toArray());
-            }
-            else
-            {
-                Assert.Equals(correctValue.get(typedKey), trace.Parameters.get(typedKey));
-            }
         }
-				);
-		}
-	}
-	}
-
-	/// <summary>
-	/// This tests getting a value of the wrong type correctly throws an exception
-	/// </summary>
-	/// <exception cref="IOException"> </exception>
-	/// <exception cref="TRSFormatException"> </exception>
-//JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-//ORIGINAL LINE: @Test public void testExceptionWrongType() throws IOException, com.riscure.trs.TRSFormatException
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-	public virtual void testExceptionWrongType()
-{
-    TRSMetaData metaData = TRSMetaData.Create();
-    //CREATE TRACE
-    string name = Guid.NewGuid().ToString() + TRS;
-    using (TraceSet traceWithParameters = TraceSet.create(tempDir + Path.PathSeparator + name, metaData))
-    {
-        TraceParameterMap parameters = new TraceParameterMap();
-        parameters.Add("BYTE", (byte)1);
-        traceWithParameters.add(Trace.create("", FLOAT_SAMPLES, parameters));
     }
-    //READ BACK AND CHECK RESULT
-    using (TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + name))
+    /// <summary>
+    /// This tests getting a value of the wrong type correctly throws an exception
+    /// </summary>
+    /// <exception cref="IOException"> </exception>
+    /// <exception cref="TRSFormatException"> </exception>
+    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
+    //ORIGINAL LINE: @Test public void testExceptionWrongType() throws IOException, com.riscure.trs.TRSFormatException
+    //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+    public virtual void TestExceptionWrongType()
     {
-        assertThrows(typeof(System.InvalidCastException), () => readable.get(0).getParameters().getDouble("BYTE"));
-    }
-}
-
-/// <summary>
-/// This </summary>
-/// <exception cref="IOException"> </exception>
-/// <exception cref="TRSFormatException"> </exception>
-//JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-//ORIGINAL LINE: @Test public void testContainsNonArray() throws IOException, com.riscure.trs.TRSFormatException
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-public virtual void testContainsNonArray()
-{
-    ByteTypeKey byteKey = new ByteTypeKey("BYTE");
-    string name = Guid.NewGuid().ToString() + TRS;
-    using (TraceSet traceWithParameters = TraceSet.create(tempDir + Path.PathSeparator + name))
-    {
-        TraceParameterMap parameters = new TraceParameterMap();
-        parameters.put(byteKey, (byte)1);
-        traceWithParameters.add(Trace.create("", FLOAT_SAMPLES, parameters));
-    }
-    //READ BACK AND CHECK RESULT
-    using (TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + name))
-    {
-        assertTrue(readable.get(0).getParameters().get(byteKey).isPresent());
-    }
-}
-
-/// <summary>
-/// This test checks whether all deserialize methods throw an exception if the inputstream does not contain enough data
-/// Introduced to test #11: TraceParameter.deserialize does not check the actual returned length
-/// </summary>
-//JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-//ORIGINAL LINE: @Test public void testInvalidParameterLength()
-public virtual void testInvalidParameterLength()
-{
-    int errors = 0;
-    byte[] empty = new byte[1];
-    foreach (ParameterType type in ParameterType.Values())
-    {
-        try
+        TRSMetaData metaData = TRSMetaData.Create();
+        //CREATE TRACE
+        string name = Guid.NewGuid().ToString() + TRS;
+        using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.PathSeparator + name, metaData))
         {
-            using (LittleEndianInputStream dis = new LittleEndianInputStream(new MemoryStream(empty)))
+            TraceParameterMap parameters = new();
+            parameters.Add("BYTE", (byte)1);
+            traceWithParameters.add(Trace.create("", FLOAT_SAMPLES, parameters));
+        }
+        //READ BACK AND CHECK RESULT
+        using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
+        {
+            Assert.ThrowsException<InvalidCastException>(() => readable.Get(0).Parameters.GetDouble("BYTE"));
+        }
+    }
+
+    /// <summary>
+    /// This </summary>
+    /// <exception cref="IOException"> </exception>
+    /// <exception cref="TRSFormatException"> </exception>
+
+    public virtual void TestContainsNonArray()
+    {
+        ByteTypeKey byteKey = new("BYTE");
+        string name = Guid.NewGuid().ToString() + TRS;
+        using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.PathSeparator + name))
+        {
+            TraceParameterMap parameters = new();
+            parameters.Add(byteKey, (byte)1);
+            traceWithParameters.add(Trace.create("", FLOAT_SAMPLES, parameters));
+        }
+        //READ BACK AND CHECK RESULT
+        using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
+        {
+            Assert.IsTrue(readable.Get(0).Parameters[byteKey.Key].Equals(null));
+        }
+    }
+
+    /// <summary>
+    /// This test checks whether all deserialize methods throw an exception if the inputstream does not contain enough data
+    /// Introduced to test #11: TraceParameter.deserialize does not check the actual returned length
+    /// </summary>
+    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
+    //ORIGINAL LINE: @Test public void testInvalidParameterLength()
+    public virtual void TestInvalidParameterLength()
+    {
+        int errors = 0;
+        byte[] empty = new byte[1];
+        foreach (ParameterType type in ParameterType.Values)
+        {
+            try
             {
-                TraceParameter.Deserialize(type, (short)4, dis);
+                using (LittleEndianInputStream dis = new(new MemoryStream(empty)))
+                {
+                    TraceParameter.Deserialize(type, (short)4, dis);
+                }
+            }
+            catch (IOException)
+            {
+                errors++;
             }
         }
-        catch (IOException)
-        {
-            errors++;
-        }
+        Assert.Equals(ParameterType.Values.Length, errors);
     }
-    Assert.Equals(ParameterType.Values().Length, errors);
-}
 
-/// <summary>
-/// This test was added to test #26: Trace(Set)ParameterMap is modifiable in read only mode
-/// </summary>
-//JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-//ORIGINAL LINE: @Test public void testModificationAfterReadback() throws IOException, com.riscure.trs.TRSFormatException
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-public virtual void testModificationAfterReadback()
-{
-    using (TraceSet readable = TraceSet.open(tempDir + Path.PathSeparator + BYTES_TRS))
+    /// <summary>
+    /// This test was added to test #26: Trace(Set)ParameterMap is modifiable in read only mode
+    /// </summary>
+
+    public virtual void TestModificationAfterReadback()
     {
-        assertThrows(typeof(System.NotSupportedException), () => readable.MetaData.TraceSetParameters.put("SHOULD_FAIL", 0));
-        assertThrows(typeof(System.NotSupportedException), () => readable.MetaData.TraceParameterDefinitions.put("SHOULD_FAIL", new TraceParameterDefinition<TraceParameter>(ParameterType.BYTE, (short)1, (short)1)));
-        for (int k = 0; k < NUMBER_OF_TRACES; k++)
+        using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + BYTES_TRS))
         {
-            Trace t = readable.get(k);
-            assertThrows(typeof(System.NotSupportedException), () => t.Parameters.Add("SHOULD_FAIL", 0));
+            Assert.ThrowsException<NotSupportedException>(() => readable.MetaData.TraceSetParameters.Add("SHOULD_FAIL", 0));
+            //Assert.ThrowsException<NotSupportedException>(() => readable.MetaData.TraceParameterDefinitions.Add("SHOULD_FAIL", new TraceParameterDefinition<TraceParameter>(ParameterType.BYTE, (short)1, (short)1)));
+            for (int k = 0; k < NUMBER_OF_TRACES; k++)
+            {
+                Trace t = readable.Get(k);
+                Assert.ThrowsException<NotSupportedException>(() => t.Parameters.Add("SHOULD_FAIL", 0));
+            }
         }
     }
+
+    /// <summary>
+    /// This test checks whether an empty array is serialized and deserialized correctly
+    /// Expected: an exception is thrown when adding an empty parameter
+    /// </summary>
+    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
+    //ORIGINAL LINE: @Test public void testEmptyArrayParameter()
+    public virtual void TestEmptyArrayParameter()
+    {
+        Assert.ThrowsException<ArgumentException>(() => (new TraceParameterMap()).Add("EMPTY", Array.Empty<byte>()));
+
+    }
+
+    /// <summary>
+    /// This test checks whether a Trace(Set)ParameterMap correctly works with typed keys
+    /// </summary>
+    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
+    //ORIGINAL LINE: @Test public void testContainsTypedKey()
+    public virtual void TestContainsTypedKey()
+    {
+        TraceParameterMap tpm = new();
+        TraceSetParameterMap tspm = new();
+        string rawKey = "BYTE";
+        ByteTypeKey typedKey = new(rawKey);
+        tpm.Add(typedKey, (byte)1);
+        tspm.Add(typedKey, (byte)2);
+
+        Assert.IsTrue(tpm[typedKey.Key].Equals(null));
+        Assert.IsTrue(tspm[typedKey.Key].Equals(null));
+    }
+
+    /// <summary>
+    /// This test checks whether you can get an array type of a simple value
+    /// </summary>
+    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
+    //ORIGINAL LINE: @Test public void testGetArrayOfLengthOne()
+    public virtual void TestGetArrayOfLengthOne()
+    {
+        TraceParameterMap tpm = new();
+        TraceSetParameterMap tspm = new();
+
+        byte rawValue = 1;
+        string rawKey = "BYTE";
+        ByteTypeKey typedKey = new(rawKey);
+        tpm.Add(typedKey, rawValue);
+        tspm.Add(typedKey, rawValue);
+
+        ByteArrayTypeKey arrayTypeKey = new(rawKey);
+        Assert.IsTrue(tpm[arrayTypeKey.Key].Equals(null));
+        Assert.IsTrue(tspm[arrayTypeKey.Key].Equals(null));
+        Assert.AreEqual(new byte[] { rawValue }, tpm.GetByteArray(rawKey));
+        Assert.AreEqual(new byte[] { rawValue }, tspm.GetByteArray(rawKey));
+    }
+
+    /// <summary>
+    /// This test checks whether a Trace(Set)ParameterMap correctly fails with a typed key of the incorrect type
+    /// </summary>
+    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
+    //ORIGINAL LINE: @Test public void testContainsWrongTypedKey()
+    public virtual void testContainsWrongTypedKey()
+    {
+        TraceParameterMap tpm = new();
+        TraceSetParameterMap tspm = new();
+        string rawKey = "BYTE";
+        ByteTypeKey typedKey = new ByteTypeKey(rawKey);
+        tpm.Add(rawKey, new byte[] { 1, 2 }); //actually a byte array
+        tspm.Add(rawKey, 2); //actually an int
+        Assert.ThrowsException<InvalidCastException>(() => tpm[typedKey.Key]);
+        Assert.ThrowsException<InvalidCastException>(() => tspm[typedKey.Key]);
+    }
+
+    /// <summary>
+    /// This test ensure that the underlying data of a copied map cannot change underlying map itself
+    /// </summary>
+    public virtual void TestCopyConstructor()
+    {
+        byte[] ba = new byte[] { 1, 2, 3, 4, 5 };
+        ByteArrayParameter bap = new(ba);
+        TraceParameterMap tpm = new();
+        tpm.Add("BA", bap);
+        TraceParameterMap copy = (TraceParameterMap)tpm.Clone();
+        ba[1] = 6;
+        var t = copy["BA"];
+        if (t is TraceParameter<byte> Tparameter)
+        {
+            Assert.IsFalse(Tparameter.Value.Equals(ba));
+        }
+
+    }
+
+    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
+    //ORIGINAL LINE: @Test public void testEmptyString()
+    public virtual void TestEmptyString()
+    {
+        TraceParameterMap tpm = new();
+        tpm.Add("EMPTY_STRING", "");
+        TraceParameterDefinitionMap tpdm = TraceParameterDefinitionMap.CreateFrom(tpm);
+        byte[] serialized = tpm.Serialize();
+
+        TraceParameterMap deserialized = TraceParameterMap.Deserialize(serialized, tpdm);
+        string empty_string = deserialized["EMPTY_STRING"].ToString();
+        Assert.Equals("", empty_string);
+    }
+
+    //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
+    //ORIGINAL LINE: @Test public void testTooLargeArraySetParameter()
+    public virtual void TestTooLargeArraySetParameter()
+    {
+        int arrayLength = 65536;
+        IntegerArrayTypeKey key = new("TOO_LARGE_ARRAY");
+        TraceSetParameterMap tspm = new();
+        tspm.Add(key, new int[arrayLength]);
+        Assert.ThrowsException<InvalidCastException>(() => tspm.Serialize);
+
+
+    }
+
+
+    public virtual void TestLargeArraySetParameter()
+    {
+        int arrayLength = 65535;
+        IntegerArrayTypeKey key = new("JUST_SMALL_ENOUGH_ARRAY");
+        TraceSetParameterMap tspm = new();
+        tspm.Add(key, new int[arrayLength]);
+        byte[] serialize = tspm.Serialize();
+        TraceSetParameterMap deserialize = TraceSetParameterMap.Deserialize(serialize);
+        Assert.Equals(arrayLength, deserialize.GetByteArray(key.Key).Length);
+    }
+
+
 }
 
-/// <summary>
-/// This test checks whether an empty array is serialized and deserialized correctly
-/// Expected: an exception is thrown when adding an empty parameter
-/// </summary>
-//JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-//ORIGINAL LINE: @Test public void testEmptyArrayParameter()
-public virtual void testEmptyArrayParameter()
-{
-    assertThrows(typeof(System.ArgumentException), () => (new TraceParameterMap()).Add("EMPTY", new byte[0]));
-}
 
-/// <summary>
-/// This test checks whether a Trace(Set)ParameterMap correctly works with typed keys
-/// </summary>
-//JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-//ORIGINAL LINE: @Test public void testContainsTypedKey()
-public virtual void testContainsTypedKey()
-{
-    TraceParameterMap tpm = new TraceParameterMap();
-    TraceSetParameterMap tspm = new TraceSetParameterMap();
-    string rawKey = "BYTE";
-    ByteTypeKey typedKey = new ByteTypeKey(rawKey);
-    tpm.put(typedKey, (byte)1);
-    tspm.Add(typedKey, (byte)2);
 
-    assertTrue(tpm.Get(typedKey).isPresent());
-    assertTrue(tspm.Get(typedKey).isPresent());
-}
 
-/// <summary>
-/// This test checks whether you can get an array type of a simple value
-/// </summary>
-//JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-//ORIGINAL LINE: @Test public void testGetArrayOfLengthOne()
-public virtual void testGetArrayOfLengthOne()
-{
-    TraceParameterMap tpm = new TraceParameterMap();
-    TraceSetParameterMap tspm = new TraceSetParameterMap();
-
-    byte rawValue = 1;
-    string rawKey = "BYTE";
-    ByteTypeKey typedKey = new ByteTypeKey(rawKey);
-    tpm.put(typedKey, rawValue);
-    tspm.Add(typedKey, rawValue);
-
-    ByteArrayTypeKey arrayTypeKey = new ByteArrayTypeKey(rawKey);
-    assertTrue(tpm.get(arrayTypeKey).isPresent());
-    assertTrue(tspm.Get(arrayTypeKey).isPresent());
-    AssertArrayEquals(new byte[] { rawValue }, tpm.GetByteArray(rawKey));
-    AssertArrayEquals(new byte[] { rawValue }, tspm.getByteArray(rawKey));
-}
-
-/// <summary>
-/// This test checks whether a Trace(Set)ParameterMap correctly fails with a typed key of the incorrect type
-/// </summary>
-//JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-//ORIGINAL LINE: @Test public void testContainsWrongTypedKey()
-public virtual void testContainsWrongTypedKey()
-{
-    TraceParameterMap tpm = new TraceParameterMap();
-    TraceSetParameterMap tspm = new TraceSetParameterMap();
-    string rawKey = "BYTE";
-    ByteTypeKey typedKey = new ByteTypeKey(rawKey);
-    tpm.Add(rawKey, new byte[] { 1, 2 }); //actually a byte array
-    tspm.put(rawKey, 2); //actually an int
-
-    assertThrows(typeof(System.InvalidCastException), () => tpm.Get(typedKey));
-    assertThrows(typeof(System.InvalidCastException), () => tspm.Get(typedKey));
-}
-
-/// <summary>
-/// This test ensure that the underlying data of a copied map cannot change underlying map itself
-/// </summary>
-//JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-//ORIGINAL LINE: @Test public void testCopyConstructor()
-public virtual void testCopyConstructor()
-{
-    byte[] ba = new byte[] { 1, 2, 3, 4, 5 };
-    ByteArrayParameter bap = new ByteArrayParameter(ba);
-    TraceParameterMap tpm = new TraceParameterMap();
-    tpm.put("BA", bap);
-    TraceParameterMap copy = tpm.copy();
-    ba[1] = 6;
-    byte[] baCopy = (byte[])copy.get("BA").Value;
-    assertFalse("Arrays should not be equal, but they are", baCopy.SequenceEqual(ba));
-}
-
-//JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-//ORIGINAL LINE: @Test public void testEmptyString()
-public virtual void testEmptyString()
-{
-    TraceParameterMap tpm = new TraceParameterMap();
-    tpm.Add("EMPTY_STRING", "");
-    TraceParameterDefinitionMap tpdm = TraceParameterDefinitionMap.CreateFrom(tpm);
-    byte[] serialized = tpm.Serialize();
-
-    TraceParameterMap deserialized = TraceParameterMap.Deserialize(serialized, tpdm);
-    string empty_string = deserialized.get("EMPTY_STRING").ToString();
-    Assert.Equals("", empty_string);
-}
-
-//JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-//ORIGINAL LINE: @Test public void testTooLargeArraySetParameter()
-public virtual void testTooLargeArraySetParameter()
-{
-    int arrayLength = 65536;
-    IntegerArrayTypeKey key = new IntegerArrayTypeKey("TOO_LARGE_ARRAY");
-    TraceSetParameterMap tspm = new TraceSetParameterMap();
-    tspm.Add(key, new int[arrayLength]);
-    assertThrows(typeof(Exception), tspm.serialize);
-}
-
-//JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-//ORIGINAL LINE: @Test public void testLargeArraySetParameter()
-public virtual void testLargeArraySetParameter()
-{
-    int arrayLength = 65535;
-    IntegerArrayTypeKey key = new IntegerArrayTypeKey("JUST_SMALL_ENOUGH_ARRAY");
-    TraceSetParameterMap tspm = new TraceSetParameterMap();
-    tspm.Add(key, new int[arrayLength]);
-    byte[] serialize = tspm.Serialize();
-    TraceSetParameterMap deserialize = TraceSetParameterMap.Deserialize(serialize);
-    Assert.Equals(arrayLength, deserialize.getOrElseThrow(key).length);
-}
-}

@@ -68,7 +68,7 @@ namespace com.riscure.trs
         /// <summary>
         /// Force float sample coding
         /// </summary>
-        public virtual void forceFloatCoding()
+        public virtual void ForceFloatCoding()
         {
             isReal = true;
         }
