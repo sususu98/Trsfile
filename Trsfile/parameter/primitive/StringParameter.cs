@@ -41,11 +41,6 @@ namespace com.riscure.trs.parameter.primitive
             return new StringParameter(StringHelper.NewString(bytes, Encoding.UTF8));
         }
 
-
-
-
-
-
         public override StringParameter Clone()
         {
             return new StringParameter(this);

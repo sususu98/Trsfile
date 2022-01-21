@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using com.riscure.trs.enums;
-using com.riscure.trs.parameter;
+﻿using com.riscure.trs.enums;
 using com.riscure.trs.parameter.primitive;
 using com.riscure.trs.parameter.trace;
 using com.riscure.trs.parameter.trace.definition;
+using System.Text;
+using System.IO.MemoryMappedFiles;
 
 namespace com.riscure.trs
 {
-    using Encoding = enums.Encoding;
     using static enums.TRSTag;
-    using System.IO.MemoryMappedFiles;
+    using Encoding = enums.Encoding;
 
+#pragma warning disable CS8604, CS8618
     public class TraceSet : IDisposable
     {
         private const string ERROR_READING_FILE = "Error reading TRS file: file size (%d) != meta data (%d) + trace size (%d) * nr of traces (%d)";
@@ -70,7 +67,9 @@ namespace com.riscure.trs
             this.bufferSize = Math.Min(fileSize, MAX_BUFFER_SIZE);
 
             MapBuffer();
-            this.MetaData = TRSMetaDataUtils.readTRSMetaData(buffer);
+
+            this.MetaData = TRSMetaDataUtils.readTRSMetaData(buffer); // buffer is not null through MapBuffer()
+
             this.metaDataSize = (int)buffer.Position;
         }
 
@@ -622,5 +621,5 @@ namespace com.riscure.trs
             }
         }
     }
-
+#pragma warning restore CS8604, CS8618
 }

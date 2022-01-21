@@ -30,7 +30,9 @@ namespace com.riscure.trs.parameter.trace
 
         public virtual new void Add(string s, TraceParameter t) => base.Add(s, t);
 
+#pragma warning disable CS8601
         public virtual new bool Remove(string s, out TraceParameter t) => base.Remove(s, out t);
+#pragma warning restore CS8601
 
         public virtual new void Clear() => base.Clear();
 

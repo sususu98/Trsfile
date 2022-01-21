@@ -52,7 +52,7 @@ namespace com.riscure.trs.parameter.primitive
 
         public override string ToString()
         {
-            return Value.ToString();
+            return string.Join(", ", Value);
         }
 
     }

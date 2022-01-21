@@ -28,7 +28,9 @@
                 {
                     stream.Close();
                     stream.Dispose();
+#pragma warning disable CS8625
                     stream = null;
+#pragma warning restore CS8625
                 }
             }
         }

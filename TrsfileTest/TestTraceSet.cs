@@ -218,7 +218,7 @@ public class TestTraceSet
         try
         {
             using TraceSet ts = TraceSet.Create(tempDir + Path.PathSeparator + name);
-            ts.add(Trace.create(title, new float[0], new TraceParameterMap()));
+            ts.add(Trace.Create(title, new float[0], new TraceParameterMap()));
         }
         catch (TRSFormatException e)
         {
@@ -288,7 +288,7 @@ public class TestTraceSet
         {
             TraceParameterMap parameters = new TraceParameterMap();
             parameters.Add(parameterName, 1);
-            traceWithParameters.add(Trace.create("", FLOAT_SAMPLES, parameters));
+            traceWithParameters.add(Trace.Create("", FLOAT_SAMPLES, parameters));
         }
         //READ BACK AND CHECK RESULT
         using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
@@ -328,7 +328,7 @@ public class TestTraceSet
                 parameters.Add("BYTEARRAY", new byte[] { (byte)k, (byte)k, (byte)k });
                 parameters.Add(TraceParameter.SAMPLES, new float[] { (float)k, (float)k, (float)k });
                 parameters.Add(TraceParameter.TITLE, strings[k % strings.Count]);
-                traceWithParameters.add(Trace.create(strings[k % strings.Count], FLOAT_SAMPLES, parameters));
+                traceWithParameters.add(Trace.Create(strings[k % strings.Count], FLOAT_SAMPLES, parameters));
                 testParameters.Add(parameters);
             }
         }
@@ -370,7 +370,7 @@ public class TestTraceSet
                 parameters.Add("LONGARRAY", new long[] { k, k, k });
                 parameters.Add("DOUBLEARRAY", new double[] { k, k, k });
                 parameters.Add("BOOLEANARRAY", new bool[] { true, false, true, false, true, true });
-                traceWithParameters.add(Trace.create("", FLOAT_SAMPLES, parameters));
+                traceWithParameters.add(Trace.Create("", FLOAT_SAMPLES, parameters));
                 testParameters.Add(parameters);
             }
         }

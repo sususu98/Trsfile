@@ -40,15 +40,12 @@ namespace com.riscure.trs.parameter.primitive
             return new ByteArrayParameter(this);
         }
 
-
-
-
         public override string ToString()
         {
             return HexUtils.ToHexString(Value);
         }
 
-        public override bool Equals(object o)
+        public override bool Equals(object? o)
         {
             if (this == o)
             {
@@ -68,7 +65,6 @@ namespace com.riscure.trs.parameter.primitive
         {
             return Value.GetHashCode();
         }
-
 
     }
 

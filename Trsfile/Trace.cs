@@ -1,11 +1,8 @@
-﻿using System;
-using System.Numerics;
+﻿using com.riscure.trs.parameter.trace;
 
 namespace com.riscure.trs
 {
     using Encoding = enums.Encoding;
-    using TraceParameterMap = parameter.trace.TraceParameterMap;
-
 
     /// <summary>
     /// Trace contains the data related to one consecutive array of samples,
@@ -30,7 +27,7 @@ namespace com.riscure.trs
         /// <param name="sample"> the sample array </param>
         /// <param name="parameters"> the parameters to be saved with every trace </param>
         /// <returns> a new trace object holding the provided information </returns>
-        public static Trace create(string title, float[] sample, TraceParameterMap parameters)
+        public static Trace Create(string title, float[] sample, TraceParameterMap parameters)
         {
             return new Trace(title, (float[])sample.Clone(), parameters);
         }
@@ -42,7 +39,7 @@ namespace com.riscure.trs
         /// <param name="sample"> Sample values. Do not modify </param>
         public Trace(float[] sample)
         {
-            this.sample = (float[])sample.Clone();
+            Sample = (float[])sample.Clone();
         }
 
         /// <summary>
@@ -56,19 +53,19 @@ namespace com.riscure.trs
         public Trace(string title, float[] sample, TraceParameterMap parameters)
         {
             this.title = title;
-            this.sample = (float[])sample.Clone();
-            this.parameters = parameters;
+            Sample = (float[])sample.Clone();
+            Parameters = parameters;
         }
 
         /// <summary>
         /// Get the sample array, no shift corrections are done. </summary>
         /// <returns> the sample array </returns>
-        public virtual float[] Sample { get; }
+        public float[] Sample { get; }
 
         /// <summary>
         /// Force float sample coding
         /// </summary>
-        public virtual void forceFloatCoding()
+        public void ForceFloatCoding()
         {
             isReal = true;
         }
@@ -78,7 +75,7 @@ namespace com.riscure.trs
         /// </summary>
         /// <returns> the preferred data type to store samples
         ///  </returns>
-        public virtual int PreferredCoding
+        public int PreferredCoding
         {
             get
             {
@@ -130,37 +127,34 @@ namespace com.riscure.trs
         /// Get the trace title
         /// </summary>
         /// <returns> The title </returns>
-        public virtual string? Title { get; set; }
-
-
+        public string? Title { get; set; }
 
         /// <summary>
         /// Get the supplementary (crypto) data of this trace.
         /// </summary>
         /// <returns> the supplementary data of this trace </returns>
-        public virtual byte[] Data
+        public byte[]? Data
         {
-            get
-            {
-                return parameters.Serialize();
-            }
+            get => Parameters.Serialize();
         }
 
         /// <summary>
+        /// A map of all custom named trace parameters
         /// Get the parameters of this trace
         /// </summary>
         /// <returns> the parameters of this trace </returns>
-        public virtual TraceParameterMap Parameters { get; }
+        public TraceParameterMap Parameters { get; } = new();
 
 
         /// <summary>
         /// Get the supplementary (crypto) data of this trace as a hexadecimal string.
         /// </summary>
         /// <returns> the supplementary (crypto) data of this trace as a hexadecimal string </returns>
-        public virtual string DataString
+        public string DataString
         {
             get
             {
+                if (Data == null) return string.Empty;
                 return BitConverter.ToString(Data).Replace("-", "");
             }
         }
@@ -169,40 +163,34 @@ namespace com.riscure.trs
         /// Get the number of samples that this trace is shifted.
         /// </summary>
         /// <returns> the number of samples that this trace is shifted </returns>
-        public virtual int Shifted { get; set; }
+        public int Shifted { get; set; }
 
         /// <summary>
         /// Get the length of the sample array.
         /// </summary>
         /// <returns> the length of the sample array </returns>
-        public virtual int NumberOfSamples => sample.Length;
+        public int NumberOfSamples => Sample.Length;
 
         /// <returns> the trace set containing this trace, or null if not set </returns>
-        public virtual TraceSet? TraceSet { get; set; }
+        public TraceSet? TraceSet { get; set; }
 
 
         public override string ToString()
         {
-            return string.Format(TO_STRING_FORMAT, title, sample.Length, shifted, aggregatesValid, hasIllegalValues, isReal, max, min, parameters);
+            return string.Format(TO_STRING_FORMAT, title, Sample.Length, shifted, aggregatesValid, 
+                hasIllegalValues, isReal, max, min, Parameters);
         }
-
-        /// <summary>
-        /// A map of all custom named trace parameters </summary>
-        private readonly TraceParameterMap parameters = new();
-        /// <summary>
-        /// list of samples </summary>
-        private readonly float[] sample;
+        
         /// <summary>
         /// trace title </summary>
-        private readonly string? title = null;
+        private readonly string title = string.Empty;
         /// <summary>
         /// number of samples shifted </summary>
         private readonly int shifted = 0;
         /// <summary>
-        /// trace set including this trace </summary>
-        private readonly TraceSet? traceSet = null;
-        /// <summary>
-        /// Indicates whether the aggregates (<seealso cref="Trace.hasIllegalValues"/>, <seealso cref="Trace.isReal"/> <seealso cref="Trace.max"/>, <seealso cref="Trace.min"/>) are valid. </summary>
+        /// Indicates whether the aggregates (<seealso cref="hasIllegalValues"/>, 
+        /// <seealso cref="isReal"/> <seealso cref="max"/>, <seealso cref="min"/>) 
+        /// are valid. </summary>
         private bool aggregatesValid = false;
         /// <summary>
         /// whether the trace contains illegal float values </summary>

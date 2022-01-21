@@ -29,7 +29,9 @@ namespace com.riscure.trs.parameter
             ScalarValue = value;
         }
 
+#pragma warning disable CS8618
         public TraceParameter(T[] value) : base(ParameterType.BOOL, true) // set as some default
+#pragma warning restore CS8618
         {
             _ = value ?? throw new ArgumentNullException(nameof(value) + " is null");
             Type = value.ElementAtOrDefault(0) switch

@@ -41,8 +41,10 @@ namespace com.riscure.trs.io
 				{
 					stream.Close();
 					stream.Dispose();
-					stream = null;
-				}
+#pragma warning disable CS8625
+                    stream = null;
+#pragma warning restore CS8625
+                }
 			}
 		}
 
