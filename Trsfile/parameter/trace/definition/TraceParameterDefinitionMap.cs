@@ -71,13 +71,13 @@ namespace com.riscure.trs.parameter.trace.definition
 		/// <exception cref="RuntimeException"> if the provided byte array does not represent a valid parameter definition map </exception>
 		public static TraceParameterDefinitionMap Deserialize(byte[] bytes)
 		{
-			TraceParameterDefinitionMap result = new TraceParameterDefinitionMap();
+			TraceParameterDefinitionMap result = new();
 			if (bytes != null && bytes.Length > 0)
 			{
 				try
 				{
-                    MemoryStream bais = new MemoryStream(bytes);
-					using LittleEndianInputStream dis = new LittleEndianInputStream(bais);
+                    MemoryStream bais = new(bytes);
+					using LittleEndianInputStream dis = new(bais);
                     //Read NE
                     short numberOfEntries = dis.ReadShort();
                     for (int k = 0; k < numberOfEntries; k++)

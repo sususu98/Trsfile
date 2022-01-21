@@ -190,15 +190,15 @@ namespace com.riscure.trs.parameter.traceset
 
         public double GetDouble(string key) => Get(new DoubleTypeKey(key), out _);
 
-        public double[]? getDoubleArray(string key) => Get(new DoubleArrayTypeKey(key), out _);
+        public double[]? GetDoubleArray(string key) => Get(new DoubleArrayTypeKey(key), out _);
 
 
         public string? GetString(string key) => Get(new StringTypeKey(key), out _);
 
 
-        public bool GetBoolean(string key) => Get(new BoolTypeKey(key), out _);
+        public bool GetBool(string key) => Get(new BoolTypeKey(key), out _);
 
-        public bool[]? GetBooleanArray(string key) => Get(new BoolArrayTypeKey(key), out _);
+        public bool[]? GetBoolArray(string key) => Get(new BoolArrayTypeKey(key), out _);
 
 
         public override bool Equals(object? obj)

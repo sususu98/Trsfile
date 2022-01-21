@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Linq;
 using ByteArrayParameter = com.riscure.trs.parameter.primitive.ByteArrayParameter;
 using IntegerArrayParameter = com.riscure.trs.parameter.primitive.IntegerArrayParameter;
 
@@ -67,21 +66,6 @@ namespace com.riscure.trs.parameter.trace
             Assert.IsTrue(actualMessage.Contains(expectedMessage));
         }
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void putAll()
-        public virtual void AddAll()
-        {
-            TraceParameterMap source = new();
-            source.Add("BEEP", 5);
-            source.Add("BOOP", 7);
-
-            Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.AddAll(source));
-
-            string expectedMessage = "Unable to add all of `{BEEP=[5], BOOP=[7]}` : This trace set is in read mode and cannot be modified.";
-            string actualMessage = e.Message;
-
-            Assert.IsTrue(actualMessage.Contains(expectedMessage));
-        }
 
         //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
         //ORIGINAL LINE: @Test public void clear()
@@ -109,22 +93,10 @@ namespace com.riscure.trs.parameter.trace
         }
 
         //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void putIfAbsent()
-        public virtual void PutIfAbsent()
-        {
-            Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.putIfAbsent("BLA", new IntegerArrayParameter(new int[] { -1 })));
-
-            string expectedMessage = "Unable to set parameter `BLA` to `[-1]`: This trace set is in read mode and cannot be modified.";
-            string actualMessage = e.Message;
-
-            Assert.IsTrue(actualMessage.Contains(expectedMessage));
-        }
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
         //ORIGINAL LINE: @Test public void testRemove()
         public virtual void TestRemove()
         {
-            Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Remove("BLA", "MEH"));
+            Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Remove("BLA", out _));
 
             string expectedMessage = "Unable to remove parameter `BLA`: This trace set is in read mode and cannot be modified.";
             string actualMessage = e.Message;
@@ -132,42 +104,5 @@ namespace com.riscure.trs.parameter.trace
             Assert.IsTrue(actualMessage.Contains(expectedMessage));
         }
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void replace()
-        public virtual void Replace()
-        {
-            Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Replace("FOO", new IntegerArrayParameter(new int[] { 1 }), new IntegerArrayParameter(new int[] { -1 })));
-
-            string expectedMessage = "Unable to set parameter `FOO` to `[-1]`: This trace set is in read mode and cannot be modified.";
-            string actualMessage = e.Message;
-
-            Assert.IsTrue(actualMessage.Contains(expectedMessage));
-        }
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void testReplace()
-        public virtual void TestReplace()
-        {
-            Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Replace("FOO", new IntegerArrayParameter(new int[] { -1 })));
-
-            string expectedMessage = "Unable to set parameter `FOO` to `[-1]`: This trace set is in read mode and cannot be modified.";
-            string actualMessage = e.Message;
-
-            Assert.IsTrue(actualMessage.Contains(expectedMessage));
-        }
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void merge()
-        public virtual void Merge()
-        {
-
-
-            Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.merge("BLA", new IntegerArrayParameter(new int[] { 77 }), (traceParameter, traceParameter2) => new IntegerArrayParameter(new int[] { 55 })));
-
-            string expectedMessage = "Unable to modify: This trace set is in read mode and cannot be modified.";
-            string actualMessage = e.Message;
-
-            Assert.IsTrue(actualMessage.Contains(expectedMessage));
-        }
     }
 }
