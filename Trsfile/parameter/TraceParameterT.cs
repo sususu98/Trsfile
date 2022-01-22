@@ -15,14 +15,14 @@ namespace com.riscure.trs.parameter
         {
             Type = typeof(T) switch
             {
-                T _ when value is bool => ParameterType.BOOL,
-                T _ when value is byte => ParameterType.BYTE,
-                T _ when value is short => ParameterType.SHORT,
-                T _ when value is int => ParameterType.INT,
-                T _ when value is float => ParameterType.FLOAT,
-                T _ when value is double => ParameterType.DOUBLE,
-                T _ when value is string => ParameterType.STRING,
-                T _ when value is long => ParameterType.LONG,
+                Type _ when value is bool => ParameterType.BOOL,
+                Type _ when value is byte => ParameterType.BYTE,
+                Type _ when value is short => ParameterType.SHORT,
+                Type _ when value is int => ParameterType.INT,
+                Type _ when value is float => ParameterType.FLOAT,
+                Type _ when value is double => ParameterType.DOUBLE,
+                Type _ when value is string => ParameterType.STRING,
+                Type _ when value is long => ParameterType.LONG,
                 _ => throw new InvalidDataException("Not supported Data Type")
             };
             Value = new T[] { value };

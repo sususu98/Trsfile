@@ -66,46 +66,47 @@ namespace Trsfile.Test
             return true;
         }
 
-        //[TestInitialize]
-        public static void CreateTempDir()
+        [TestInitialize]
+        public void CreateTempDir()
         {
             tempDir = Path.Combine(Path.GetTempPath(), "TestTraceSet");
+            Directory.CreateDirectory(tempDir);
 
-            using (TraceSet writable = TraceSet.Create(tempDir + Path.PathSeparator + BYTES_TRS))
+            using (TraceSet writable = TraceSet.Create(tempDir + Path.DirectorySeparatorChar + BYTES_TRS))
             {
                 for (int k = 0; k < NUMBER_OF_TRACES; k++)
                 {
-                    writable.add(Trace.Create(BYTE_SAMPLES));
+                    writable.Add(Trace.Create(BYTE_SAMPLES));
                 }
             }
 
-            using (TraceSet writable = TraceSet.Create(tempDir + Path.PathSeparator + SHORTS_TRS))
+            using (TraceSet writable = TraceSet.Create(tempDir + Path.DirectorySeparatorChar + SHORTS_TRS))
             {
                 for (int k = 0; k < NUMBER_OF_TRACES; k++)
                 {
-                    writable.add(Trace.Create(SHORT_SAMPLES));
+                    writable.Add(Trace.Create(SHORT_SAMPLES));
                 }
             }
 
-            using (TraceSet writable = TraceSet.Create(tempDir + Path.PathSeparator + INTS_TRS))
+            using (TraceSet writable = TraceSet.Create(tempDir + Path.DirectorySeparatorChar + INTS_TRS))
             {
                 for (int k = 0; k < NUMBER_OF_TRACES; k++)
                 {
-                    writable.add(Trace.Create(INT_SAMPLES));
+                    writable.Add(Trace.Create(INT_SAMPLES));
                 }
             }
 
-            using (TraceSet writable = TraceSet.Create(tempDir + Path.PathSeparator + FLOATS_TRS))
+            using (TraceSet writable = TraceSet.Create(tempDir + Path.DirectorySeparatorChar + FLOATS_TRS))
             {
                 for (int k = 0; k < NUMBER_OF_TRACES; k++)
                 {
-                    writable.add(Trace.Create(FLOAT_SAMPLES));
+                    writable.Add(Trace.Create(FLOAT_SAMPLES));
                 }
             }
         }
 
         [TestCleanup]
-        public static void Cleanup()
+        public void Cleanup()
         {
             //We need to allow a little time for java to release all handles
             GC.Collect();
@@ -138,7 +139,7 @@ namespace Trsfile.Test
         [TestMethod]
         public void TestOpenBytes()
         {
-            using TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + BYTES_TRS);
+            using TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + BYTES_TRS);
             int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
             Encoding encoding = Encoding.FromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
             Assert.Equals(Encoding.BYTE, encoding);
@@ -154,7 +155,7 @@ namespace Trsfile.Test
         [TestMethod]
         public void TestOpenShorts()
         {
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + SHORTS_TRS))
+            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + SHORTS_TRS))
             {
                 int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
                 Encoding encoding = Encoding.FromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
@@ -172,7 +173,7 @@ namespace Trsfile.Test
         [TestMethod]
         public void TestOpenInts()
         {
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + INTS_TRS))
+            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + INTS_TRS))
             {
                 int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
                 Encoding encoding = Encoding.FromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
@@ -190,7 +191,7 @@ namespace Trsfile.Test
         [TestMethod]
         public void TestOpenFloats()
         {
-            using TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + FLOATS_TRS);
+            using TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + FLOATS_TRS);
             int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
             Encoding encoding = Encoding.FromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
             Assert.Equals(Encoding.FLOAT, encoding);
@@ -210,14 +211,14 @@ namespace Trsfile.Test
             string name = Guid.NewGuid().ToString() + TRS;
             try
             {
-                using TraceSet ts = TraceSet.Create(tempDir + Path.PathSeparator + name);
-                ts.add(Trace.Create(title, Array.Empty<float>(), new TraceParameterMap()));
+                using TraceSet ts = TraceSet.Create(tempDir + Path.DirectorySeparatorChar + name);
+                ts.Add(Trace.Create(title, Array.Empty<float>(), new TraceParameterMap()));
             }
             catch (TRSFormatException e)
             {
                 throw e;
             }
-            using TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name);
+            using TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name);
             Assert.Equals(title, readable.Get(0).Title);
         }
 
@@ -252,9 +253,9 @@ namespace Trsfile.Test
             metaData.Add(TRSTag.TRACE_SET_PARAMETERS, parameters);
             //CREATE TRACE
             string name = Guid.NewGuid().ToString() + TRS;
-            TraceSet.Create(tempDir + Path.PathSeparator + name, metaData).Close();
+            TraceSet.Create(tempDir + Path.DirectorySeparatorChar + name, metaData).Close();
             //READ BACK AND CHECK RESULT
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
+            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
             {
                 TraceSetParameterMap readTraceSetParameterMap = readable.MetaData.TraceSetParameters;
                 foreach (var (s, traceSetParameter) in parameters)
@@ -279,14 +280,14 @@ namespace Trsfile.Test
             string parameterName = string.Format("{0,100000}", "XYZ");
             //CREATE TRACE
             string name = Guid.NewGuid().ToString() + TRS;
-            using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.PathSeparator + name, metaData))
+            using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.DirectorySeparatorChar + name, metaData))
             {
                 TraceParameterMap parameters = new();
                 parameters.Add(parameterName, 1);
-                traceWithParameters.add(Trace.Create("", FLOAT_SAMPLES, parameters));
+                traceWithParameters.Add(Trace.Create("", FLOAT_SAMPLES, parameters));
             }
             //READ BACK AND CHECK RESULT
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
+            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
             {
                 TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
                 foreach (var (key, parameter) in parameterDefinitions)
@@ -322,7 +323,7 @@ namespace Trsfile.Test
         };
             //CREATE TRACE
             string name = Guid.NewGuid().ToString() + TRS;
-            using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.PathSeparator + name, metaData))
+            using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.DirectorySeparatorChar + name, metaData))
             {
                 for (int k = 0; k < 25; k++)
                 {
@@ -330,7 +331,7 @@ namespace Trsfile.Test
                     parameters.Add("BYTEARRAY", new byte[] { (byte)k, (byte)k, (byte)k });
                     parameters.Add(TraceParameter.SAMPLES, new float[] { (float)k, (float)k, (float)k });
                     parameters.Add(TraceParameter.TITLE, strings[k % strings.Count]);
-                    traceWithParameters.add(Trace.Create(strings[k % strings.Count], FLOAT_SAMPLES, parameters));
+                    traceWithParameters.Add(Trace.Create(strings[k % strings.Count], FLOAT_SAMPLES, parameters));
                     testParameters.Add(parameters);
                 }
             }
@@ -353,7 +354,7 @@ namespace Trsfile.Test
             IList<TraceParameterMap> testParameters = new List<TraceParameterMap>();
             //CREATE TRACE
             string name = Guid.NewGuid().ToString() + TRS;
-            using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.PathSeparator + name, metaData))
+            using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.DirectorySeparatorChar + name, metaData))
             {
                 for (int k = 0; k < 25; k++)
                 {
@@ -373,7 +374,7 @@ namespace Trsfile.Test
                     parameters.Add("LONGARRAY", new long[] { k, k, k });
                     parameters.Add("DOUBLEARRAY", new double[] { k, k, k });
                     parameters.Add("BOOLEANARRAY", new bool[] { true, false, true, false, true, true });
-                    traceWithParameters.add(Trace.Create("", FLOAT_SAMPLES, parameters));
+                    traceWithParameters.Add(Trace.Create("", FLOAT_SAMPLES, parameters));
                     testParameters.Add(parameters);
                 }
             }
@@ -386,7 +387,7 @@ namespace Trsfile.Test
         //ORIGINAL LINE: private void readBackGeneric(List<com.riscure.trs.parameter.trace.TraceParameterMap> testParameters, String name) throws IOException, com.riscure.trs.TRSFormatException
         private void ReadBackGeneric(IList<TraceParameterMap> testParameters, string name)
         {
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
+            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
             {
                 TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
                 for (int k = 0; k < 25; k++)
@@ -408,7 +409,7 @@ namespace Trsfile.Test
         //ORIGINAL LINE: private void readBackTyped(List<com.riscure.trs.parameter.trace.TraceParameterMap> testParameters, String name) throws IOException, com.riscure.trs.TRSFormatException
         private static void ReadBackTyped(IList<TraceParameterMap> testParameters, string name)
         {
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
+            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
             {
                 TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
                 for (int k = 0; k < 25; k++)
@@ -510,7 +511,7 @@ namespace Trsfile.Test
         //ORIGINAL LINE: private void readBackTypedKeys(List<com.riscure.trs.parameter.trace.TraceParameterMap> testParameters, String name) throws IOException, com.riscure.trs.TRSFormatException
         private void ReadBackTypedKeys(IList<TraceParameterMap> testParameters, string name)
         {
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
+            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
             {
                 TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
                 for (int k = 0; k < 25; k++)
@@ -623,14 +624,14 @@ namespace Trsfile.Test
             TRSMetaData metaData = TRSMetaData.Create();
             //CREATE TRACE
             string name = Guid.NewGuid().ToString() + TRS;
-            using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.PathSeparator + name, metaData))
+            using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.DirectorySeparatorChar + name, metaData))
             {
                 TraceParameterMap parameters = new();
                 parameters.Add("BYTE", (byte)1);
-                traceWithParameters.add(Trace.Create("", FLOAT_SAMPLES, parameters));
+                traceWithParameters.Add(Trace.Create("", FLOAT_SAMPLES, parameters));
             }
             //READ BACK AND CHECK RESULT
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
+            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
             {
                 Assert.ThrowsException<InvalidCastException>(() => readable.Get(0).Parameters.GetDouble("BYTE"));
             }
@@ -647,14 +648,14 @@ namespace Trsfile.Test
         {
             ByteTypeKey byteKey = new("BYTE");
             string name = Guid.NewGuid().ToString() + TRS;
-            using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.PathSeparator + name))
+            using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.DirectorySeparatorChar + name))
             {
                 TraceParameterMap parameters = new();
                 parameters.Add(byteKey, (byte)1);
-                traceWithParameters.add(Trace.Create("", FLOAT_SAMPLES, parameters));
+                traceWithParameters.Add(Trace.Create("", FLOAT_SAMPLES, parameters));
             }
             //READ BACK AND CHECK RESULT
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + name))
+            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
             {
                 Assert.IsTrue(readable.Get(0).Parameters[byteKey.Key].Equals(null));
             }
@@ -695,7 +696,7 @@ namespace Trsfile.Test
         [TestMethod]
         public void TestModificationAfterReadback()
         {
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.PathSeparator + BYTES_TRS))
+            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + BYTES_TRS))
             {
                 Assert.ThrowsException<NotSupportedException>(() => readable.MetaData.TraceSetParameters.Add("SHOULD_FAIL", 0));
                 //Assert.ThrowsException<NotSupportedException>(() => readable.MetaData.TraceParameterDefinitions.Add("SHOULD_FAIL", new TraceParameterDefinition<TraceParameter>(ParameterType.BYTE, (short)1, (short)1)));

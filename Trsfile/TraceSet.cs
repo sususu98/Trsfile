@@ -30,9 +30,9 @@ namespace com.riscure.trs
 
         //Reading variables
         private int metaDataSize;
-        private FileStream readStream;
         //private FileChannel channel;
         private FileInfo info;
+        private MemoryMappedFile mmf;
 
         private MemoryMappedViewStream buffer;
 
@@ -57,7 +57,6 @@ namespace com.riscure.trs
             this.writing = false;
             this.open_Conflict = true;
             this.filePath = Path.GetFullPath(inputFileName);
-            this.readStream = new FileStream(inputFileName, FileMode.Open, FileAccess.Read);
             //this.channel = readStream.getChannel();
             this.info = new FileInfo(inputFileName);
 
@@ -67,9 +66,7 @@ namespace com.riscure.trs
             this.bufferSize = Math.Min(fileSize, MAX_BUFFER_SIZE);
 
             MapBuffer();
-
             this.MetaData = TRSMetaDataUtils.readTRSMetaData(buffer); // buffer is not null through MapBuffer()
-
             this.metaDataSize = (int)buffer.Position;
         }
 
@@ -92,7 +89,7 @@ namespace com.riscure.trs
         //ORIGINAL LINE: private void mapBuffer() throws java.io.IOException
         private void MapBuffer()
         {
-            MemoryMappedFile mmf = MemoryMappedFile.CreateFromFile(filePath, FileMode.Open);
+            mmf = MemoryMappedFile.CreateFromFile(filePath, FileMode.Open);
             this.buffer = mmf.CreateViewStream(bufferStart, bufferSize, MemoryMappedFileAccess.Read);
 
             //this.buffer = this.channel.map(FileChannel.MapMode.READ_ONLY, this.bufferStart, this.bufferSize);
@@ -202,7 +199,7 @@ namespace com.riscure.trs
         /// <exception cref="TRSFormatException"> if the formatting of the trace is invalid </exception>
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: public void add(Trace trace) throws IOException, TRSFormatException
-        public virtual void add(Trace trace)
+        public void Add(Trace trace)
         {
             if (!open_Conflict)
             {
@@ -224,7 +221,7 @@ namespace com.riscure.trs
                 TRSMetaDataUtils.writeTRSMetaData(writeStream, MetaData);
                 firstTrace = false;
             }
-            truncateStrings(trace, MetaData);
+            TruncateStrings(trace, MetaData);
             CheckValid(trace);
 
             trace.TraceSet = this;
@@ -238,7 +235,7 @@ namespace com.riscure.trs
         /// This method makes sure that the trace title and any added string parameters adhere to the preset maximum length </summary>
         /// <param name="trace"> the trace to update </param>
         /// <param name="metaData"> the metadata specifying the maximum string lengths </param>
-        private void truncateStrings(Trace trace, TRSMetaData metaData)
+        private void TruncateStrings(Trace trace, TRSMetaData metaData)
         {
             int titleSpace = metaData.GetInt(TITLE_SPACE);
             trace.Title = fitUtf8StringToByteLength(trace.Title, titleSpace);
@@ -401,7 +398,7 @@ namespace com.riscure.trs
         //ORIGINAL LINE: private void closeReader() throws java.io.IOException
         private void CloseReader()
         {
-            readStream.Close();
+            mmf.Dispose();
         }
 
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
@@ -556,7 +553,7 @@ namespace com.riscure.trs
             TraceSet traceSet = Create(file, metaData);
             foreach (Trace trace in traces)
             {
-                traceSet.add(trace);
+                traceSet.Add(trace);
             }
             traceSet.Close();
         }
