@@ -41,10 +41,10 @@ namespace com.riscure.trs.parameter.trace.definition
 		/// <exception cref="RuntimeException"> if the map failed to serialize correctly </exception>
 		public virtual byte[] Serialize()
 		{
-			MemoryStream baos = new MemoryStream();
+			MemoryStream baos = new();
 			try
 			{
-                using LittleEndianOutputStream dos = new LittleEndianOutputStream(baos);
+                using LittleEndianOutputStream dos = new(baos);
                 //Write NE
                 dos.WriteShort(Count);
                 foreach (var entry in this)

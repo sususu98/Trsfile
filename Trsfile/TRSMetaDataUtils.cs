@@ -25,7 +25,7 @@ namespace com.riscure.trs
         /// <exception cref="TRSFormatException"> if the metadata contains unsupported tags </exception>
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: public static void writeTRSMetaData(java.io.FileOutputStream fos, TRSMetaData metaData) throws IOException, TRSFormatException
-        public static void writeTRSMetaData(FileStream fos, TRSMetaData metaData)
+        public static void WriteTRSMetaData(FileStream fos, TRSMetaData metaData)
         {
             if (fos.Position != 0)
             {

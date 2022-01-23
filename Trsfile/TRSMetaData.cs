@@ -50,7 +50,7 @@ namespace com.riscure.trs
         /// <param name="overwriteNonDefault"> whether to overwrite non-default values currently saved for this tag </param>
         public void Add(TRSTag tag, object data, bool overwriteNonDefault)
         {
-           
+
             if (!tag.Type.IsAssignableFrom(data.GetType()))
             {
                 throw new ArgumentException(string.Format(INCOMPATIBLE_TYPES, tag.ToString(), tag.Type, data.GetType()));
@@ -138,7 +138,7 @@ namespace com.riscure.trs
             get
             {
                 object o = metaData[TRSTag.TRACE_PARAMETER_DEFINITIONS];
-                if (o.GetType().IsAssignableFrom(typeof(TraceParameterDefinitionMap)))
+                if (typeof(TraceParameterDefinitionMap).IsAssignableFrom(o.GetType()))
                 {
                     return (TraceParameterDefinitionMap)o;
                 }
@@ -152,7 +152,7 @@ namespace com.riscure.trs
         /// <returns> true if the value of the supplied tag is default, false otherwise </returns>
         public bool HasDefaultValue(TRSTag tag)
         {
-            return tag.DefaultValue == metaData[tag];
+            return tag.DefaultValue.Equals(metaData[tag]);
         }
 
         public override string ToString()

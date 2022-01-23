@@ -652,10 +652,11 @@ namespace Trsfile.Test
                 traceWithParameters.Add(Trace.Create("", FLOAT_SAMPLES, parameters));
             }
             //READ BACK AND CHECK RESULT
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
-            {
-                Assert.IsTrue(readable.Get(0).Parameters[byteKey.Key].Equals(null));
-            }
+            using TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name);
+
+            var a = readable.Get(0);
+            var b = a.Parameters;
+            Assert.IsTrue(readable.Get(0).Parameters[byteKey.Key].Equals(null));
         }
 
         /// <summary>
