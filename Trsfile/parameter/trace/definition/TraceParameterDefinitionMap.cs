@@ -82,7 +82,7 @@ namespace com.riscure.trs.parameter.trace.definition
                     short numberOfEntries = dis.ReadShort();
                     for (int k = 0; k < numberOfEntries; k++)
                     {
-                        string name = TRSMetaDataUtils.readName(dis);
+                        string name = TRSMetaDataUtils.ReadName(dis);
                         //Read definition
                         result.Add(name, TraceParameterDefinition.Deserialize(dis));
                     }

@@ -51,10 +51,10 @@ namespace com.riscure.trs.enums
         public static readonly TRSTag XY_SCAN_WIDTH = new("XY_SCAN_WIDTH", InnerEnum.XY_SCAN_WIDTH, 0x73, "WI", false, typeof(int), 4, 0, "Number of steps in the \"x\" direction during XY scan");
         public static readonly TRSTag XY_SCAN_HEIGHT = new("XY_SCAN_HEIGHT", InnerEnum.XY_SCAN_HEIGHT, 0x74, "HE", false, typeof(int), 4, 0, "Number of steps in the \"y\" direction during XY scan");
         public static readonly TRSTag XY_MEASUREMENTS_PER_SPOT = new("XY_MEASUREMENTS_PER_SPOT", InnerEnum.XY_MEASUREMENTS_PER_SPOT, 0x75, "ME", false, typeof(int), 4, 0, "Number of consecutive measurements done per spot during XY scan");
-        public static readonly TRSTag TRACE_SET_PARAMETERS = new("TRACE_SET_PARAMETERS", InnerEnum.TRACE_SET_PARAMETERS, 0x76, "GP", false, typeof(parameter.traceset.TraceSetParameterMap), 0, parameter.traceset.UnmodifiableTraceSetParameterMap.Of(new TraceSetParameterMap()), "The set of custom global trace set parameters");
+        public static readonly TRSTag TRACE_SET_PARAMETERS = new("TRACE_SET_PARAMETERS", InnerEnum.TRACE_SET_PARAMETERS, 0x76, "GP", false, typeof(TraceSetParameterMap), 0, parameter.traceset.UnmodifiableTraceSetParameterMap.Of(new TraceSetParameterMap()), "The set of custom global trace set parameters");
         public static readonly TRSTag TRACE_PARAMETER_DEFINITIONS = new("TRACE_PARAMETER_DEFINITIONS", InnerEnum.TRACE_PARAMETER_DEFINITIONS, 0x77, "LP", false, typeof(parameter.trace.definition.TraceParameterDefinitionMap), 0, UnmodifiableTraceParameterDefinitionMap.Of(new parameter.trace.definition.TraceParameterDefinitionMap()), "The set of custom local trace parameters");
 
-        private static readonly List<TRSTag> valueList = new List<TRSTag>();
+        private static readonly List<TRSTag> valueList = new();
 
         static TRSTag()
         {

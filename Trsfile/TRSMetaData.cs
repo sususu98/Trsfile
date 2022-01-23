@@ -50,9 +50,10 @@ namespace com.riscure.trs
         /// <param name="overwriteNonDefault"> whether to overwrite non-default values currently saved for this tag </param>
         public void Add(TRSTag tag, object data, bool overwriteNonDefault)
         {
-            if (!tag.Type.Equals(data.GetType()))
+           
+            if (!tag.Type.IsAssignableFrom(data.GetType()))
             {
-                throw new System.ArgumentException(string.Format(INCOMPATIBLE_TYPES, tag.ToString(), tag.Type, data.GetType()));
+                throw new ArgumentException(string.Format(INCOMPATIBLE_TYPES, tag.ToString(), tag.Type, data.GetType()));
             }
 
             if (HasDefaultValue(tag) || overwriteNonDefault)

@@ -129,7 +129,7 @@ namespace com.riscure.trs
         /// <exception cref="TRSFormatException"> If either the file is corrupt or the reader is not positioned at the start of the file </exception>
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: public static TRSMetaData readTRSMetaData(ByteBuffer buffer) throws TRSFormatException
-        public static TRSMetaData readTRSMetaData(MemoryMappedViewStream buffer)
+        public static TRSMetaData ReadTRSMetaData(MemoryMappedViewStream buffer)
         {
             TRSMetaData trs = TRSMetaData.Create();
             byte tag;
@@ -154,9 +154,7 @@ namespace com.riscure.trs
             return trs;
         }
 
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: public static String readName(com.riscure.trs.io.LittleEndianInputStream dis) throws java.io.IOException
-        public static string readName(LittleEndianInputStream dis)
+        public static string ReadName(LittleEndianInputStream dis)
         {
             //Read NL
             short nameLength = dis.ReadShort();
@@ -170,8 +168,7 @@ namespace com.riscure.trs
             return StringHelper.NewString(nameBytes, Encoding.UTF8);
         }
 
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: private static void readAndStoreData(ByteBuffer buffer, byte tag, int length, TRSMetaData trsMD) throws TRSFormatException
+
         private static void ReadAndStoreData(MemoryMappedViewStream buffer, byte tag, int length, TRSMetaData trsMD)
         {
             bool hasValidLength = 0 <= length && length <= 0xffff;

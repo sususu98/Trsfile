@@ -66,7 +66,7 @@ namespace com.riscure.trs
             this.bufferSize = Math.Min(fileSize, MAX_BUFFER_SIZE);
 
             MapBuffer();
-            this.MetaData = TRSMetaDataUtils.readTRSMetaData(buffer); // buffer is not null through MapBuffer()
+            this.MetaData = TRSMetaDataUtils.ReadTRSMetaData(buffer); // buffer is not null through MapBuffer()
             this.metaDataSize = (int)buffer.Position;
         }
 

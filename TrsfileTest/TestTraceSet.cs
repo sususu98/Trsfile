@@ -142,13 +142,13 @@ namespace Trsfile.Test
             using TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + BYTES_TRS);
             int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
             Encoding encoding = Encoding.FromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
-            Assert.Equals(Encoding.BYTE, encoding);
-            Assert.Equals(NUMBER_OF_TRACES, numberOfTracesRead);
+            Assert.AreEqual(Encoding.BYTE, encoding);
+            Assert.AreEqual(NUMBER_OF_TRACES, numberOfTracesRead);
             for (int k = 0; k < NUMBER_OF_TRACES; k++)
             {
                 Trace t = readable.Get(k);
                 Assert.AreEqual(Encoding.BYTE.Value, t.PreferredCoding);
-                Assert.AreEqual(BYTE_SAMPLES, readable.Get(k).Sample);
+                AssertArrayEquals(BYTE_SAMPLES, readable.Get(k).Sample, 0.01f);
             }
         }
 
@@ -159,12 +159,12 @@ namespace Trsfile.Test
             {
                 int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
                 Encoding encoding = Encoding.FromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
-                Assert.Equals(Encoding.SHORT, encoding);
-                Assert.Equals(NUMBER_OF_TRACES, numberOfTracesRead);
+                Assert.AreEqual(Encoding.SHORT, encoding);
+                Assert.AreEqual(NUMBER_OF_TRACES, numberOfTracesRead);
                 for (int k = 0; k < NUMBER_OF_TRACES; k++)
                 {
                     Trace t = readable.Get(k);
-                    Assert.Equals(Encoding.SHORT.Value, t.PreferredCoding);
+                    Assert.AreEqual(Encoding.SHORT.Value, t.PreferredCoding);
                     AssertArrayEquals(SHORT_SAMPLES, readable.Get(k).Sample, 0.01f);
                 }
             }
@@ -177,12 +177,12 @@ namespace Trsfile.Test
             {
                 int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
                 Encoding encoding = Encoding.FromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
-                Assert.Equals(Encoding.INT, encoding);
-                Assert.Equals(NUMBER_OF_TRACES, numberOfTracesRead);
+                Assert.AreEqual(Encoding.INT, encoding);
+                Assert.AreEqual(NUMBER_OF_TRACES, numberOfTracesRead);
                 for (int k = 0; k < NUMBER_OF_TRACES; k++)
                 {
                     Trace t = readable.Get(k);
-                    Assert.Equals(Encoding.INT.Value, t.PreferredCoding);
+                    Assert.AreEqual(Encoding.INT.Value, t.PreferredCoding);
                     AssertArrayEquals(INT_SAMPLES, readable.Get(k).Sample, 0.01f);
                 }
             }
@@ -194,12 +194,12 @@ namespace Trsfile.Test
             using TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + FLOATS_TRS);
             int numberOfTracesRead = readable.MetaData.GetInt(TRSTag.NUMBER_OF_TRACES);
             Encoding encoding = Encoding.FromValue(readable.MetaData.GetInt(TRSTag.SAMPLE_CODING));
-            Assert.Equals(Encoding.FLOAT, encoding);
-            Assert.Equals(NUMBER_OF_TRACES, numberOfTracesRead);
+            Assert.AreEqual(Encoding.FLOAT, encoding);
+            Assert.AreEqual(NUMBER_OF_TRACES, numberOfTracesRead);
             for (int k = 0; k < NUMBER_OF_TRACES; k++)
             {
                 Trace t = readable.Get(k);
-                Assert.Equals(Encoding.FLOAT.Value, t.PreferredCoding);
+                Assert.AreEqual(Encoding.FLOAT.Value, t.PreferredCoding);
                 AssertArrayEquals(FLOAT_SAMPLES, readable.Get(k).Sample, 0.01f);
             }
         }
@@ -219,7 +219,7 @@ namespace Trsfile.Test
                 throw e;
             }
             using TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name);
-            Assert.Equals(title, readable.Get(0).Title);
+            Assert.AreEqual(title, readable.Get(0).Title);
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace Trsfile.Test
                 TraceSetParameterMap readTraceSetParameterMap = readable.MetaData.TraceSetParameters;
                 foreach (var (s, traceSetParameter) in parameters)
                 {
-                    Assert.Equals(traceSetParameter, readTraceSetParameterMap[s]);
+                    Assert.AreEqual(traceSetParameter, readTraceSetParameterMap[s]);
                 }
             }
         }
@@ -292,7 +292,7 @@ namespace Trsfile.Test
                 TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
                 foreach (var (key, parameter) in parameterDefinitions)
                 {
-                    Assert.Equals(parameterName, key);
+                    Assert.AreEqual(parameterName, key);
                 }
             }
         }
@@ -392,13 +392,13 @@ namespace Trsfile.Test
                 TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
                 for (int k = 0; k < 25; k++)
                 {
-                    Assert.Equals(parameterDefinitions.Count, testParameters[k].Count);
+                    Assert.AreEqual(parameterDefinitions.Count, testParameters[k].Count);
                     Trace trace = readable.Get(k);
                     TraceParameterMap correctValue = testParameters[k];
                     foreach (var (key, parameter) in parameterDefinitions)
                     {
                         TraceParameter traceParameter = trace.Parameters[key];
-                        Assert.Equals(traceParameter, correctValue[key]);
+                        Assert.AreEqual(traceParameter, correctValue[key]);
                     }
 
                 }
@@ -414,7 +414,7 @@ namespace Trsfile.Test
                 TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
                 for (int k = 0; k < 25; k++)
                 {
-                    Assert.Equals(parameterDefinitions.Count, testParameters[k].Count);
+                    Assert.AreEqual(parameterDefinitions.Count, testParameters[k].Count);
                     Trace trace = readable.Get(k);
                     TraceParameterMap correctValue = testParameters[k];
                     foreach (var (key, parameter) in parameterDefinitions)
@@ -516,7 +516,7 @@ namespace Trsfile.Test
                 TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
                 for (int k = 0; k < 25; k++)
                 {
-                    Assert.Equals(parameterDefinitions.Count, testParameters[k].Count);
+                    Assert.AreEqual(parameterDefinitions.Count, testParameters[k].Count);
                     Trace trace = readable.Get(k);
                     TraceParameterMap correctValue = testParameters[k];
                     foreach (var (key, parameter) in parameterDefinitions)
@@ -614,9 +614,6 @@ namespace Trsfile.Test
         /// </summary>
         /// <exception cref="IOException"> </exception>
         /// <exception cref="TRSFormatException"> </exception>
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void testExceptionWrongType() throws IOException, com.riscure.trs.TRSFormatException
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
 
         [TestMethod]
         public void TestExceptionWrongType()
@@ -686,7 +683,7 @@ namespace Trsfile.Test
                     errors++;
                 }
             }
-            Assert.Equals(ParameterType.Values.Length, errors);
+            Assert.AreEqual(ParameterType.Values.Length, errors);
         }
 
         /// <summary>
@@ -814,7 +811,7 @@ namespace Trsfile.Test
 
             TraceParameterMap deserialized = TraceParameterMap.Deserialize(serialized, tpdm);
             string empty_string = deserialized["EMPTY_STRING"].ToString();
-            Assert.Equals("", empty_string);
+            Assert.AreEqual("", empty_string);
         }
 
         //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
@@ -841,7 +838,7 @@ namespace Trsfile.Test
             tspm.Add(key, new int[arrayLength]);
             byte[] serialize = tspm.Serialize();
             TraceSetParameterMap deserialize = TraceSetParameterMap.Deserialize(serialize);
-            Assert.Equals(arrayLength, deserialize.GetByteArray(key.Key).Length);
+            Assert.AreEqual(arrayLength, deserialize.GetByteArray(key.Key).Length);
         }
 
 
