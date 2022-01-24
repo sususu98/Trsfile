@@ -731,8 +731,8 @@ namespace Trsfile.Test
             tpm.Add(typedKey, (byte)1);
             tspm.Add(typedKey, (byte)2);
 
-            Assert.IsTrue(tpm[typedKey.Key].Equals(null));
-            Assert.IsTrue(tspm[typedKey.Key].Equals(null));
+            Assert.IsFalse(tpm[typedKey.Key].Equals(null));
+            Assert.IsFalse(tspm[typedKey.Key].Equals(null));
         }
 
         /// <summary>
@@ -770,9 +770,9 @@ namespace Trsfile.Test
             TraceParameterMap tpm = new();
             TraceSetParameterMap tspm = new();
             string rawKey = "BYTE";
-            ByteTypeKey typedKey = new ByteTypeKey(rawKey);
+            ByteTypeKey typedKey = new(rawKey);
             tpm.Add(rawKey, new byte[] { 1, 2 }); //actually a byte array
-            tspm.Add(rawKey, 2); //actually an int
+            tspm.Add(rawKey, 2); //actually an int'
             Assert.ThrowsException<InvalidCastException>(() => tpm[typedKey.Key]);
             Assert.ThrowsException<InvalidCastException>(() => tspm[typedKey.Key]);
         }
