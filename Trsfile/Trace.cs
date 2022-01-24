@@ -1,4 +1,5 @@
 ﻿using com.riscure.trs.parameter.trace;
+using System.Text.Json;
 
 namespace com.riscure.trs
 {
@@ -10,7 +11,8 @@ namespace com.riscure.trs
     /// </summary>
     public class Trace
     {
-        private const string TO_STRING_FORMAT = "Trace{Title='%s', numberOfSamples=%d, shifted=%d, " + "aggregatesValid=%b, hasIllegalValues=%b, isReal=%b, max=%f, min=%f%n%s}";
+        private const string TO_STRING_FORMAT = "Trace{Title='{0}', numberOfSamples={1}, shifted={2:d}, " 
+            + "aggregatesValid={3}, hasIllegalValues={4}, isReal={5}, max={6:f}, min={7:f}\n{8}";
 
         /// <summary>
         /// Factory method. This will copy the sample array for stability. </summary>
@@ -178,7 +180,11 @@ namespace com.riscure.trs
         public override string ToString()
         {
             return string.Format(TO_STRING_FORMAT, title, Sample.Length, shifted, aggregatesValid, 
-                hasIllegalValues, isReal, max, min, Parameters);
+                hasIllegalValues, isReal, max, min, 
+                JsonSerializer.Serialize(Parameters, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                }));
         }
         
         /// <summary>

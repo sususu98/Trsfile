@@ -6,7 +6,7 @@ namespace com.riscure.trs.parameter.trace
 {
     public class TraceParameterMap : Dictionary<string, TraceParameter>, ICloneable
     {
-        private const string KEY_NOT_FOUND = "TraceParameter %s was not found in the trace.";
+        private const string KEY_NOT_FOUND = "TraceParameter {0}s was not found in the trace.";
         private const string EMPTY_DATA_BUT_NONEMPTY_DEFINITIONS = "The provided byte array is null or empty, but the provided definitions are not";
         private const string DATA_LENGTH_DEFINITIONS_MISMATCH = "The provided byte array (%d bytes) does not match the total definitions length (%d bytes)";
 

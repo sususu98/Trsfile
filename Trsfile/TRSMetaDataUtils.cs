@@ -11,9 +11,9 @@ namespace com.riscure.trs
 
     public class TRSMetaDataUtils
     {
-        private const string IGNORED_UNKNOWN_TAG = "ignored unknown metadata tag '%02X' while reading a TRS file\n";
-        private const string TAG_LENGTH_INVALID = "The length field following tag '%s' has value '%X', which is not between 0 and 0xffff";
-        private const string UNSUPPORTED_TAG_TYPE = "Unsupported tag type for tag '%s': %s";
+        private const string IGNORED_UNKNOWN_TAG = "ignored unknown metadata tag '{0:2X}' while reading a TRS file\n";
+        private const string TAG_LENGTH_INVALID = "The length field following tag '{0}' has value '{1}', which is not between 0 and 0xffff";
+        private const string UNSUPPORTED_TAG_TYPE = "Unsupported tag type for tag '{0}': {1}";
         private const string REWINDING_STREAM = "The output stream is not at the start of the file. Rewinding stream.";
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace com.riscure.trs.parameter.traceset
     /// </summary>
     public class TraceSetParameterMap : Dictionary<string, TraceSetParameter>, ICloneable
     {
-        private const string KEY_NOT_FOUND = "TraceSetParameter %s was not found in the trace set.";
+        private const string KEY_NOT_FOUND = "TraceSetParameter {0} was not found in the trace set.";
 
         public TraceSetParameterMap() : base()
         {

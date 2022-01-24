@@ -22,7 +22,7 @@ namespace com.riscure.trs
         private const string TRACE_DATA_LENGTH_DIFFERS = "All traces in a set need to have the same data length, but current trace data length (%d) differs from the previous trace(s) (%d)";
         private const string UNKNOWN_SAMPLE_CODING = "Error reading TRS file: unknown sample coding '%d'";
         private static readonly long MAX_BUFFER_SIZE = int.MaxValue;
-        private const string PARAMETER_NOT_DEFINED = "Parameter %s is saved in the trace, but was not found in the header definition";
+        private const string PARAMETER_NOT_DEFINED = "Parameter {0} is saved in the trace, but was not found in the header definition";
         private static readonly System.Text.Encoding UTF8_IGNORE_DECODER =
             System.Text.Encoding.GetEncoding(System.Text.Encoding.UTF8.CodePage,
                 System.Text.Encoding.UTF8.EncoderFallback,

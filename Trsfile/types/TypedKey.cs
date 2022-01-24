@@ -7,7 +7,7 @@ namespace com.riscure.trs.types
 {
 	public abstract class TypedKey<T>
 	{
-		public const string INCORRECT_TYPE = "Tried to retrieve a value of type %s, but the actual value was of type %s";
+		public const string INCORRECT_TYPE = "Tried to retrieve a value of type {0}, but the actual value was of type {1}";
 
 		protected TypedKey(Type cls, string key)
 		{
