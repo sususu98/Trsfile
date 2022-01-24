@@ -29,24 +29,21 @@ namespace com.riscure.trs.parameter.trace.definition
             return new UnmodifiableTraceParameterDefinitionMap(t);
         }
 
-        public new void Add(string key, TraceParameterDefinition value)
+        public override void Add(string key, TraceParameterDefinition value)
         {
             throw new NotSupportedException(string
-                .Format(UNABLE_TO_SET_PARAMETER, key, value.ToString()));
+                .Format(UNABLE_TO_SET_PARAMETER, key, value?.ToString()));
         }
         
-
-        public void Remove(object key)
+        public override bool Remove(string key)
         {
             throw new NotSupportedException(string.Format(REMOVAL_NOT_SUPPORTED_EXCEPTION, key));
         }
 
-
-        public new void Clear()
+        public override void Clear()
         {
             throw new NotSupportedException(MODIFICATION_NOT_SUPPORTED_EXCEPTION);
         }
-
 
     }
 

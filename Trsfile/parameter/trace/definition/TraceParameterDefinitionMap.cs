@@ -22,6 +22,13 @@ namespace com.riscure.trs.parameter.trace.definition
 			}
 		}
 
+		public new virtual void Add(string key, TraceParameterDefinition value) 
+			=> base.Add(key, value);
+
+		public new virtual bool Remove(string key) => base.Remove(key);
+
+		public new virtual void Clear() => base.Clear();
+
 		/// <returns> a new instance of a TraceParameterDefinitionMap containing all the same values as this one </returns>
 		public object Clone()
 		{
