@@ -137,7 +137,6 @@ namespace com.riscure.trs
                 throw new ArgumentException(TRACE_SET_IN_WRITE_MODE);
             }
 
-            MoveBufferIfNecessary(index);
 
             long traceSize = calculateTraceSize();
             long nrOfTraces = MetaData.GetInt(NUMBER_OF_TRACES);
@@ -153,6 +152,8 @@ namespace com.riscure.trs
                 string msg = string.Format(ERROR_READING_FILE, fileSize, metaDataSize, traceSize, nrOfTraces);
                 throw new InvalidOperationException(msg);
             }
+            MoveBufferIfNecessary(index);
+
             long absolutePosition = metaDataSize + index * traceSize;
             buffer.Position = absolutePosition - this.bufferStart;
 
@@ -170,7 +171,7 @@ namespace com.riscure.trs
                     TraceParameterDefinitionMap traceParameterDefinitionMap = MetaData.TraceParameterDefinitions;
                     int size = traceParameterDefinitionMap.TotalByteSize();
                     byte[] data = new byte[size];
-                    buffer.Read(data, 0, size); 
+                    buffer.Read(data, 0, size);
                     traceParameterMap = TraceParameterMap.Deserialize(data, traceParameterDefinitionMap);
                 }
                 else
