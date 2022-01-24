@@ -5,8 +5,8 @@
     /// </summary>
     public class UnmodifiableTraceParameterMap : TraceParameterMap
 	{
-		private const string UNABLE_TO_SET_PARAMETER = "Unable to set parameter `%s` to `%s`: This trace set is in read mode and cannot be modified.";
-		private const string REMOVAL_NOT_SUPPORTED_EXCEPTION = "Unable to remove parameter `%s`: This trace set is in read mode and cannot be modified.";
+		private const string UNABLE_TO_SET_PARAMETER = "Unable to set parameter {0} to {1}: This trace set is in read mode and cannot be modified.";
+		private const string REMOVAL_NOT_SUPPORTED_EXCEPTION = "Unable to remove parameter `{}`: This trace set is in read mode and cannot be modified.";
 		private const string MODIFICATION_NOT_SUPPORTED_EXCEPTION = "Unable to modify: This trace set is in read mode and cannot be modified.";
 
 		private const string UNABLE_TO_ADD_ALL_OF_S_THIS_TRACE_SET_IS_IN_READ_MODE_AND_CANNOT_BE_MODIFIED = "Unable to add all of `%s` : This trace set is in read mode and cannot be modified.";
@@ -21,7 +21,7 @@
 			return new UnmodifiableTraceParameterMap(t);
 		}
 
-		public override void Add(string key, TraceParameter value)
+		public new void Add(string key, TraceParameter value)
 		{
 			throw new NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, value.ToString()));
 		}

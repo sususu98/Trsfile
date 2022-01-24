@@ -653,16 +653,13 @@ namespace Trsfile.Test
             }
             //READ BACK AND CHECK RESULT
             using TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name);
-
-            var a = readable.Get(0);
-            var b = a.Parameters;
-            Assert.IsTrue(readable.Get(0).Parameters[byteKey.Key].Equals(null));
+            Assert.IsFalse(readable.Get(0).Parameters[byteKey.Key].Equals(null));
         }
 
         /// <summary>
         /// This test checks whether all deserialize methods throw an exception if the inputstream does not contain enough data
         /// Introduced to test #11: TraceParameter.deserialize does not check the actual returned length
-        /// </summary>
+        /// </summary> 
         //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
         //ORIGINAL LINE: @Test public void testInvalidParameterLength()
         [TestMethod]
