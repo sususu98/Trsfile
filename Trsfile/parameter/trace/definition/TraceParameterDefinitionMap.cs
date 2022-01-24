@@ -86,6 +86,7 @@ namespace com.riscure.trs.parameter.trace.definition
                         //Read definition
                         result.Add(name, TraceParameterDefinition.Deserialize(dis));
                     }
+					return result;
                 }
 				catch (IOException ex)
 				{

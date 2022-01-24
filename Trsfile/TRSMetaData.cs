@@ -138,11 +138,12 @@ namespace com.riscure.trs
             get
             {
                 object o = metaData[TRSTag.TRACE_PARAMETER_DEFINITIONS];
-                if (typeof(TraceParameterDefinitionMap).IsAssignableFrom(o.GetType()))
-                {
-                    return (TraceParameterDefinitionMap)o;
-                }
-                return UnmodifiableTraceParameterDefinitionMap.Of(new TraceParameterDefinitionMap());
+                //if (typeof(TraceParameterDefinitionMap).IsAssignableFrom(o.GetType()))
+                //{
+                //    return (TraceParameterDefinitionMap)o;
+                //}
+                return o as TraceParameterDefinitionMap ?? 
+                    UnmodifiableTraceParameterDefinitionMap.Of(new TraceParameterDefinitionMap());
             }
         }
 
