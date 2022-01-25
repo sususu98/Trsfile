@@ -18,6 +18,8 @@ namespace com.riscure.trs.parameter.primitive
         {
         }
 
+        public override int Length => ScalarValue.Length;
+
         //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
         //ORIGINAL LINE: public void serialize(com.riscure.trs.io.LittleEndianOutputStream dos) throws java.io.IOException
         public override void Serialize(LittleEndianOutputStream dos)
