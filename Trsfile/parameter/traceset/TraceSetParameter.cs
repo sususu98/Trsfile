@@ -8,7 +8,7 @@
 
     public class TraceSetParameter: ICloneable
     {
-        private const string LENGTH_ERROR = "length of parameter (%d) exceeds maximum length (%d)";
+        private const string LENGTH_ERROR = "length of parameter {0:d} exceeds maximum length {1:d}";
         private const int MAX_LENGTH = 0x0FFFF;
 
 

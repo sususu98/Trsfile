@@ -122,11 +122,13 @@ namespace com.riscure.trs
             get
             {
                 object o = metaData[TRSTag.TRACE_SET_PARAMETERS];
-                if (o.GetType().IsAssignableFrom(typeof(TraceSetParameterMap)))
-                {
-                    return (TraceSetParameterMap)o;
-                }
-                return UnmodifiableTraceSetParameterMap.Of(new TraceSetParameterMap());
+                return o as TraceSetParameterMap ??
+                    UnmodifiableTraceSetParameterMap.Of(new TraceSetParameterMap());
+                //if (o.GetType().IsAssignableFrom(typeof(TraceSetParameterMap)))
+                //{
+                //    return (TraceSetParameterMap)o;
+                //}
+                //return UnmodifiableTraceSetParameterMap.Of(new TraceSetParameterMap());
             }
         }
 

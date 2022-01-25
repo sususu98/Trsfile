@@ -11,7 +11,7 @@ namespace com.riscure.trs
     /// </summary>
     public class Trace
     {
-        private const string TO_STRING_FORMAT = "Trace{Title='{0}', numberOfSamples={1}, shifted={2:d}, " 
+        private const string TO_STRING_FORMAT = "Trace{Title='{0}', numberOfSamples={1}, shifted={2:d}, "
             + "aggregatesValid={3}, hasIllegalValues={4}, isReal={5}, max={6:f}, min={7:f}\n{8}";
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace com.riscure.trs
         ///                   these values are also stored as a raw byte array </param>
         public Trace(string title, float[] sample, TraceParameterMap parameters)
         {
-            this.title = title;
+            Title = title;
             Sample = (float[])sample.Clone();
             Parameters = parameters;
         }
@@ -165,7 +165,7 @@ namespace com.riscure.trs
         /// Get the number of samples that this trace is shifted.
         /// </summary>
         /// <returns> the number of samples that this trace is shifted </returns>
-        public int Shifted { get; set; }
+        public int Shifted { get; private set; }
 
         /// <summary>
         /// Get the length of the sample array.
@@ -179,20 +179,14 @@ namespace com.riscure.trs
 
         public override string ToString()
         {
-            return string.Format(TO_STRING_FORMAT, title, Sample.Length, shifted, aggregatesValid, 
-                hasIllegalValues, isReal, max, min, 
+            return string.Format(TO_STRING_FORMAT, Title, Sample.Length, Shifted, aggregatesValid,
+                hasIllegalValues, isReal, max, min,
                 JsonSerializer.Serialize(Parameters, new JsonSerializerOptions
                 {
                     WriteIndented = true,
                 }));
         }
-        
-        /// <summary>
-        /// trace title </summary>
-        private readonly string title = string.Empty;
-        /// <summary>
-        /// number of samples shifted </summary>
-        private readonly int shifted = 0;
+
         /// <summary>
         /// Indicates whether the aggregates (<seealso cref="hasIllegalValues"/>, 
         /// <seealso cref="isReal"/> <seealso cref="max"/>, <seealso cref="min"/>) 

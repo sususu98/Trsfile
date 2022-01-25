@@ -58,7 +58,7 @@ namespace com.riscure.trs.parameter.traceset
             }
             catch (IOException ex)
             {
-                throw new Exception(ex.Message);
+                throw new IOException(ex.Message);
             }
         }
 

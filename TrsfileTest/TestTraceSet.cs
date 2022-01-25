@@ -753,10 +753,12 @@ namespace Trsfile.Test
             tspm.Add(typedKey, rawValue);
 
             ByteArrayTypeKey arrayTypeKey = new(rawKey);
-            Assert.IsTrue(tpm[arrayTypeKey.Key].Equals(null));
-            Assert.IsTrue(tspm[arrayTypeKey.Key].Equals(null));
-            Assert.AreEqual(new byte[] { rawValue }, tpm.GetByteArray(rawKey));
-            Assert.AreEqual(new byte[] { rawValue }, tspm.GetByteArray(rawKey));
+            Assert.IsTrue(tpm[arrayTypeKey.Key] is not null);
+            Assert.IsTrue(tspm[arrayTypeKey.Key] is not null);
+            var a = tpm.GetByteArray(arrayTypeKey.Key); 
+            var b = tspm.GetByteArray(arrayTypeKey.Key);
+            Assert.AreEqual(new byte[] { rawValue }, tpm.GetByteArray(arrayTypeKey.Key));
+            Assert.AreEqual(new byte[] { rawValue }, tspm.GetByteArray(arrayTypeKey.Key));
         }
 
         /// <summary>
@@ -797,8 +799,6 @@ namespace Trsfile.Test
 
         }
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void testEmptyString()
         [TestMethod]
         public void TestEmptyString()
         {
@@ -809,11 +809,9 @@ namespace Trsfile.Test
 
             TraceParameterMap deserialized = TraceParameterMap.Deserialize(serialized, tpdm);
             string empty_string = deserialized["EMPTY_STRING"].ToString();
-            Assert.AreEqual("", empty_string);
+            Assert.IsTrue("" == empty_string);
         }
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void testTooLargeArraySetParameter()
         [TestMethod]
         public void TestTooLargeArraySetParameter()
         {
@@ -821,9 +819,7 @@ namespace Trsfile.Test
             IntegerArrayTypeKey key = new("TOO_LARGE_ARRAY");
             TraceSetParameterMap tspm = new();
             tspm.Add(key, new int[arrayLength]);
-            Assert.ThrowsException<InvalidCastException>(() => tspm.Serialize);
-
-
+            Assert.ThrowsException<IOException>(() => tspm.Serialize());
         }
 
 
