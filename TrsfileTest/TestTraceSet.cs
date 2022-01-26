@@ -62,15 +62,6 @@ namespace Trsfile.Test
             }
             return true;
         }
-        public static bool AssertArrayEquals(byte[] a1, byte[] a2)
-        {
-            if (a1.Length != a2.Length) Assert.Fail("Array Not Equal");
-            for (int i = 0; i < a1.Length; i++)
-            {
-                if (a1[i] != a2[i]) Assert.Fail("Array Not Equal");
-            }
-            return true;
-        }
 
         [TestInitialize]
         public void CreateTempDir()
@@ -291,18 +282,13 @@ namespace Trsfile.Test
                 traceWithParameters.Add(Trace.Create("", FLOAT_SAMPLES, parameters));
             }
             //READ BACK AND CHECK RESULT
-            try
+            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
             {
-                TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name);
                 TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
                 foreach (var (key, parameter) in parameterDefinitions)
                 {
                     Assert.AreEqual(parameterName, key);
                 }
-            }
-            catch (Exception ex)
-            {
-                Assert.IsTrue(ex is TRSFormatException);
             }
         }
 
@@ -426,10 +412,10 @@ namespace Trsfile.Test
                             }
                             else
                             {
-                                Assert.AreEqual(correctValue.GetByteArray(key), trace.Parameters.GetByteArray(key));
+                                Assert.IsTrue(correctValue.GetByteArray(key).SequenceEqual(trace.Parameters.GetByteArray(key)));
                             }
                         }
-                        if (parameter.Type == ParameterType.SHORT)
+                        else if (parameter.Type == ParameterType.SHORT)
                         {
                             if (parameter.Length == 1)
                             {
@@ -437,10 +423,10 @@ namespace Trsfile.Test
                             }
                             else
                             {
-                                Assert.AreEqual(correctValue.GetShortArray(key), trace.Parameters.GetShortArray(key));
+                                Assert.IsTrue(correctValue.GetShortArray(key).SequenceEqual(trace.Parameters.GetShortArray(key)));
                             }
                         }
-                        if (parameter.Type == ParameterType.INT)
+                        else if (parameter.Type == ParameterType.INT)
                         {
                             if (parameter.Length == 1)
                             {
@@ -448,10 +434,10 @@ namespace Trsfile.Test
                             }
                             else
                             {
-                                Assert.AreEqual(correctValue.GetIntArray(key), trace.Parameters.GetIntArray(key));
+                                Assert.IsTrue(correctValue.GetIntArray(key).SequenceEqual(trace.Parameters.GetIntArray(key)));
                             }
                         }
-                        if (parameter.Type == ParameterType.FLOAT)
+                        else if (parameter.Type == ParameterType.FLOAT)
                         {
                             if (parameter.Length == 1)
                             {
@@ -459,10 +445,10 @@ namespace Trsfile.Test
                             }
                             else
                             {
-                                Assert.AreEqual(correctValue.GetFloatArray(key), trace.Parameters.GetFloatArray(key));
+                                Assert.IsTrue(correctValue.GetFloatArray(key).SequenceEqual(trace.Parameters.GetFloatArray(key)));
                             }
                         }
-                        if (parameter.Type == ParameterType.LONG)
+                        else if (parameter.Type == ParameterType.LONG)
                         {
                             if (parameter.Length == 1)
                             {
@@ -470,10 +456,10 @@ namespace Trsfile.Test
                             }
                             else
                             {
-                                Assert.AreEqual(correctValue.GetLongArray(key), trace.Parameters.GetLongArray(key));
+                                Assert.IsTrue(correctValue.GetLongArray(key).SequenceEqual(trace.Parameters.GetLongArray(key)));
                             }
                         }
-                        if (parameter.Type == ParameterType.DOUBLE)
+                        else if (parameter.Type == ParameterType.DOUBLE)
                         {
                             if (parameter.Length == 1)
                             {
@@ -481,14 +467,14 @@ namespace Trsfile.Test
                             }
                             else
                             {
-                                Assert.AreEqual(correctValue.GetDoubleArray(key), trace.Parameters.GetDoubleArray(key));
+                                Assert.IsTrue(correctValue.GetDoubleArray(key).SequenceEqual(trace.Parameters.GetDoubleArray(key)));
                             }
                         }
-                        if (parameter.Type == ParameterType.STRING)
+                        else if (parameter.Type == ParameterType.STRING)
                         {
                             Assert.AreEqual(correctValue.GetString(key), trace.Parameters.GetString(key));
                         }
-                        if (parameter.Type == ParameterType.BOOL)
+                        else if (parameter.Type == ParameterType.BOOL)
                         {
                             if (parameter.Length == 1)
                             {
@@ -496,7 +482,7 @@ namespace Trsfile.Test
                             }
                             else
                             {
-                                Assert.AreEqual(correctValue.GetBoolArray(key), trace.Parameters.GetBoolArray(key));
+                                Assert.IsTrue(correctValue.GetBoolArray(key).SequenceEqual(trace.Parameters.GetBoolArray(key)));
                             }
                         }
                         else throw new Exception("Unexpected type: " + parameter.Type);
@@ -526,10 +512,10 @@ namespace Trsfile.Test
                             }
                             else
                             {
-                                Assert.AreEqual(correctValue.GetByteArray(key), trace.Parameters.GetByteArray(key));
+                                Assert.IsTrue(correctValue.GetByteArray(key).SequenceEqual(trace.Parameters.GetByteArray(key)));
                             }
                         }
-                        if (parameter.Type == ParameterType.SHORT)
+                        else if (parameter.Type == ParameterType.SHORT)
                         {
                             if (parameter.Length == 1)
                             {
@@ -537,10 +523,10 @@ namespace Trsfile.Test
                             }
                             else
                             {
-                                Assert.AreEqual(correctValue.GetShortArray(key), trace.Parameters.GetShortArray(key));
+                                Assert.IsTrue(correctValue.GetShortArray(key).SequenceEqual(trace.Parameters.GetShortArray(key)));
                             }
                         }
-                        if (parameter.Type == ParameterType.INT)
+                        else if (parameter.Type == ParameterType.INT)
                         {
                             if (parameter.Length == 1)
                             {
@@ -548,10 +534,10 @@ namespace Trsfile.Test
                             }
                             else
                             {
-                                Assert.AreEqual(correctValue.GetIntArray(key), trace.Parameters.GetIntArray(key));
+                                Assert.IsTrue(correctValue.GetIntArray(key).SequenceEqual(trace.Parameters.GetIntArray(key)));
                             }
                         }
-                        if (parameter.Type == ParameterType.FLOAT)
+                        else if (parameter.Type == ParameterType.FLOAT)
                         {
                             if (parameter.Length == 1)
                             {
@@ -559,10 +545,10 @@ namespace Trsfile.Test
                             }
                             else
                             {
-                                Assert.AreEqual(correctValue.GetFloatArray(key), trace.Parameters.GetFloatArray(key));
+                                Assert.IsTrue(correctValue.GetFloatArray(key).SequenceEqual(trace.Parameters.GetFloatArray(key)));
                             }
                         }
-                        if (parameter.Type == ParameterType.LONG)
+                        else if (parameter.Type == ParameterType.LONG)
                         {
                             if (parameter.Length == 1)
                             {
@@ -570,10 +556,10 @@ namespace Trsfile.Test
                             }
                             else
                             {
-                                Assert.AreEqual(correctValue.GetLongArray(key), trace.Parameters.GetLongArray(key));
+                                Assert.IsTrue(correctValue.GetLongArray(key).SequenceEqual(trace.Parameters.GetLongArray(key)));
                             }
                         }
-                        if (parameter.Type == ParameterType.DOUBLE)
+                        else if (parameter.Type == ParameterType.DOUBLE)
                         {
                             if (parameter.Length == 1)
                             {
@@ -581,14 +567,14 @@ namespace Trsfile.Test
                             }
                             else
                             {
-                                Assert.AreEqual(correctValue.GetDoubleArray(key), trace.Parameters.GetDoubleArray(key));
+                                Assert.IsTrue(correctValue.GetDoubleArray(key).SequenceEqual(trace.Parameters.GetDoubleArray(key)));
                             }
                         }
-                        if (parameter.Type == ParameterType.STRING)
+                        else if (parameter.Type == ParameterType.STRING)
                         {
                             Assert.AreEqual(correctValue.GetString(key), trace.Parameters.GetString(key));
                         }
-                        if (parameter.Type == ParameterType.BOOL)
+                        else if (parameter.Type == ParameterType.BOOL)
                         {
                             if (parameter.Length == 1)
                             {
@@ -596,7 +582,7 @@ namespace Trsfile.Test
                             }
                             else
                             {
-                                Assert.AreEqual(correctValue.GetBoolArray(key), trace.Parameters.GetBoolArray(key));
+                                Assert.IsTrue(correctValue.GetBoolArray(key).SequenceEqual(trace.Parameters.GetBoolArray(key)));
                             }
                         }
                         else throw new Exception("Unexpected type: " + parameter.Type);
@@ -622,7 +608,8 @@ namespace Trsfile.Test
             //READ BACK AND CHECK RESULT
             using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
             {
-                Assert.ThrowsException<ArgumentNullException>(() => readable.Get(0).Parameters.GetDouble("BYTE"));
+                // Assert.ThrowsException<ArgumentNullException>(() => readable.Get(0).Parameters.GetDouble("BYTE"));
+                Assert.ThrowsException<InvalidCastException>(() => readable.Get(0).Parameters.GetDouble("BYTE"));
             }
         }
 
@@ -743,8 +730,10 @@ namespace Trsfile.Test
             ByteArrayTypeKey arrayTypeKey = new(rawKey);
             Assert.IsTrue(tpm[arrayTypeKey.Key] is not null);
             Assert.IsTrue(tspm[arrayTypeKey.Key] is not null);
-            AssertArrayEquals(new byte[] { rawValue }, tpm.GetByteArray(arrayTypeKey.Key));
-            AssertArrayEquals(new byte[] { rawValue }, tspm.GetByteArray(arrayTypeKey.Key));
+            var a = tpm.GetByteArray(arrayTypeKey.Key);
+            var b = tspm.GetByteArray(arrayTypeKey.Key);
+            Assert.IsTrue(new byte[] { rawValue }.SequenceEqual(tpm.GetByteArray(arrayTypeKey.Key)));
+            Assert.IsTrue(new byte[] { rawValue }.SequenceEqual(tspm.GetByteArray(arrayTypeKey.Key)));
         }
 
         /// <summary>
@@ -760,8 +749,8 @@ namespace Trsfile.Test
             ByteTypeKey typedKey = new(rawKey);
             tpm.Add(rawKey, new byte[] { 1, 2 }); //actually a byte array
             tspm.Add(rawKey, 2); //actually an int'
-            Assert.ThrowsException<NotSupportedException>(() => tpm.GetByte(typedKey.Key));
-            Assert.ThrowsException<NotSupportedException>(() => tspm.GetByte(typedKey.Key));
+            Assert.ThrowsException<InvalidCastException>(() => tpm.GetArray(typedKey, out _));
+            Assert.ThrowsException<InvalidCastException>(() => tspm.Get(typedKey, out _));
         }
 
         /// <summary>
@@ -817,7 +806,7 @@ namespace Trsfile.Test
             tspm.Add(key, new int[arrayLength]);
             byte[] serialize = tspm.Serialize();
             TraceSetParameterMap deserialize = TraceSetParameterMap.Deserialize(serialize);
-            Assert.AreEqual(arrayLength, deserialize.GetIntArray(key.Key).Length);
+            Assert.AreEqual(arrayLength, deserialize.GetArray(key, out _)?.Length);
         }
 
 

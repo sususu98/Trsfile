@@ -2,22 +2,18 @@
 {
 	using TraceParameter = parameter.TraceParameter;
 	using BoolArrayParameter = parameter.primitive.BoolArrayParameter;
-	public class BoolArrayTypeKey : TypedKey<bool[]>
+	public class BoolArrayTypeKey : TypedKey<bool>
 	{
-		public BoolArrayTypeKey(string key) : base(typeof(bool[]), key)
+		public BoolArrayTypeKey(string key) : base(typeof(bool[]), key, true)
 		{
 		}
 
         public override TraceParameter CreateParameter(bool[] value)
 		{
-			CheckLength(value);
+			if (value.Length <= 0) throw new ArgumentException("Value's length below 0");
+			if (value.Length == 1) IsArray = false;
 			return new BoolArrayParameter(value);
 		}
-
-        protected internal override void CheckLength(bool[] value)
-        {
-			if (value.Length <= 0) throw new ArgumentException("Value's length below 0");
-        }
     }
 
 }

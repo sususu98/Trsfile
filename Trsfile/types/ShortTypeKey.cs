@@ -5,17 +5,14 @@
 
     public class ShortTypeKey : TypedKey<short>
     {
-        public ShortTypeKey(string key) : base(typeof(short), key)
-        {
-        }
-
+        public ShortTypeKey(string key) : base(typeof(short), key, false) { }
         public override TraceParameter CreateParameter(short value)
         {
-            CheckLength(value);
             return new ShortArrayParameter(value);
         }
-        protected internal override void CheckLength(short value)
+        public override TraceParameter CreateParameter(short[] value)
         {
+            throw new NotSupportedException("This is single type key, this method is not supported.");
         }
     }
 
