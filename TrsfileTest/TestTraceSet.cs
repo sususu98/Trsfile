@@ -270,9 +270,7 @@ namespace Trsfile.Test
         /// </summary>
         /// <exception cref="IOException"> </exception>
         /// <exception cref="TRSFormatException"> </exception>
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test(expected = com.riscure.trs.TRSFormatException.class) public void testWriteTraceParametersInvalidName() throws IOException, com.riscure.trs.TRSFormatException
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+
         [TestMethod]
         public void TestWriteTraceParametersInvalidName()
         {
@@ -382,9 +380,6 @@ namespace Trsfile.Test
             ReadBackTyped(testParameters, name);
             ReadBackTypedKeys(testParameters, name);
         }
-
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: private void readBackGeneric(List<com.riscure.trs.parameter.trace.TraceParameterMap> testParameters, String name) throws IOException, com.riscure.trs.TRSFormatException
         private void ReadBackGeneric(IList<TraceParameterMap> testParameters, string name)
         {
             using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
@@ -404,9 +399,6 @@ namespace Trsfile.Test
                 }
             }
         }
-
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: private void readBackTyped(List<com.riscure.trs.parameter.trace.TraceParameterMap> testParameters, String name) throws IOException, com.riscure.trs.TRSFormatException
         private static void ReadBackTyped(IList<TraceParameterMap> testParameters, string name)
         {
             using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
@@ -507,8 +499,6 @@ namespace Trsfile.Test
 
             }
         }
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: private void readBackTypedKeys(List<com.riscure.trs.parameter.trace.TraceParameterMap> testParameters, String name) throws IOException, com.riscure.trs.TRSFormatException
         private void ReadBackTypedKeys(IList<TraceParameterMap> testParameters, string name)
         {
             using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
@@ -609,17 +599,12 @@ namespace Trsfile.Test
 
             }
         }
-        /// <summary>
-        /// This tests getting a value of the wrong type correctly throws an exception
-        /// </summary>
-        /// <exception cref="IOException"> </exception>
-        /// <exception cref="TRSFormatException"> </exception>
 
         [TestMethod]
         public void TestExceptionWrongType()
         {
             TRSMetaData metaData = TRSMetaData.Create();
-            //CREATE TRACE
+            //CREATE trsfile
             string name = Guid.NewGuid().ToString() + TRS;
             using (TraceSet traceWithParameters = TraceSet.Create(tempDir + Path.DirectorySeparatorChar + name, metaData))
             {
@@ -630,6 +615,9 @@ namespace Trsfile.Test
             //READ BACK AND CHECK RESULT
             using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
             {
+                var a = readable.Get(0);
+                var b = a.Parameters;
+                var c = b.GetDouble("BYTE");
                 Assert.ThrowsException<InvalidCastException>(() => readable.Get(0).Parameters.GetDouble("BYTE"));
             }
         }
@@ -755,7 +743,7 @@ namespace Trsfile.Test
             ByteArrayTypeKey arrayTypeKey = new(rawKey);
             Assert.IsTrue(tpm[arrayTypeKey.Key] is not null);
             Assert.IsTrue(tspm[arrayTypeKey.Key] is not null);
-            var a = tpm.GetByteArray(arrayTypeKey.Key); 
+            var a = tpm.GetByteArray(arrayTypeKey.Key);
             var b = tspm.GetByteArray(arrayTypeKey.Key);
             Assert.AreEqual(new byte[] { rawValue }, tpm.GetByteArray(arrayTypeKey.Key));
             Assert.AreEqual(new byte[] { rawValue }, tspm.GetByteArray(arrayTypeKey.Key));

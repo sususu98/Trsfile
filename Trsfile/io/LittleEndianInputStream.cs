@@ -193,7 +193,7 @@
             while (n < len)
             {
                 int count = stream.Read(b, off + n, len - n);
-                if (count < 0)
+                if (count <= 0)
                 {
                     throw new EndOfStreamException();
                 }
@@ -427,8 +427,6 @@
         ///                      input stream does not support reading after close, or
         ///                      another I/O error occurs. </exception>
         /// <seealso cref="java.io.FilterInputStream.in"/>
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: public final int readInt() throws IOException
         public int ReadInt()
         {
             int ch1 = stream.ReadByte();
