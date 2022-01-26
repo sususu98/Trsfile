@@ -57,7 +57,6 @@ namespace com.riscure.trs
             this.writing = false;
             this.open_Conflict = true;
             this.filePath = Path.GetFullPath(inputFileName);
-            //this.channel = readStream.getChannel();
             this.info = new FileInfo(inputFileName);
 
             //the file might be bigger than the buffer, in which case we partially buffer it in memory

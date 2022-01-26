@@ -24,9 +24,6 @@ using com.riscure.trs.types;
 using com.riscure.trs.parameter;
 
 
-//JAVA TO C# CONVERTER TODO TASK: This Java 'import static' statement cannot be converted to C#:
-//import static org.junit.Assert.*;
-
 namespace Trsfile.Test
 {
     [TestClass]
@@ -303,9 +300,7 @@ namespace Trsfile.Test
         /// </summary>
         /// <exception cref="IOException"> </exception>
         /// <exception cref="TRSFormatException"> </exception>
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void testWriteTraceParametersVaryingStringLength() throws IOException, com.riscure.trs.TRSFormatException
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+
 
         [TestMethod]
         public void TestWriteTraceParametersVaryingStringLength()
@@ -342,9 +337,7 @@ namespace Trsfile.Test
         /// </summary>
         /// <exception cref="IOException"> </exception>
         /// <exception cref="TRSFormatException"> </exception>
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void testReadTraceParametersTyped() throws IOException, com.riscure.trs.TRSFormatException
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
+
         [TestMethod]
         public void TestReadTraceParametersTyped()
         {
@@ -615,10 +608,7 @@ namespace Trsfile.Test
             //READ BACK AND CHECK RESULT
             using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
             {
-                var a = readable.Get(0);
-                var b = a.Parameters;
-                var c = b.GetDouble("BYTE");
-                Assert.ThrowsException<InvalidCastException>(() => readable.Get(0).Parameters.GetDouble("BYTE"));
+                Assert.ThrowsException<ArgumentNullException>(() => readable.Get(0).Parameters.GetDouble("BYTE"));
             }
         }
 
@@ -648,8 +638,7 @@ namespace Trsfile.Test
         /// This test checks whether all deserialize methods throw an exception if the inputstream does not contain enough data
         /// Introduced to test #11: TraceParameter.deserialize does not check the actual returned length
         /// </summary> 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void testInvalidParameterLength()
+
         [TestMethod]
         public void TestInvalidParameterLength()
         {
@@ -695,8 +684,7 @@ namespace Trsfile.Test
         /// This test checks whether an empty array is serialized and deserialized correctly
         /// Expected: an exception is thrown when adding an empty parameter
         /// </summary>
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void testEmptyArrayParameter()
+
         [TestMethod]
         public void TestEmptyArrayParameter()
         {
@@ -707,8 +695,7 @@ namespace Trsfile.Test
         /// <summary>
         /// This test checks whether a Trace(Set)ParameterMap correctly works with typed keys
         /// </summary>
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void testContainsTypedKey()
+
         [TestMethod]
         public void TestContainsTypedKey()
         {
@@ -726,8 +713,7 @@ namespace Trsfile.Test
         /// <summary>
         /// This test checks whether you can get an array type of a simple value
         /// </summary>
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void testGetArrayOfLengthOne()
+
         [TestMethod]
         public void TestGetArrayOfLengthOne()
         {
@@ -752,8 +738,7 @@ namespace Trsfile.Test
         /// <summary>
         /// This test checks whether a Trace(Set)ParameterMap correctly fails with a typed key of the incorrect type
         /// </summary>
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void testContainsWrongTypedKey()
+
         [TestMethod]
         public void TestContainsWrongTypedKey()
         {

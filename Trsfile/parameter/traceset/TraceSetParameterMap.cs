@@ -20,7 +20,7 @@ namespace com.riscure.trs.parameter.traceset
         {
             foreach (var (key, value) in toCopy)
             {
-                Add(key, (TraceSetParameter)value.Clone());
+                base.Add(key, (TraceSetParameter)value.Clone());
             }
         }
 
@@ -110,7 +110,7 @@ namespace com.riscure.trs.parameter.traceset
         /// @param <T> the type of the parameter </param>
         /// <returns> the value of the requested parameter </returns>
         /// <exception cref="ClassCastException"> if the requested value is not of the expected type </exception>
-        public T? Get<T>(TypedKey<T> typedKey, out bool isNull, T? defaultValue = default, bool throwIfNull = false)
+        public T? Get<T>(TypedKey<T> typedKey, out bool isNull, T? defaultValue = default, bool throwIfNull = true)
         {
             TraceParameter parameter = this[typedKey.Key].Value;
             if (parameter is null || parameter is not TraceParameter<T> Tparameter)

@@ -108,7 +108,7 @@ namespace com.riscure.trs.parameter.trace
         /// <param name="typedKey"> the <seealso cref="TypedKey<typeparamref name="T"/>"/> defining the name and the type of the value to retrieve </param>
         /// @param <T> the type of the parameter </param>
         /// <returns> the value of the requested parameter </returns>
-        public T? Get<T>(TypedKey<T> typedKey, out bool isNull, T? defaultValue = default, bool throwIfNull = false)
+        public T? Get<T>(TypedKey<T> typedKey, out bool isNull, T? defaultValue = default, bool throwIfNull = true)
         {
             TraceParameter parameter = this[typedKey.Key];
             if (parameter is null || parameter is not TraceParameter<T> Tparameter)

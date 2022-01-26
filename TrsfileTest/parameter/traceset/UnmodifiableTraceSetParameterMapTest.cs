@@ -1,19 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using IntegerArrayParameter = com.riscure.trs.parameter.primitive.IntegerArrayParameter;
 
 namespace com.riscure.trs.parameter.traceset
 {
-    using IntegerArrayParameter = com.riscure.trs.parameter.primitive.IntegerArrayParameter;
-
-    //JAVA TO C# CONVERTER TODO TASK: This Java 'import static' statement cannot be converted to C#:
-    //	import static org.junit.jupiter.api.Assertions.*;
-
+    [TestClass]
     internal class UnmodifiableTraceSetParameterMapTest
     {
         private TraceSetParameterMap immutable;
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @BeforeEach public void setup()
+        [TestInitialize]
         public virtual void Setup()
         {
             TraceSetParameterMap mutable = new();
@@ -21,14 +17,9 @@ namespace com.riscure.trs.parameter.traceset
 
             immutable = UnmodifiableTraceSetParameterMap.Of(mutable);
         }
-
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void put()
+        [TestMethod]
         public virtual void Add()
         {
-
-
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Add("BLA", 2));
 
             string expectedMessage = "Unable to set parameter `BLA` to `[2]`: This trace set is in read mode and cannot be modified.";
@@ -37,8 +28,7 @@ namespace com.riscure.trs.parameter.traceset
             Assert.IsTrue(actualMessage.Contains(expectedMessage));
         }
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void remove()
+        [TestMethod]
         public virtual void Remove()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Remove("FOO"));
@@ -51,8 +41,7 @@ namespace com.riscure.trs.parameter.traceset
 
 
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void clear()
+        [TestMethod]
         public virtual void Clear()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Clear());
@@ -65,12 +54,7 @@ namespace com.riscure.trs.parameter.traceset
         }
 
 
-
-
-
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void testRemove()
+        [TestMethod]
         public virtual void TestRemove()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Remove("BLA", out _));
@@ -82,8 +66,7 @@ namespace com.riscure.trs.parameter.traceset
 
         }
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void replace()
+        [TestMethod]
         public virtual void Replace()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable["FOO"] = new TraceSetParameter(new IntegerArrayParameter(new int[] { -1 })));
@@ -95,8 +78,7 @@ namespace com.riscure.trs.parameter.traceset
 
         }
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void testReplace()
+        [TestMethod]
         public virtual void TestReplace()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable["FOO"] = new TraceSetParameter(new IntegerArrayParameter(new int[] { -1 })));
