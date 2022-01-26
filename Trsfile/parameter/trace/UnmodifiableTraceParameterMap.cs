@@ -21,7 +21,7 @@
 			return new UnmodifiableTraceParameterMap(t);
 		}
 
-		public new void Add(string key, TraceParameter value)
+		public override void Add(string key, TraceParameter value)
 		{
 			throw new NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, value.ToString()));
 		}
