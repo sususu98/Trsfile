@@ -9,7 +9,9 @@ namespace com.riscure.trs.parameter
     {
         public T[] Value { get; }
 
-        public T ScalarValue { get; }
+#pragma warning disable CS8603
+        public T ScalarValue { get => Value.ElementAtOrDefault(0); }
+#pragma warning restore CS8603
 
         public TraceParameter(T value) : base(ParameterType.BOOL, false) // set as some default
         {
@@ -26,7 +28,6 @@ namespace com.riscure.trs.parameter
                 _ => throw new InvalidDataException("Not supported Data Type")
             };
             Value = new T[] { value };
-            ScalarValue = value;
         }
 
 #pragma warning disable CS8618
@@ -46,9 +47,6 @@ namespace com.riscure.trs.parameter
                 _ => throw new InvalidDataException("Not supported Data Type")
             };
             Value = value;
-#pragma warning disable CS8601
-            ScalarValue = value.ElementAtOrDefault(0); // Here it wouldn't be null :)
-#pragma warning restore CS8601
         }
 
         public override int Length => Value.Length;
