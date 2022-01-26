@@ -118,17 +118,8 @@ namespace com.riscure.trs.parameter.trace
                     nameof(parameter) + " or " + nameof(Tparameter));
                 else return defaultValue;
             }
-            if (!parameter.IsArray)
-            {
-                isNull = false;
-                return Tparameter.ScalarValue;
-            }
-            else
-            {
-                isNull = true;
-                if (throwIfNull) throw new ArgumentException($"{nameof(parameter)} is array ! Should use GetArray instead.");
-                else return defaultValue;
-            }
+            isNull = false;
+            return Tparameter.ScalarValue;
         }
 
         /// <summary>
@@ -137,7 +128,7 @@ namespace com.riscure.trs.parameter.trace
         /// @param <T> the type of the parameter </param>
         /// <returns> the value of the requested parameter </returns>
         /// <exception cref="ClassCastException"> if the requested value is not of the expected type </exception>
-        public T[]? GetArray<T>(TypedKey<T> typedKey, out bool isNull, T[]? defaultValue = default, bool throwIfNull = false)
+        public T[]? GetArray<T>(TypedKey<T> typedKey, out bool isNull, T[]? defaultValue = default, bool throwIfNull = true)
         {
             TraceParameter parameter = this[typedKey.Key];
             if (parameter is null || parameter is not TraceParameter<T> Tparameter)
@@ -147,17 +138,8 @@ namespace com.riscure.trs.parameter.trace
                     nameof(parameter) + " or " + nameof(Tparameter));
                 else return defaultValue;
             }
-            if (parameter.IsArray)
-            {
-                isNull = false;
-                return Tparameter.Value;
-            }
-            else
-            {
-                isNull = true;
-                if (throwIfNull) throw new ArgumentException($"{nameof(parameter)} is array ! Should use GetArray instead.");
-                else return defaultValue;
-            }
+            isNull = false;
+            return Tparameter.Value;
         }
 
         public void Add(string key, byte value) => Add(new ByteTypeKey(key), value);
