@@ -18,7 +18,7 @@ namespace com.riscure.trs.parameter.trace
         {
             foreach (var (key, value) in toCopy)
             {
-                Add(key, (TraceParameter)value.Clone());
+                base.Add(key, (TraceParameter)value.Clone());
             }
         }
 
@@ -28,7 +28,7 @@ namespace com.riscure.trs.parameter.trace
             return new TraceParameterMap(this);
         }
 
-        public new void Add(string s, TraceParameter t) => base.Add(s, t);
+        public virtual new void Add(string s, TraceParameter t) => base.Add(s, t);
 
 #pragma warning disable CS8601
         public virtual new bool Remove(string s, out TraceParameter t) => base.Remove(s, out t);
