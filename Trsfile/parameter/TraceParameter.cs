@@ -12,10 +12,9 @@ namespace com.riscure.trs.parameter
         public const string SAMPLES = nameof(SAMPLES);
         public const string TITLE = nameof(TITLE);
 
-        protected TraceParameter(ParameterType type, bool isArray)
+        protected TraceParameter(ParameterType type)
         {
             Type = type;
-            IsArray = isArray;
         }
 
         /// <summary>
@@ -24,7 +23,7 @@ namespace com.riscure.trs.parameter
         /// <returns> the number of values of this type in this parameter </returns>
         public abstract int Length { get; }
 
-        public bool IsArray { get; }
+        public virtual bool IsArray { get; }
 
         /// <returns> The type of the parameter. </returns>
         public ParameterType Type { get; protected set; }

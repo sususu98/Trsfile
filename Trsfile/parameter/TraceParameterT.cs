@@ -13,25 +13,13 @@ namespace com.riscure.trs.parameter
         public T ScalarValue { get => Value.ElementAtOrDefault(0); }
 #pragma warning restore CS8603
 
-        public TraceParameter(T value) : base(ParameterType.BOOL, false) // set as some default
+        public TraceParameter(T value) : this(new T[]{ value })
         {
-            Type = typeof(T) switch
-            {
-                Type _ when value is bool => ParameterType.BOOL,
-                Type _ when value is byte => ParameterType.BYTE,
-                Type _ when value is short => ParameterType.SHORT,
-                Type _ when value is int => ParameterType.INT,
-                Type _ when value is float => ParameterType.FLOAT,
-                Type _ when value is double => ParameterType.DOUBLE,
-                Type _ when value is string => ParameterType.STRING,
-                Type _ when value is long => ParameterType.LONG,
-                _ => throw new InvalidDataException("Not supported Data Type")
-            };
-            Value = new T[] { value };
+           
         }
 
 #pragma warning disable CS8618
-        public TraceParameter(T[] value) : base(ParameterType.BOOL, true) // set as some default
+        public TraceParameter(T[] value) : base(ParameterType.BOOL) // set as some default
 #pragma warning restore CS8618
         {
             _ = value ?? throw new ArgumentNullException(nameof(value) + " is null");
@@ -44,6 +32,8 @@ namespace com.riscure.trs.parameter
                 T t when t is float => ParameterType.FLOAT,
                 T t when t is double => ParameterType.DOUBLE,
                 T t when t is long => ParameterType.LONG,
+                T t when t is string => value.Length == 1 ?
+                    ParameterType.STRING : throw new InvalidDataException("String array is not supported."),
                 _ => throw new InvalidDataException("Not supported Data Type")
             };
             Value = value;
@@ -51,6 +41,7 @@ namespace com.riscure.trs.parameter
 
         public override int Length => Value.Length;
 
+        public override bool IsArray => Value.Length != 1;
 
         public override bool Equals(object? o)
         {

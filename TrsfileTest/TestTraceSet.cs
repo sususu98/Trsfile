@@ -781,8 +781,8 @@ namespace Trsfile.Test
             byte[] serialized = tpm.Serialize();
 
             TraceParameterMap deserialized = TraceParameterMap.Deserialize(serialized, tpdm);
-            string empty_string = deserialized["EMPTY_STRING"].ToString();
-            Assert.IsTrue("" == empty_string);
+            string empty_string = (deserialized["EMPTY_STRING"] as TraceParameter<string>).ScalarValue;
+            Assert.IsTrue(empty_string == string.Empty);
         }
 
         [TestMethod]
