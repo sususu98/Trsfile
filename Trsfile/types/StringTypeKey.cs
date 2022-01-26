@@ -5,17 +5,14 @@
 
     public class StringTypeKey : TypedKey<string>
     {
-        public StringTypeKey(string key) : base(typeof(string), key)
-        {
-        }
-
+        public StringTypeKey(string key) : base(typeof(string), key, false) { }
         public override TraceParameter CreateParameter(string value)
         {
-            CheckLength(value);
             return new StringParameter(value);
         }
-        protected internal override void CheckLength(string value)
+        public override TraceParameter CreateParameter(string[] value)
         {
+            throw new NotSupportedException("This is single type key, this method is not supported.");
         }
     }
 

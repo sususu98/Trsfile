@@ -608,7 +608,8 @@ namespace Trsfile.Test
             //READ BACK AND CHECK RESULT
             using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
             {
-                Assert.ThrowsException<ArgumentNullException>(() => readable.Get(0).Parameters.GetDouble("BYTE"));
+                // Assert.ThrowsException<ArgumentNullException>(() => readable.Get(0).Parameters.GetDouble("BYTE"));
+                Assert.ThrowsException<InvalidCastException>(() => readable.Get(0).Parameters.GetDouble("BYTE"));
             }
         }
 
@@ -731,8 +732,8 @@ namespace Trsfile.Test
             Assert.IsTrue(tspm[arrayTypeKey.Key] is not null);
             var a = tpm.GetByteArray(arrayTypeKey.Key);
             var b = tspm.GetByteArray(arrayTypeKey.Key);
-            Assert.AreEqual(new byte[] { rawValue }, tpm.GetByteArray(arrayTypeKey.Key));
-            Assert.AreEqual(new byte[] { rawValue }, tspm.GetByteArray(arrayTypeKey.Key));
+            Assert.IsTrue(new byte[] { rawValue }.SequenceEqual(tpm.GetByteArray(arrayTypeKey.Key)));
+            Assert.IsTrue(new byte[] { rawValue }.SequenceEqual(tspm.GetByteArray(arrayTypeKey.Key)));
         }
 
         /// <summary>
@@ -748,8 +749,8 @@ namespace Trsfile.Test
             ByteTypeKey typedKey = new(rawKey);
             tpm.Add(rawKey, new byte[] { 1, 2 }); //actually a byte array
             tspm.Add(rawKey, 2); //actually an int'
-            Assert.ThrowsException<InvalidCastException>(() => tpm[typedKey.Key]);
-            Assert.ThrowsException<InvalidCastException>(() => tspm[typedKey.Key]);
+            Assert.ThrowsException<InvalidCastException>(() => tpm.GetArray(typedKey, out _));
+            Assert.ThrowsException<InvalidCastException>(() => tspm.Get(typedKey, out _));
         }
 
         /// <summary>

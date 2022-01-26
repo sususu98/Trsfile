@@ -5,17 +5,14 @@
 
     public class LongTypeKey : TypedKey<long>
     {
-        public LongTypeKey(string key) : base(typeof(long), key)
-        {
-        }
-
+        public LongTypeKey(string key) : base(typeof(long), key, false) { }
         public override TraceParameter CreateParameter(long value)
         {
-            CheckLength(value);
             return new LongArrayParameter(value);
         }
-        protected internal override void CheckLength(long value)
+        public override TraceParameter CreateParameter(long[] value)
         {
+            throw new NotSupportedException("This is single type key, this method is not supported.");
         }
     }
 

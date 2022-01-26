@@ -3,7 +3,7 @@
     public sealed class ParameterType
     {
         public static readonly ParameterType BYTE
-            = new("BYTE", ParameterTypeEnum.BYTE, 0x01, sizeof(byte), typeof(byte), typeof(sbyte[]));
+            = new("BYTE", ParameterTypeEnum.BYTE, 0x01, sizeof(byte), typeof(byte), typeof(byte[]));
         public static readonly ParameterType SHORT
             = new("SHORT", ParameterTypeEnum.SHORT, 0x02, sizeof(short), typeof(short), typeof(short[]));
         public static readonly ParameterType INT
@@ -53,15 +53,15 @@
         public int Ordinal { get; }
         private static int nextOrdinal = 0;
 
-        private readonly Type cls;
-        private readonly Type arrayCls;
+        public Type Cls { get; }
+        public Type ArrayCls { get; }
 
         internal ParameterType(string name, ParameterTypeEnum innerEnum, int value, int byteSize, Type cls, Type arrayCls)
         {
             Value = (byte)value;
             ByteSize = byteSize;
-            this.cls = cls;
-            this.arrayCls = arrayCls;
+            Cls = cls;
+            ArrayCls = arrayCls;
 
             nameValue = name;
             Ordinal = nextOrdinal++;
@@ -88,7 +88,7 @@
         {
             foreach (var parameterType in Values)
             {
-                if (parameterType.cls.IsAssignableFrom(cls) || parameterType.arrayCls.IsAssignableFrom(cls))
+                if (parameterType.Cls.IsAssignableFrom(cls) || parameterType.ArrayCls.IsAssignableFrom(cls))
                 {
                     return parameterType;
                 }

@@ -5,19 +5,26 @@ using System.Text.Json;
 
 namespace com.riscure.trs.types
 {
+	/// <summary>
+	/// Basic Type Key for Map
+	/// </summary>
+	/// <typeparam name="T">Type of single value</typeparam>
 	public abstract class TypedKey<T>
 	{
 		public const string INCORRECT_TYPE = "Tried to retrieve a value of type {0}, but the actual value was of type {1}";
 
-		protected TypedKey(Type cls, string key)
+		protected TypedKey(Type cls, string key, bool isArray)
 		{
 			Cls = cls;
 			Key = key;
+			IsArray = isArray;
 		}
 
-		public virtual Type Cls { get; } = typeof(T);
+		public Type Cls { get; }
 
-		public virtual string Key { get; }
+		public string Key { get; }
+
+		public bool IsArray { get; protected set; }
 
         public virtual T Cast(object value)
         {
@@ -29,16 +36,14 @@ namespace com.riscure.trs.types
             throw new InvalidCastException(string.Format(INCORRECT_TYPE, Cls.FullName, value.GetType().FullName));
         }
 
-        public abstract TraceParameter CreateParameter(T value);
+        public virtual TraceParameter CreateParameter(T value)
+        {
+			return CreateParameter(new T[] { value });
+        }
 
-		public virtual ParameterType Type { get => ParameterType.FromClass(Cls); }
+		public abstract TraceParameter CreateParameter(T[] value);
 
 		// T, T[], string
-
-		protected internal virtual void CheckLength(T value)
-        {
-
-        }
 
 		public override bool Equals(object? o)
 		{
