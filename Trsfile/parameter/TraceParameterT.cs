@@ -22,7 +22,8 @@ namespace com.riscure.trs.parameter
         public TraceParameter(T[] value) : base(ParameterType.BOOL) // set as some default
 #pragma warning restore CS8618
         {
-            _ = value ?? throw new ArgumentNullException(nameof(value) + " is null");
+            _ = value
+                ?? throw new ArgumentNullException(nameof(value) + " is null");
             Type = value.ElementAtOrDefault(0) switch
             {
                 T t when t is bool => ParameterType.BOOL,

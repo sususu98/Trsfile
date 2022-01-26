@@ -8,7 +8,7 @@ using System;
 using System.Text;
 using System.Text.RegularExpressions;
 
-internal static class StringHelper
+public static class StringHelper
 {
 	//------------------------------------------------------------------------------------
 	//	This method is used to replace calls to the 2-arg Java String.startsWith method.

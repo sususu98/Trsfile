@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace com.riscure.trs
+﻿namespace com.riscure.trs
 {
-	public class TRSFormatException : Exception
+    public class TRSFormatException : Exception
 	{
 		public TRSFormatException(string message) : base(message)
 		{

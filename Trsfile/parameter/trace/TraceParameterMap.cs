@@ -108,18 +108,21 @@ namespace com.riscure.trs.parameter.trace
         /// <param name="typedKey"> the <seealso cref="TypedKey<typeparamref name="T"/>"/> defining the name and the type of the value to retrieve </param>
         /// @param <T> the type of the parameter </param>
         /// <returns> the value of the requested parameter </returns>
-        public T? Get<T>(TypedKey<T> typedKey, out bool isNull, T? defaultValue = default, bool throwIfNull = true)
+        public T? Get<T>(TypedKey<T> typedKey)
         {
             TraceParameter parameter = this[typedKey.Key];
-            if (parameter is null || parameter is not TraceParameter<T> Tparameter)
+            if (parameter.Length > 1)
             {
-                isNull = true;
-                if (throwIfNull) throw new ArgumentNullException(
-                    nameof(parameter) + " or " + nameof(Tparameter));
-                else return defaultValue;
+                throw new NotSupportedException("you should use GetArray method");
             }
-            isNull = false;
-            return Tparameter.ScalarValue;
+            if (parameter is not TraceParameter<T> Tparameter)
+            {
+                throw new NotSupportedException(string.Format(KEY_NOT_FOUND, typedKey.Key));
+            }
+            else
+            {
+                return Tparameter.ScalarValue;
+            }
         }
 
         /// <summary>
@@ -128,17 +131,13 @@ namespace com.riscure.trs.parameter.trace
         /// @param <T> the type of the parameter </param>
         /// <returns> the value of the requested parameter </returns>
         /// <exception cref="ClassCastException"> if the requested value is not of the expected type </exception>
-        public T[]? GetArray<T>(TypedKey<T> typedKey, out bool isNull, T[]? defaultValue = default, bool throwIfNull = true)
+        public T[]? GetArray<T>(TypedKey<T> typedKey)
         {
             TraceParameter parameter = this[typedKey.Key];
-            if (parameter is null || parameter is not TraceParameter<T> Tparameter)
+            if (parameter is not TraceParameter<T> Tparameter)
             {
-                isNull = true;
-                if (throwIfNull) throw new ArgumentNullException(
-                    nameof(parameter) + " or " + nameof(Tparameter));
-                else return defaultValue;
+                throw new NotSupportedException(String.Format(KEY_NOT_FOUND, typedKey.Key));
             }
-            isNull = false;
             return Tparameter.Value;
         }
 
@@ -172,40 +171,40 @@ namespace com.riscure.trs.parameter.trace
 
         public void Add(string key, bool[] value) => Add(new BoolArrayTypeKey(key), value);
 
-        public byte GetByte(string key) => Get(new ByteTypeKey(key), out _);
+        public byte GetByte(string key) => Get(new ByteTypeKey(key));
 
-        public byte[]? GetByteArray(string key) => Get(new ByteArrayTypeKey(key), out _);
-
-
-        public short GetShort(string key) => Get(new ShortTypeKey(key), out _);
-
-        public short[]? GetShortArray(string key) => Get(new ShortArrayTypeKey(key), out _);
+        public byte[]? GetByteArray(string key) => GetArray(new ByteTypeKey(key));
 
 
-        public int GetInt(string key) => Get(new IntegerTypeKey(key), out _);
+        public short GetShort(string key) => Get(new ShortTypeKey(key));
 
-        public int[]? GetIntArray(string key) => Get(new IntegerArrayTypeKey(key), out _);
-
-        public float GetFloat(string key) => Get(new FloatTypeKey(key), out _);
-
-        public float[]? GetFloatArray(string key) => Get(new FloatArrayTypeKey(key), out _);
+        public short[]? GetShortArray(string key) => GetArray(new ShortTypeKey(key));
 
 
-        public long GetLong(string key) => Get(new LongTypeKey(key), out _);
+        public int GetInt(string key) => Get(new IntegerTypeKey(key));
 
-        public long[]? GetLongArray(string key) => Get(new LongArrayTypeKey(key), out _);
+        public int[]? GetIntArray(string key) => GetArray(new IntegerTypeKey(key));
 
-        public double GetDouble(string key) => Get(new DoubleTypeKey(key), out _);
+        public float GetFloat(string key) => Get(new FloatTypeKey(key));
 
-        public double[]? GetDoubleArray(string key) => Get(new DoubleArrayTypeKey(key), out _);
-
-
-        public string? GetString(string key) => Get(new StringTypeKey(key), out _);
+        public float[]? GetFloatArray(string key) => GetArray(new FloatTypeKey(key));
 
 
-        public bool GetBool(string key) => Get(new BoolTypeKey(key), out _);
+        public long GetLong(string key) => Get(new LongTypeKey(key));
 
-        public bool[]? GetBoolArray(string key) => Get(new BoolArrayTypeKey(key), out _);
+        public long[]? GetLongArray(string key) => GetArray(new LongTypeKey(key));
+
+        public double GetDouble(string key) => Get(new DoubleTypeKey(key));
+
+        public double[]? GetDoubleArray(string key) => GetArray(new DoubleTypeKey(key));
+
+
+        public string? GetString(string key) => Get(new StringTypeKey(key));
+
+
+        public bool GetBool(string key) => Get(new BoolTypeKey(key));
+
+        public bool[]? GetBoolArray(string key) => GetArray(new BoolTypeKey(key));
 
 
         public override bool Equals(object? o)

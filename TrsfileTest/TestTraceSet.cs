@@ -62,6 +62,15 @@ namespace Trsfile.Test
             }
             return true;
         }
+        public static bool AssertArrayEquals(byte[] a1, byte[] a2)
+        {
+            if (a1.Length != a2.Length) Assert.Fail("Array Not Equal");
+            for (int i = 0; i < a1.Length; i++)
+            {
+                if (a1[i] != a2[i]) Assert.Fail("Array Not Equal");
+            }
+            return true;
+        }
 
         [TestInitialize]
         public void CreateTempDir()
@@ -282,13 +291,18 @@ namespace Trsfile.Test
                 traceWithParameters.Add(Trace.Create("", FLOAT_SAMPLES, parameters));
             }
             //READ BACK AND CHECK RESULT
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
+            try
             {
+                TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name);
                 TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
                 foreach (var (key, parameter) in parameterDefinitions)
                 {
                     Assert.AreEqual(parameterName, key);
                 }
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is TRSFormatException);
             }
         }
 
@@ -729,10 +743,8 @@ namespace Trsfile.Test
             ByteArrayTypeKey arrayTypeKey = new(rawKey);
             Assert.IsTrue(tpm[arrayTypeKey.Key] is not null);
             Assert.IsTrue(tspm[arrayTypeKey.Key] is not null);
-            var a = tpm.GetByteArray(arrayTypeKey.Key);
-            var b = tspm.GetByteArray(arrayTypeKey.Key);
-            Assert.AreEqual(new byte[] { rawValue }, tpm.GetByteArray(arrayTypeKey.Key));
-            Assert.AreEqual(new byte[] { rawValue }, tspm.GetByteArray(arrayTypeKey.Key));
+            AssertArrayEquals(new byte[] { rawValue }, tpm.GetByteArray(arrayTypeKey.Key));
+            AssertArrayEquals(new byte[] { rawValue }, tspm.GetByteArray(arrayTypeKey.Key));
         }
 
         /// <summary>
@@ -748,8 +760,8 @@ namespace Trsfile.Test
             ByteTypeKey typedKey = new(rawKey);
             tpm.Add(rawKey, new byte[] { 1, 2 }); //actually a byte array
             tspm.Add(rawKey, 2); //actually an int'
-            Assert.ThrowsException<InvalidCastException>(() => tpm[typedKey.Key]);
-            Assert.ThrowsException<InvalidCastException>(() => tspm[typedKey.Key]);
+            Assert.ThrowsException<NotSupportedException>(() => tpm.GetByte(typedKey.Key));
+            Assert.ThrowsException<NotSupportedException>(() => tspm.GetByte(typedKey.Key));
         }
 
         /// <summary>
@@ -805,7 +817,7 @@ namespace Trsfile.Test
             tspm.Add(key, new int[arrayLength]);
             byte[] serialize = tspm.Serialize();
             TraceSetParameterMap deserialize = TraceSetParameterMap.Deserialize(serialize);
-            Assert.AreEqual(arrayLength, deserialize.GetByteArray(key.Key).Length);
+            Assert.AreEqual(arrayLength, deserialize.GetIntArray(key.Key).Length);
         }
 
 

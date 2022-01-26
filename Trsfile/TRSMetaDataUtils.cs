@@ -171,7 +171,7 @@ namespace com.riscure.trs
 
         private static void ReadAndStoreData(MemoryMappedViewStream buffer, byte tag, int length, TRSMetaData trsMD)
         {
-            bool hasValidLength = 0 <= length && length <= 0xffff;
+            bool hasValidLength = (0 <= length & length <= 0xffff);
             TRSTag trsTag;
             try
             {

@@ -4,8 +4,8 @@ using com.riscure.trs.parameter.primitive;
 
 namespace com.riscure.trs.parameter
 {
-    public partial class TraceParameter
-    {
+    //public partial class TraceParameter
+    //{
     //    public static TraceParameter Create(bool value) => new TraceParameter<bool>(value);
     //    public static TraceParameter Create(bool[] value) => new TraceParameter<bool>(value);
 
@@ -30,5 +30,5 @@ namespace com.riscure.trs.parameter
     //    public static TraceParameter Create(string value) => new TraceParameter<string>(value);
 
 
-    }
+    //}
 }
