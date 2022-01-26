@@ -8,7 +8,7 @@ namespace com.riscure.trs.parameter.primitive
 
     public class StringParameter : TraceParameter<string>
     {
-        private const string INVALID_LENGTH = "Error parsing string: Expected (%d) bytes but found (%d)";
+        private const string INVALID_LENGTH = "Error parsing string: Expected ({0:d}) bytes but found ({1:d})";
 
         public StringParameter(string value) : base(value)
         {

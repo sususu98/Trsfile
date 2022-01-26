@@ -13,14 +13,14 @@ namespace com.riscure.trs
 #pragma warning disable CS8604, CS8618
     public class TraceSet : IDisposable
     {
-        private const string ERROR_READING_FILE = "Error reading TRS file: file size (%d) != meta data (%d) + trace size (%d) * nr of traces (%d)";
+        private const string ERROR_READING_FILE = "Error reading TRS file: file size ({0:d}) != meta data ({1:d}) + trace size ({2:d}) * nr of traces ({3:d})";
         private const string TRACE_SET_NOT_OPEN = "TraceSet has not been opened or has been closed.";
         private const string TRACE_SET_IN_WRITE_MODE = "TraceSet is in write mode. Please open the TraceSet in read mode.";
-        private const string TRACE_INDEX_OUT_OF_BOUNDS = "Requested trace index (%d) is larger than the total number of available traces (%d).";
+        private const string TRACE_INDEX_OUT_OF_BOUNDS = "Requested trace index ({0:d}) is larger than the total number of available traces ({1:d}).";
         private const string TRACE_SET_IN_READ_MODE = "TraceSet is in read mode. Please open the TraceSet in write mode.";
-        private const string TRACE_LENGTH_DIFFERS = "All traces in a set need to be the same length, but current trace length (%d) differs from the previous trace(s) (%d)";
-        private const string TRACE_DATA_LENGTH_DIFFERS = "All traces in a set need to have the same data length, but current trace data length (%d) differs from the previous trace(s) (%d)";
-        private const string UNKNOWN_SAMPLE_CODING = "Error reading TRS file: unknown sample coding '%d'";
+        private const string TRACE_LENGTH_DIFFERS = "All traces in a set need to be the same length, but current trace length ({0:d}) differs from the previous trace(s) ({1:d})";
+        private const string TRACE_DATA_LENGTH_DIFFERS = "All traces in a set need to have the same data length, but current trace data length ({0:d}) differs from the previous trace(s) ({1:d})";
+        private const string UNKNOWN_SAMPLE_CODING = "Error reading TRS file: unknown sample coding '{0:d}'";
         private static readonly long MAX_BUFFER_SIZE = int.MaxValue;
         private const string PARAMETER_NOT_DEFINED = "Parameter {0} is saved in the trace, but was not found in the header definition";
         private static readonly System.Text.Encoding UTF8_IGNORE_DECODER =

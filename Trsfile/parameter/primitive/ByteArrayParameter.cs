@@ -5,7 +5,7 @@ namespace com.riscure.trs.parameter.primitive
 {
     public class ByteArrayParameter : TraceParameter<byte>
     {
-        private const string INVALID_LENGTH = "Error parsing byte array: Expected (%d) bytes but found (%d)";
+        private const string INVALID_LENGTH = "Error parsing byte array: Expected ({0:d}) bytes but found ({1:d})";
 
         public ByteArrayParameter(byte value) : base(value)
         {

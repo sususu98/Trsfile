@@ -163,7 +163,7 @@ namespace com.riscure.trs.enums
         public readonly InnerEnum innerEnumValue;
         private static int nextOrdinal = 0;
 
-        private const string UNKNOWN_TAG = "Unknown tag: 0x%X";
+        private const string UNKNOWN_TAG = "Unknown tag: 0x{0:X}";
 
 
         internal TRSTag(string nameValue, InnerEnum innerEnum, int value, string name, bool required, Type type, int length, object defaultValue, string description)

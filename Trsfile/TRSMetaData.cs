@@ -11,7 +11,7 @@ namespace com.riscure.trs
 
     public class TRSMetaData
     {
-        private const string IGNORING_NEW_VALUE = "{0}: Ignoring new value ({1}) because previously defined value is non-default (%s) and overwrite is disabled.%n";
+        private const string IGNORING_NEW_VALUE = "{0}: Ignoring new value ({1}) because previously defined value is non-default ({2}) and overwrite is disabled.\n";
         private const string INCOMPATIBLE_TYPES = "Failed to add tag {0}: Expected type ({1}) does not match actual type ({2}).";
 
         private readonly IDictionary<TRSTag, object> metaData;
