@@ -282,14 +282,21 @@ namespace Trsfile.Test
                 traceWithParameters.Add(Trace.Create("", FLOAT_SAMPLES, parameters));
             }
             //READ BACK AND CHECK RESULT
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
+            try
             {
+                TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name);
                 TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
                 foreach (var (key, parameter) in parameterDefinitions)
                 {
                     Assert.AreEqual(parameterName, key);
                 }
             }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is TRSFormatException);
+            }
+
+
         }
 
         /// <summary>
@@ -320,7 +327,7 @@ namespace Trsfile.Test
             {
                 for (int k = 0; k < 25; k++)
                 {
-                    TraceParameterMap parameters = new TraceParameterMap();
+                    TraceParameterMap parameters = new();
                     parameters.Add("BYTEARRAY", new byte[] { (byte)k, (byte)k, (byte)k });
                     parameters.Add(TraceParameter.SAMPLES, new float[] { (float)k, (float)k, (float)k });
                     parameters.Add(TraceParameter.TITLE, strings[k % strings.Count]);
