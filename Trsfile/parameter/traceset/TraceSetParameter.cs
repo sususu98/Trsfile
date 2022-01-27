@@ -1,11 +1,8 @@
-﻿namespace com.riscure.trs.parameter.traceset
+﻿using com.riscure.trs.enums;
+using com.riscure.trs.io;
+
+namespace com.riscure.trs.parameter.traceset
 {
-    using ParameterType = enums.ParameterType;
-    using LittleEndianInputStream = io.LittleEndianInputStream;
-    using LittleEndianOutputStream = io.LittleEndianOutputStream;
-    using TraceParameter = TraceParameter;
-
-
     public class TraceSetParameter: ICloneable
     {
         private const string LENGTH_ERROR = "length of parameter {0:d} exceeds maximum length {1:d}";
@@ -19,14 +16,14 @@
 
         public TraceSetParameter(TraceParameter instance)
         {
-            this.Value = instance;
+            Value = instance;
         }
 
         public TraceSetParameter(TraceSetParameter toCopy) : this(toCopy.Value)
         {
         }
 
-        public virtual void Serialize(LittleEndianOutputStream dos)
+        public void Serialize(LittleEndianOutputStream dos)
         {
             if (Value.Length != (Value.Length & MAX_LENGTH))
             {
@@ -44,10 +41,10 @@
             return new TraceSetParameter(TraceParameter.Deserialize(type, length, dis));
         }
 
-        public virtual TraceParameter Value { get; }
+        public TraceParameter Value { get; }
 
         /// <returns> a new instance of a TraceSetParameter containing a copy of its trace parameter </returns>
-        public virtual object Clone()
+        public object Clone()
         {
             return new TraceSetParameter(this);
         }
@@ -57,6 +54,21 @@
         {
             return Value != null ? Value.GetHashCode() : 0;
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is null) return false;
+            if (base.Equals(obj)) return true;
+            if (obj is not TraceSetParameter t)
+                return false;
+            return t.Value.Equals(Value);
+        }
+
+        public static bool operator ==(TraceSetParameter a, TraceSetParameter b)
+            => a.Value.Equals(b.Value);
+        public static bool operator !=(TraceSetParameter a, TraceSetParameter b)
+            => !(a == b);
+
     }
 
 }

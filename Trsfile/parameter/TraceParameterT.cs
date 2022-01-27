@@ -46,18 +46,18 @@ namespace com.riscure.trs.parameter
 
         public override bool Equals(object? o)
         {
-            if (this == o)
-            {
-                return true;
-            }
-            if (o == null || this.GetType() != o.GetType())
-            {
+            if (this == o) return true;
+            if (o is not TraceParameter<T> that)
                 return false;
-            }
-
-            TraceParameter<T> that = (TraceParameter<T>)o;
             return Value.SequenceEqual(that.Value);
         }
+
+        public static bool operator ==(TraceParameter<T> a, TraceParameter<T> b) 
+            => a.Value.SequenceEqual(b.Value);
+
+        public static bool operator !=(TraceParameter<T> a, TraceParameter<T> b)
+            => !(a == b);
+
         public override int GetHashCode()
         {
             return Value.GetHashCode();
