@@ -1,10 +1,9 @@
-﻿using com.riscure.trs.parameter.trace;
+﻿using Trsfile.Parameter.Trace;
 using System.Text.Json;
+using Encoding = Trsfile.Enums.Encoding;
 
-namespace com.riscure.trs
+namespace Trsfile
 {
-    using Encoding = enums.Encoding;
-
     /// <summary>
     /// Trace contains the data related to one consecutive array of samples,
     /// including potential associated data and a title

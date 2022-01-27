@@ -1,8 +1,8 @@
-﻿namespace com.riscure.trs.types
-{
-    using TraceParameter = com.riscure.trs.parameter.TraceParameter;
-    using LongArrayParameter = com.riscure.trs.parameter.primitive.LongArrayParameter;
+﻿using TraceParameter = Trsfile.Parameter.TraceParameter;
+using LongArrayParameter = Trsfile.Parameter.Primitive.LongArrayParameter;
 
+namespace Trsfile.Types
+{
     public class LongTypeKey : TypedKey<long>
     {
         public LongTypeKey(string key) : base(typeof(long), key, false) { }

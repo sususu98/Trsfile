@@ -1,8 +1,8 @@
-﻿namespace com.riscure.trs.types
-{
-    using TraceParameter = com.riscure.trs.parameter.TraceParameter;
-    using ShortArrayParameter = com.riscure.trs.parameter.primitive.ShortArrayParameter;
+﻿using TraceParameter = Trsfile.Parameter.TraceParameter;
+using ShortArrayParameter = Trsfile.Parameter.Primitive.ShortArrayParameter;
 
+namespace Trsfile.Types
+{
     public class ShortTypeKey : TypedKey<short>
     {
         public ShortTypeKey(string key) : base(typeof(short), key, false) { }

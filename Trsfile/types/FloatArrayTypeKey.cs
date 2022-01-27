@@ -1,8 +1,8 @@
-﻿namespace com.riscure.trs.types
-{
-    using TraceParameter = parameter.TraceParameter;
-    using FloatArrayParameter = parameter.primitive.FloatArrayParameter;
+﻿using TraceParameter = Trsfile.Parameter.TraceParameter;
+using FloatArrayParameter = Trsfile.Parameter.Primitive.FloatArrayParameter;
 
+namespace Trsfile.Types
+{
     public class FloatArrayTypeKey : TypedKey<float>
     {
         public FloatArrayTypeKey(string key) : base(typeof(float[]), key, true)

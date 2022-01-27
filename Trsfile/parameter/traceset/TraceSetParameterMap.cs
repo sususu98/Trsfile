@@ -1,7 +1,7 @@
-﻿using com.riscure.trs.io;
-using com.riscure.trs.types;
+﻿using Trsfile.IO;
+using Trsfile.Types;
 
-namespace com.riscure.trs.parameter.traceset
+namespace Trsfile.Parameter.Traceset
 {
     /// <summary>
     /// This class represents the header definitions of all user-added global parameters of the trace set

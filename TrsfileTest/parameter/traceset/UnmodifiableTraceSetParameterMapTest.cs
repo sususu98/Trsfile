@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using com.riscure.trs.parameter.primitive;
-using com.riscure.trs.parameter.traceset;
+using Trsfile.Parameter.Primitive;
+using Trsfile.Parameter.Traceset;
 
 namespace Trsfile.Test
 {
@@ -74,7 +74,6 @@ namespace Trsfile.Test
 
             string expectedMessage = "Unable to set parameter `FOO` to `[-1]`: This trace set is in read mode and cannot be modified.";
             string actualMessage = e.Message;
-
             Assert.IsTrue(actualMessage.Contains(expectedMessage));
 
         }

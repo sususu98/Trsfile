@@ -1,9 +1,8 @@
-﻿namespace com.riscure.trs.parameter.primitive
+﻿using LittleEndianInputStream = Trsfile.IO.LittleEndianInputStream;
+using LittleEndianOutputStream = Trsfile.IO.LittleEndianOutputStream;
+
+namespace Trsfile.Parameter.Primitive
 {
-    using LittleEndianInputStream = io.LittleEndianInputStream;
-    using LittleEndianOutputStream = io.LittleEndianOutputStream;
-
-
     public class ShortArrayParameter : TraceParameter<short>
     {
 

@@ -1,6 +1,6 @@
-﻿using com.riscure.trs.enums;
+﻿using Trsfile.Enums;
 
-namespace com.riscure.trs.parameter
+namespace Trsfile.Parameter
 {
     /// <summary>
     /// This interface represents a parameter with generic that is used in the trace data or the trace set header

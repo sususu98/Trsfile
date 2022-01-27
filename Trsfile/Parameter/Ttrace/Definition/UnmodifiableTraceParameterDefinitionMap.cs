@@ -1,10 +1,5 @@
-﻿using System.Collections.Generic;
-
-namespace com.riscure.trs.parameter.trace.definition
+﻿namespace Trsfile.Parameter.Trace.Definition
 {
-    using TraceParameter = com.riscure.trs.parameter.TraceParameter;
-
-
     /// <summary>
     /// This class represents the header definitions of all user-added local parameters of the trace set
     /// 

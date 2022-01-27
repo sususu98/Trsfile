@@ -1,15 +1,12 @@
-﻿using System;
-using com.riscure.trs.enums;
-using com.riscure.trs.parameter;
-using System.Text.Json;
+﻿using Trsfile.Parameter;
 
-namespace com.riscure.trs.types
+namespace Trsfile.Types
 {
-	/// <summary>
-	/// Basic Type Key for Map
-	/// </summary>
-	/// <typeparam name="T">Type of single value</typeparam>
-	public abstract class TypedKey<T>
+    /// <summary>
+    /// Basic Type Key for Map
+    /// </summary>
+    /// <typeparam name="T">Type of single value</typeparam>
+    public abstract class TypedKey<T>
 	{
 		public const string INCORRECT_TYPE = "Tried to retrieve a value of type {0}, but the actual value was of type {1}";
 

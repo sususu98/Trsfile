@@ -1,4 +1,4 @@
-﻿namespace com.riscure.trs.enums
+﻿namespace Trsfile.Enums
 {
     public sealed class Encoding
     {

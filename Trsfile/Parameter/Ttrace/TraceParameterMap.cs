@@ -1,8 +1,8 @@
-﻿using com.riscure.trs.types;
-using com.riscure.trs.parameter.trace.definition;
-using com.riscure.trs.io;
+﻿using Trsfile.Types;
+using Trsfile.Parameter.Trace.Definition;
+using Trsfile.IO;
 
-namespace com.riscure.trs.parameter.trace
+namespace Trsfile.Parameter.Trace
 {
     public class TraceParameterMap : Dictionary<string, TraceParameter>, ICloneable
     {

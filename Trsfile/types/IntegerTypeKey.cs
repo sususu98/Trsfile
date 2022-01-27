@@ -1,8 +1,8 @@
-﻿namespace com.riscure.trs.types
-{
-    using TraceParameter = parameter.TraceParameter;
-    using IntegerArrayParameter = parameter.primitive.IntegerArrayParameter;
+﻿using TraceParameter = Trsfile.Parameter.TraceParameter;
+using IntegerArrayParameter = Trsfile.Parameter.Primitive.IntegerArrayParameter;
 
+namespace Trsfile.Types
+{
     public class IntegerTypeKey : TypedKey<int>
     {
         public IntegerTypeKey(string key) : base(typeof(int), key, false)

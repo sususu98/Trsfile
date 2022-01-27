@@ -1,9 +1,9 @@
-﻿
+﻿using TraceParameter = Trsfile.Parameter.TraceParameter;
+using ByteArrayParameter = Trsfile.Parameter.Primitive.ByteArrayParameter;
 
-namespace com.riscure.trs.types
+
+namespace Trsfile.Types
 {
-    using TraceParameter = parameter.TraceParameter;
-    using ByteArrayParameter = parameter.primitive.ByteArrayParameter;
     public class ByteTypeKey : TypedKey<byte>
     {
         public ByteTypeKey(string key) : base(typeof(byte), key, false)

@@ -1,7 +1,8 @@
-﻿namespace com.riscure.trs.types
+﻿using TraceParameter = Trsfile.Parameter.TraceParameter;
+using BoolArrayParameter = Trsfile.Parameter.Primitive.BoolArrayParameter;
+
+namespace Trsfile.Types
 {
-	using TraceParameter = parameter.TraceParameter;
-	using BoolArrayParameter = parameter.primitive.BoolArrayParameter;
 	public class BoolArrayTypeKey : TypedKey<bool>
 	{
 		public BoolArrayTypeKey(string key) : base(typeof(bool[]), key, true)

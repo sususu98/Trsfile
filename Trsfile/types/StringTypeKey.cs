@@ -1,8 +1,8 @@
-﻿namespace com.riscure.trs.types
-{
-    using TraceParameter = parameter.TraceParameter;
-    using StringParameter = parameter.primitive.StringParameter;
+﻿using TraceParameter = Trsfile.Parameter.TraceParameter;
+using StringParameter = Trsfile.Parameter.Primitive.StringParameter;
 
+namespace Trsfile.Types
+{
     public class StringTypeKey : TypedKey<string>
     {
         public StringTypeKey(string key) : base(typeof(string), key, false) { }

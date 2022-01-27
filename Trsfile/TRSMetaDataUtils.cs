@@ -1,14 +1,12 @@
 ﻿using System.IO.MemoryMappedFiles;
 using System.Text;
+using TRSTag = Trsfile.Enums.TRSTag;
+using LittleEndianInputStream = Trsfile.IO.LittleEndianInputStream;
+using TraceParameterDefinitionMap = Trsfile.Parameter.Trace.Definition.TraceParameterDefinitionMap;
+using TraceSetParameterMap = Trsfile.Parameter.Traceset.TraceSetParameterMap;
 
-namespace com.riscure.trs
+namespace Trsfile
 {
-    using TRSTag = enums.TRSTag;
-    using LittleEndianInputStream = io.LittleEndianInputStream;
-    using TraceParameterDefinitionMap = parameter.trace.definition.TraceParameterDefinitionMap;
-    using TraceSetParameterMap = parameter.traceset.TraceSetParameterMap;
-
-
     public class TRSMetaDataUtils
     {
         private const string IGNORED_UNKNOWN_TAG = "ignored unknown metadata tag '{0:2X}' while reading a TRS file\n";
@@ -21,10 +19,6 @@ namespace com.riscure.trs
         /// </summary>
         /// <param name="fos">      the file output stream </param>
         /// <param name="metaData"> the metadata to write </param>
-        /// <exception cref="IOException">        if any write error occurs </exception>
-        /// <exception cref="TRSFormatException"> if the metadata contains unsupported tags </exception>
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: public static void writeTRSMetaData(java.io.FileOutputStream fos, TRSMetaData metaData) throws IOException, TRSFormatException
         public static void WriteTRSMetaData(FileStream fos, TRSMetaData metaData)
         {
             if (fos.Position != 0)
@@ -47,13 +41,13 @@ namespace com.riscure.trs
                 {
                     string s = metaData.GetString(tag);
                     byte[] stringBytes = Encoding.UTF8.GetBytes(s);
-                    writeLength(fos, stringBytes.Length);
+                    WriteLength(fos, stringBytes.Length);
                     fos.Write(stringBytes, 0, stringBytes.Length);
                 }
                 else if (tag.Type == typeof(float))
                 {
                     float f = metaData.GetFloat(tag);
-                    writeLength(fos, tag.Length);
+                    WriteLength(fos, tag.Length);
                     for (int i = 0; i < tag.Length; i++)
                     {
                         fos.Write(BitConverter.GetBytes(f));
@@ -62,24 +56,24 @@ namespace com.riscure.trs
                 else if (tag.Type == typeof(bool))
                 {
                     int value = metaData.GetBoolean(tag) ? 1 : 0;
-                    writeLength(fos, tag.Length);
-                    writeInt(fos, value, tag.Length);
+                    WriteLength(fos, tag.Length);
+                    WriteInt(fos, value, tag.Length);
                 }
                 else if (tag.Type == typeof(int))
                 {
-                    writeLength(fos, tag.Length);
-                    writeInt(fos, metaData.GetInt(tag), tag.Length);
+                    WriteLength(fos, tag.Length);
+                    WriteInt(fos, metaData.GetInt(tag), tag.Length);
                 }
                 else if (tag.Type == typeof(TraceSetParameterMap))
                 {
                     byte[] serialized = metaData.TraceSetParameters.Serialize();
-                    writeLength(fos, serialized.Length);
+                    WriteLength(fos, serialized.Length);
                     fos.Write(serialized, 0, serialized.Length);
                 }
                 else if (tag.Type == typeof(TraceParameterDefinitionMap))
                 {
                     byte[] serialized = metaData.TraceParameterDefinitions.Serialize();
-                    writeLength(fos, serialized.Length);
+                    WriteLength(fos, serialized.Length);
                     fos.Write(serialized, 0, serialized.Length);
                 }
                 else
@@ -90,10 +84,7 @@ namespace com.riscure.trs
             fos.WriteByte(TRSTag.TRACE_BLOCK.Value);
             fos.WriteByte((byte)TRSTag.TRACE_BLOCK.Length); // it's safe here
         }
-
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: private static void writeInt(java.io.FileOutputStream fos, int value, int length) throws java.io.IOException
-        private static void writeInt(FileStream fos, int value, int length)
+        private static void WriteInt(FileStream fos, int value, int length)
         {
             for (int i = 0; i < length; i++)
             {
@@ -101,9 +92,7 @@ namespace com.riscure.trs
             }
         }
 
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: private static void writeLength(java.io.FileOutputStream fos, long length) throws java.io.IOException
-        private static void writeLength(FileStream fos, long length)
+        private static void WriteLength(FileStream fos, long length)
         {
             if (length > 0x7F)
             {
@@ -126,9 +115,6 @@ namespace com.riscure.trs
         /// </summary>
         /// <param name="buffer"> The buffer which wraps the TRS file (should be positioned at the first byte of the file) </param>
         /// <returns> the meta data of a TRS file </returns>
-        /// <exception cref="TRSFormatException"> If either the file is corrupt or the reader is not positioned at the start of the file </exception>
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: public static TRSMetaData readTRSMetaData(ByteBuffer buffer) throws TRSFormatException
         public static TRSMetaData ReadTRSMetaData(MemoryMappedViewStream buffer)
         {
             TRSMetaData trs = TRSMetaData.Create();

@@ -1,13 +1,8 @@
-﻿using System.Linq;
+﻿using LittleEndianInputStream = Trsfile.IO.LittleEndianInputStream;
+using LittleEndianOutputStream = Trsfile.IO.LittleEndianOutputStream;
 
-namespace com.riscure.trs.parameter.primitive
+namespace Trsfile.Parameter.Primitive
 {
-    using ParameterType = enums.ParameterType;
-    using LittleEndianInputStream = io.LittleEndianInputStream;
-    using LittleEndianOutputStream = io.LittleEndianOutputStream;
-    using TraceParameter = TraceParameter;
-
-
     public class LongArrayParameter : TraceParameter<long>
     {
 

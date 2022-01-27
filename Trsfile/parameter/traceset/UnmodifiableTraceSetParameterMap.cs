@@ -1,4 +1,4 @@
-﻿namespace com.riscure.trs.parameter.traceset
+﻿namespace Trsfile.Parameter.Traceset
 {
 
     /// <summary>

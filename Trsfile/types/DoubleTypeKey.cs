@@ -1,8 +1,8 @@
-﻿namespace com.riscure.trs.types
-{
-    using TraceParameter = parameter.TraceParameter;
-    using DoubleArrayParameter = parameter.primitive.DoubleArrayParameter;
+﻿using TraceParameter = Trsfile.Parameter.TraceParameter;
+using DoubleArrayParameter = Trsfile.Parameter.Primitive.DoubleArrayParameter;
 
+namespace Trsfile.Types
+{
     public class DoubleTypeKey : TypedKey<double>
     {
         public DoubleTypeKey(string key) : base(typeof(double), key, false)

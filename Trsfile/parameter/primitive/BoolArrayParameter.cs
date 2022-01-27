@@ -1,6 +1,6 @@
-﻿using com.riscure.trs.io;
+﻿using Trsfile.IO;
 
-namespace com.riscure.trs.parameter.primitive
+namespace Trsfile.Parameter.Primitive
 {
 
     public class BoolArrayParameter : TraceParameter<bool>

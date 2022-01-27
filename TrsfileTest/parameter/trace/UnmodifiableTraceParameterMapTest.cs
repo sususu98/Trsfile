@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using com.riscure.trs.parameter.primitive;
-using com.riscure.trs.parameter.trace;
-using com.riscure.trs.parameter;
+using Trsfile.Parameter.Primitive;
+using Trsfile.Parameter.Trace;
+using Trsfile.Parameter;
 
 namespace Trsfile.Test
 {

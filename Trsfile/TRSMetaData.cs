@@ -1,14 +1,12 @@
 ﻿using System.Text;
+using TRSTag = Trsfile.Enums.TRSTag;
+using TraceParameterDefinitionMap = Trsfile.Parameter.Trace.Definition.TraceParameterDefinitionMap;
+using UnmodifiableTraceParameterDefinitionMap = Trsfile.Parameter.Trace.Definition.UnmodifiableTraceParameterDefinitionMap;
+using TraceSetParameterMap = Trsfile.Parameter.Traceset.TraceSetParameterMap;
+using UnmodifiableTraceSetParameterMap = Trsfile.Parameter.Traceset.UnmodifiableTraceSetParameterMap;
 
-namespace com.riscure.trs
+namespace Trsfile
 {
-    using TRSTag = enums.TRSTag;
-    using TraceParameterDefinitionMap = parameter.trace.definition.TraceParameterDefinitionMap;
-    using UnmodifiableTraceParameterDefinitionMap = parameter.trace.definition.UnmodifiableTraceParameterDefinitionMap;
-    using TraceSetParameterMap = parameter.traceset.TraceSetParameterMap;
-    using UnmodifiableTraceSetParameterMap = parameter.traceset.UnmodifiableTraceSetParameterMap;
-
-
     public class TRSMetaData
     {
         private const string IGNORING_NEW_VALUE = "{0}: Ignoring new value ({1}) because previously defined value is non-default ({2}) and overwrite is disabled.\n";
@@ -144,7 +142,7 @@ namespace com.riscure.trs
                 //{
                 //    return (TraceParameterDefinitionMap)o;
                 //}
-                return o as TraceParameterDefinitionMap ?? 
+                return o as TraceParameterDefinitionMap ??
                     UnmodifiableTraceParameterDefinitionMap.Of(new TraceParameterDefinitionMap());
             }
         }

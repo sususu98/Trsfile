@@ -1,7 +1,7 @@
-﻿using LittleEndianInputStream = com.riscure.trs.io.LittleEndianInputStream;
-using LittleEndianOutputStream = com.riscure.trs.io.LittleEndianOutputStream;
+﻿using LittleEndianInputStream = Trsfile.IO.LittleEndianInputStream;
+using LittleEndianOutputStream = Trsfile.IO.LittleEndianOutputStream;
 
-namespace com.riscure.trs.parameter.primitive
+namespace Trsfile.Parameter.Primitive
 {
     public class DoubleArrayParameter : TraceParameter<double>
     {

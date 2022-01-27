@@ -1,6 +1,6 @@
-﻿using com.riscure.trs.io;
+﻿using Trsfile.IO;
 
-namespace com.riscure.trs.parameter.trace.definition
+namespace Trsfile.Parameter.Trace.Definition
 {
 
     /// <summary>

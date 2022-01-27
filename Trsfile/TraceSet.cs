@@ -1,15 +1,14 @@
-﻿using com.riscure.trs.enums;
-using com.riscure.trs.parameter.primitive;
-using com.riscure.trs.parameter.trace;
-using com.riscure.trs.parameter.trace.definition;
+﻿using Trsfile.Enums;
+using Trsfile.Parameter.Primitive;
+using Trsfile.Parameter.Trace;
+using Trsfile.Parameter.Trace.Definition;
 using System.Text;
 using System.IO.MemoryMappedFiles;
+using static Trsfile.Enums.TRSTag;
+using Encoding = Trsfile.Enums.Encoding;
 
-namespace com.riscure.trs
+namespace Trsfile
 {
-    using static enums.TRSTag;
-    using Encoding = enums.Encoding;
-
 #pragma warning disable CS8604, CS8618
     public class TraceSet : IDisposable
     {
@@ -44,14 +43,10 @@ namespace com.riscure.trs
         private FileStream writeStream;
 
         private bool firstTrace = true;
-
-        //JAVA TO C# CONVERTER NOTE: Fields cannot have the same name as methods of the current type:
         private bool open_Conflict;
         private readonly bool writing; //whether the trace is opened in write mode
         private readonly string filePath;
 
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: private TraceSet(String inputFileName) throws IOException, TRSFormatException
         private TraceSet(string inputFileName)
         {
             this.writing = false;
@@ -80,10 +75,6 @@ namespace com.riscure.trs
 
         /// <returns> the Path on disk of this trace set </returns>
         public virtual string FilePath { get { return filePath; } }
-
-
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: private void mapBuffer() throws java.io.IOException
         private void MapBuffer()
         {
             mmf = MemoryMappedFile.CreateFromFile(filePath, FileMode.Open);
@@ -93,11 +84,9 @@ namespace com.riscure.trs
 
         }
 
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: private void moveBufferIfNecessary(int traceIndex) throws java.io.IOException
         private void MoveBufferIfNecessary(int traceIndex)
         {
-            long traceSize = calculateTraceSize();
+            long traceSize = CalculateTraceSize();
             long start = metaDataSize + (long)traceIndex * traceSize;
             long end = start + traceSize;
 
@@ -110,7 +99,7 @@ namespace com.riscure.trs
             }
         }
 
-        private long calculateTraceSize()
+        private long CalculateTraceSize()
         {
             int sampleSize = Encoding.FromValue(MetaData.GetInt(SAMPLE_CODING)).Size;
             long sampleSpace = MetaData.GetInt(NUMBER_OF_SAMPLES) * (long)sampleSize;
@@ -121,10 +110,6 @@ namespace com.riscure.trs
         /// Get a trace from the set at the specified index </summary>
         /// <param name="index"> the index of the Trace to read from the file </param>
         /// <returns> the Trace at the requested trace index </returns>
-        /// <exception cref="IOException"> if a read error occurs </exception>
-        /// <exception cref="IllegalArgumentException"> if this TraceSet is not ready be read from </exception>
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: public Trace get(int index) throws java.io.IOException
         public virtual Trace Get(int index)
         {
             if (!open_Conflict)
@@ -137,7 +122,7 @@ namespace com.riscure.trs
             }
 
 
-            long traceSize = calculateTraceSize();
+            long traceSize = CalculateTraceSize();
             long nrOfTraces = MetaData.GetInt(NUMBER_OF_TRACES);
             if (index >= nrOfTraces)
             {
@@ -195,10 +180,6 @@ namespace com.riscure.trs
         /// <summary>
         /// Add a trace to a writable TraceSet </summary>
         /// <param name="trace"> the Trace object to add </param>
-        /// <exception cref="IOException"> if any write error occurs </exception>
-        /// <exception cref="TRSFormatException"> if the formatting of the trace is invalid </exception>
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: public void add(Trace trace) throws IOException, TRSFormatException
         public void Add(Trace trace)
         {
             if (!open_Conflict)
@@ -225,7 +206,7 @@ namespace com.riscure.trs
             CheckValid(trace);
 
             trace.TraceSet = this;
-            writeTrace(trace);
+            WriteTrace(trace);
 
             int numberOfTraces = MetaData.GetInt(NUMBER_OF_TRACES);
             MetaData.Add(NUMBER_OF_TRACES, numberOfTraces + 1);
@@ -235,7 +216,7 @@ namespace com.riscure.trs
         /// This method makes sure that the trace title and any added string parameters adhere to the preset maximum length </summary>
         /// <param name="trace"> the trace to update </param>
         /// <param name="metaData"> the metadata specifying the maximum string lengths </param>
-        private void TruncateStrings(Trace trace, TRSMetaData metaData)
+        private static void TruncateStrings(Trace trace, TRSMetaData metaData)
         {
             int titleSpace = metaData.GetInt(TITLE_SPACE);
             trace.Title = FitUtf8StringToByteLength(trace.Title, titleSpace);
@@ -264,7 +245,7 @@ namespace com.riscure.trs
         /// character. If the string is too long, it is truncated. If it's too short, it's padded with NUL characters. </summary>
         /// <param name="s"> the string to fit </param>
         /// <param name="maxBytes"> the number of bytes required </param>
-        private string? FitUtf8StringToByteLength(string s, int maxBytes)
+        private static string? FitUtf8StringToByteLength(string s, int maxBytes)
         {
             if (s is null)
             {
@@ -273,30 +254,26 @@ namespace com.riscure.trs
             byte[] sba = s.GetBytes(System.Text.Encoding.UTF8);
             if (sba.Length <= maxBytes)
             {
+                // return System.Text.Encoding.UTF8.GetString(sba[..maxBytes]);
                 byte[] bytes = new byte[maxBytes];
-                Array.Copy(sba, 0, bytes, 0, sba.Length); 
-                return System.Text.Encoding.UTF8.GetString(bytes[..maxBytes]);
+                Array.Copy(sba, 0, bytes, 0, sba.Length);
+                return System.Text.Encoding.UTF8.GetString(bytes);
             }
             // Ensure truncation by having byte buffer = maxBytes
             var bb = sba.AsSpan(0, maxBytes);
             return UTF8_IGNORE_DECODER.GetString(bb);
         }
 
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: private void writeTrace(Trace trace) throws TRSFormatException, java.io.IOException
-        private void writeTrace(Trace trace)
+        private void WriteTrace(Trace trace)
         {
             string title = trace.Title is null ? "" : trace.Title;
             writeStream.Write(title.GetBytes(System.Text.Encoding.UTF8));
             byte[] data = trace.Data is null ? Array.Empty<byte>() : trace.Data;
             writeStream.Write(data, 0, data.Length);
             Encoding encoding = Encoding.FromValue(MetaData.GetInt(SAMPLE_CODING));
-            writeStream.Write(toByteArray(trace.Sample, encoding), 0, toByteArray(trace.Sample, encoding).Length);
+            writeStream.Write(ToByteArray(trace.Sample, encoding), 0, ToByteArray(trace.Sample, encoding).Length);
         }
-
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: private byte[] toByteArray(float[] samples, com.riscure.trs.enums.Encoding encoding) throws TRSFormatException
-        private byte[] toByteArray(float[] samples, Encoding encoding)
+        private byte[] ToByteArray(float[] samples, Encoding encoding)
         {
             byte[] result;
             switch (encoding.innerEnumValue)
@@ -356,8 +333,6 @@ namespace com.riscure.trs
         }
 
         private bool closed = false;
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: @Override public void close() throws IOException, TRSFormatException
         public void Close()
         {
             open_Conflict = false;
@@ -395,16 +370,11 @@ namespace com.riscure.trs
                 }
             }
         }
-
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: private void closeReader() throws java.io.IOException
         private void CloseReader()
         {
             mmf.Dispose();
         }
 
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: private void closeWriter() throws IOException, TRSFormatException
         private void CloseWriter()
         {
             try
@@ -440,11 +410,8 @@ namespace com.riscure.trs
             return comDataArray;
         }
 
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: protected float[] readSamples() throws TRSFormatException
         protected internal virtual float[] ReadSamples()
         {
-            //buffer.order(ByteOrder.LITTLE_ENDIAN);
             int numberOfSamples = MetaData.GetInt(NUMBER_OF_SAMPLES);
             float[] samples;
             byte[] temp;
@@ -518,10 +485,6 @@ namespace com.riscure.trs
         /// Remember to close the TraceSet when done. </summary>
         /// <param name="file"> the path to the TRS file to open </param>
         /// <returns> the TraceSet representation of the file </returns>
-        /// <exception cref="IOException"> when any read exception is encountered </exception>
-        /// <exception cref="TRSFormatException"> when any incorrect formatting of the TRS file is encountered </exception>
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: public static TraceSet open(String file) throws IOException, TRSFormatException
         public static TraceSet Open(string file)
         {
             return new TraceSet(file);
@@ -531,10 +494,6 @@ namespace com.riscure.trs
         /// A one-shot creator of a TRS file. The metadata not related to the trace list is assumed to be default. </summary>
         /// <param name="file"> the path to the file to save </param>
         /// <param name="traces"> the list of traces to save in the file </param>
-        /// <exception cref="IOException"> when any write exception is encountered </exception>
-        /// <exception cref="TRSFormatException"> when any TRS formatting issues arise from saving the provided traces </exception>
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: public static void save(String file, java.util.List<Trace> traces) throws IOException, TRSFormatException
         public static void Save(string file, IList<Trace> traces)
         {
             TRSMetaData trsMetaData = TRSMetaData.Create();
@@ -546,10 +505,6 @@ namespace com.riscure.trs
         /// <param name="file"> the path to the file to save </param>
         /// <param name="traces"> the list of traces to save in the file </param>
         /// <param name="metaData"> the metadata associated with the set to create </param>
-        /// <exception cref="IOException"> when any write exception is encountered </exception>
-        /// <exception cref="TRSFormatException"> when any TRS formatting issues arise from saving the provided traces </exception>
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: public static void save(String file, java.util.List<Trace> traces, TRSMetaData metaData) throws IOException, TRSFormatException
         public static void Save(string file, IList<Trace> traces, TRSMetaData metaData)
         {
             TraceSet traceSet = Create(file, metaData);
@@ -571,9 +526,6 @@ namespace com.riscure.trs
         /// SAMPLE_CODING is defined for the whole set based on the values of the first trace <br> </summary>
         /// <param name="file"> the path to the file to be created </param>
         /// <returns> a writable trace set object </returns>
-        /// <exception cref="IOException"> if the file creation failed </exception>
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: public static TraceSet create(String file) throws java.io.IOException
         public static TraceSet Create(string file)
         {
             TRSMetaData trsMetaData = TRSMetaData.Create();
@@ -593,9 +545,6 @@ namespace com.riscure.trs
         /// <param name="file"> the path to the file to be created </param>
         /// <param name="metaData"> the user-supplied meta data </param>
         /// <returns> a writable trace set object </returns>
-        /// <exception cref="IOException"> if the file creation failed </exception>
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: public static TraceSet create(String file, TRSMetaData metaData) throws java.io.IOException
         public static TraceSet Create(string file, TRSMetaData metaData)
         {
             metaData.Add(TRS_VERSION, 2, false);

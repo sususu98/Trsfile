@@ -5,15 +5,15 @@ using System.Threading;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using com.riscure.trs;
-using com.riscure.trs.enums;
-using com.riscure.trs.io;
-using com.riscure.trs.parameter;
-using com.riscure.trs.parameter.primitive;
-using com.riscure.trs.parameter.trace;
-using com.riscure.trs.parameter.trace.definition;
-using com.riscure.trs.parameter.traceset;
-using com.riscure.trs.types;
+using Trsfile;
+using Trsfile.Enums;
+using Trsfile.IO;
+using Trsfile.Parameter;
+using Trsfile.Parameter.Primitive;
+using Trsfile.Parameter.Trace;
+using Trsfile.Parameter.Trace.Definition;
+using Trsfile.Parameter.Traceset;
+using Trsfile.Types;
 
 namespace Trsfile.Test
 {

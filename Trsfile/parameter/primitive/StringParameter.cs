@@ -1,11 +1,9 @@
 ﻿using System.Text;
+using LittleEndianInputStream = Trsfile.IO.LittleEndianInputStream;
+using LittleEndianOutputStream = Trsfile.IO.LittleEndianOutputStream;
 
-namespace com.riscure.trs.parameter.primitive
+namespace Trsfile.Parameter.Primitive
 {
-    using LittleEndianInputStream = io.LittleEndianInputStream;
-    using LittleEndianOutputStream = io.LittleEndianOutputStream;
-
-
     public class StringParameter : TraceParameter<string>
     {
         private const string INVALID_LENGTH = "Error parsing string: Expected ({0:d}) bytes but found ({1:d})";
@@ -19,16 +17,11 @@ namespace com.riscure.trs.parameter.primitive
         }
 
         public override int Length => ScalarValue.Length;
-
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: public void serialize(com.riscure.trs.io.LittleEndianOutputStream dos) throws java.io.IOException
         public override void Serialize(LittleEndianOutputStream dos)
         {
             dos.Write(ScalarValue.GetBytes(Encoding.UTF8));
         }
 
-        //JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in C#:
-        //ORIGINAL LINE: public static StringParameter deserialize(com.riscure.trs.io.LittleEndianInputStream dis, int length) throws java.io.IOException
         public static StringParameter Deserialize(LittleEndianInputStream dis, int length)
         {
             byte[] bytes = new byte[length];

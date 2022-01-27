@@ -1,8 +1,7 @@
-﻿using com.riscure.trs.enums;
-using com.riscure.trs.io;
-using com.riscure.trs.parameter;
+﻿using Trsfile.Enums;
+using Trsfile.IO;
 
-namespace com.riscure.trs.parameter.trace.definition
+namespace Trsfile.Parameter.Trace.Definition
 {
 
     public record TraceParameterDefinition
