@@ -26,7 +26,11 @@ namespace com.riscure.trs.parameter.traceset
 
         public virtual new void Add(string t, TraceSetParameter p) => base.Add(t, p);
 
-        public virtual new void Remove(string t) => base.Remove(t);
+        public virtual new bool Remove(string t) => base.Remove(t);
+
+#pragma warning disable CS8601
+        public virtual new bool Remove(string s, out TraceSetParameter t) => base.Remove(s, out t);
+#pragma warning restore CS8601
 
         public virtual new void Clear() => base.Clear();
 

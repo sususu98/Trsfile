@@ -37,6 +37,8 @@ namespace com.riscure.trs.parameter.trace
         public virtual new bool Remove(string s, out TraceParameter t) => base.Remove(s, out t);
 #pragma warning restore CS8601
 
+        public virtual new bool Remove(string s) => base.Remove(s);
+
         public virtual new void Clear() => base.Clear();
 
         /// <returns> a concatenation of all trace parameters in this map, individually converted to byte arrays </returns>

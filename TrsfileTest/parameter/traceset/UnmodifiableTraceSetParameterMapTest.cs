@@ -1,11 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using IntegerArrayParameter = com.riscure.trs.parameter.primitive.IntegerArrayParameter;
+using com.riscure.trs.parameter.primitive;
+using com.riscure.trs.parameter.traceset;
 
-namespace com.riscure.trs.parameter.traceset
+namespace Trsfile.Test
 {
     [TestClass]
-    internal class UnmodifiableTraceSetParameterMapTest
+    public class UnmodifiableTraceSetParameterMapTest
     {
         private TraceSetParameterMap immutable;
 
