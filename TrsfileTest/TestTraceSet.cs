@@ -5,24 +5,15 @@ using System.Threading;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using TRSFormatException = com.riscure.trs.TRSFormatException;
-using TRSMetaData = com.riscure.trs.TRSMetaData;
-using Trace = com.riscure.trs.Trace;
-using TraceSet = com.riscure.trs.TraceSet;
-using Encoding = com.riscure.trs.enums.Encoding;
-using ParameterType = com.riscure.trs.enums.ParameterType;
-using TRSTag = com.riscure.trs.enums.TRSTag;
-using LittleEndianInputStream = com.riscure.trs.io.LittleEndianInputStream;
-using TraceParameter = com.riscure.trs.parameter.TraceParameter;
-using ByteArrayParameter = com.riscure.trs.parameter.primitive.ByteArrayParameter;
-using TraceParameterMap = com.riscure.trs.parameter.trace.TraceParameterMap;
-using com.riscure.trs.parameter.trace.definition;
-using TraceParameterDefinitionMap = com.riscure.trs.parameter.trace.definition.TraceParameterDefinitionMap;
-using TraceSetParameter = com.riscure.trs.parameter.traceset.TraceSetParameter;
-using TraceSetParameterMap = com.riscure.trs.parameter.traceset.TraceSetParameterMap;
-using com.riscure.trs.types;
+using com.riscure.trs;
+using com.riscure.trs.enums;
+using com.riscure.trs.io;
 using com.riscure.trs.parameter;
-
+using com.riscure.trs.parameter.primitive;
+using com.riscure.trs.parameter.trace;
+using com.riscure.trs.parameter.trace.definition;
+using com.riscure.trs.parameter.traceset;
+using com.riscure.trs.types;
 
 namespace Trsfile.Test
 {

@@ -8,7 +8,7 @@
     /// </summary>
     public class UnmodifiableTraceSetParameterMap : TraceSetParameterMap
     {
-        private const string UNABLE_TO_SET_PARAMETER = "Unable to set parameter `{0}` to `{1}`: This trace set is in read mode and cannot be modified.";
+        private const string UNABLE_TO_SET_PARAMETER = "Unable to set parameter `{0}` to `[{1}]`: This trace set is in read mode and cannot be modified.";
         private const string REMOVAL_NOT_SUPPORTED_EXCEPTION = "Unable to remove parameter `{0}`: This trace set is in read mode and cannot be modified.";
         private const string MODIFICATION_NOT_SUPPORTED_EXCEPTION = "Unable to modify: This trace set is in read mode and cannot be modified.";
 
@@ -27,7 +27,12 @@
             throw new NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, value.Value));
         }
 
-        public override void Remove(string key)
+        public override bool Remove(string key)
+        {
+            throw new NotSupportedException(string.Format(REMOVAL_NOT_SUPPORTED_EXCEPTION, key));
+        }
+
+        public override bool Remove(string key, out TraceSetParameter t)
         {
             throw new NotSupportedException(string.Format(REMOVAL_NOT_SUPPORTED_EXCEPTION, key));
         }

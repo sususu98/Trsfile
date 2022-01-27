@@ -1,21 +1,18 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using ByteArrayParameter = com.riscure.trs.parameter.primitive.ByteArrayParameter;
-using IntegerArrayParameter = com.riscure.trs.parameter.primitive.IntegerArrayParameter;
+using com.riscure.trs.parameter.primitive;
+using com.riscure.trs.parameter.trace;
+using com.riscure.trs.parameter;
 
-namespace com.riscure.trs.parameter.trace
+namespace Trsfile.Test
 {
-    //JAVA TO C# CONVERTER TODO TASK: This Java 'import static' statement cannot be converted to C#:
-    //	import static org.junit.jupiter.api.Assertions.assertThrows;
-
-
+    [TestClass]
     public class UnmodifiableTraceParameterMapTest
     {
         private TraceParameterMap immutable;
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @BeforeEach public void setup()
-        public virtual void Setup()
+        [TestInitialize]
+        public void Setup()
         {
             TraceParameterMap mutable = new();
             mutable.Add("FOO", 1);
@@ -26,9 +23,8 @@ namespace com.riscure.trs.parameter.trace
         /// <summary>
         /// This test ensure that the underlying map of an unmodifiable map cannot change the map itself
         /// </summary>
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void testUnmodifiable()
-        public virtual void TestUnmodifiable()
+        [TestMethod]
+        public void TestUnmodifiable()
         {
             byte[] ba = new byte[] { 1, 2, 3, 4, 5 };
             ByteArrayParameter bap = new(ba);
@@ -42,10 +38,8 @@ namespace com.riscure.trs.parameter.trace
 
         }
 
-
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void put()
-        public virtual void Add()
+        [TestMethod]
+        public void Add()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Add("BLA", 2));
 
@@ -54,9 +48,8 @@ namespace com.riscure.trs.parameter.trace
             Assert.IsTrue(actualMessage.Contains(expectedMessage));
         }
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void remove()
-        public virtual void Remove()
+        [TestMethod]
+        public void Remove()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Remove("FOO"));
 
@@ -67,9 +60,8 @@ namespace com.riscure.trs.parameter.trace
         }
 
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void clear()
-        public virtual void Clear()
+        [TestMethod]
+        public void Clear()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Clear());
 
@@ -80,9 +72,8 @@ namespace com.riscure.trs.parameter.trace
         }
 
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void replaceAll()
-        public virtual void ReplaceAll()
+        // Here;s no ReplaceAll in C#, so we remove this
+        public void ReplaceAll()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => new IntegerArrayParameter(new int[] { 1 }));
 
@@ -92,9 +83,8 @@ namespace com.riscure.trs.parameter.trace
             Assert.IsTrue(actualMessage.Contains(expectedMessage));
         }
 
-        //JAVA TO C# CONVERTER TODO TASK: Most Java annotations will not have direct .NET equivalent attributes:
-        //ORIGINAL LINE: @Test public void testRemove()
-        public virtual void TestRemove()
+        [TestMethod]
+        public void TestRemove()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Remove("BLA", out _));
 
