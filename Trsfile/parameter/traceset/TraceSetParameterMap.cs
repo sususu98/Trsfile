@@ -36,6 +36,11 @@ namespace Trsfile.Parameter.Traceset
 
         /// <returns> a new instance of a TraceParameterMap containing all the same values as this one </returns>
         public virtual object Clone() => new TraceSetParameterMap(this);
+        public virtual new TraceSetParameter this[string key]
+        {
+            get => base[key];
+            set => base[key] = value;
+        }
 
         /// <returns> this map converted to a byte array, serialized according to the TRS V2 standard definition </returns>
         /// <exception cref="RuntimeException"> if the map failed to serialize correctly </exception>

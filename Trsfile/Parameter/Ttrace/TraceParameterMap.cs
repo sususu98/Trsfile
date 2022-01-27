@@ -40,7 +40,11 @@ namespace Trsfile.Parameter.Trace
         public virtual new bool Remove(string s) => base.Remove(s);
 
         public virtual new void Clear() => base.Clear();
-
+        public virtual new TraceParameter this[string key]
+        {
+            get => base[key];
+            set => base[key] = value;
+        }
         /// <returns> a concatenation of all trace parameters in this map, individually converted to byte arrays </returns>
         /// <exception cref="RuntimeException"> if the map failed to serialize correctly </exception>
         public byte[] Serialize()

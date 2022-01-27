@@ -393,202 +393,196 @@ namespace Trsfile.Test
         }
         private static void ReadBackTyped(IList<TraceParameterMap> testParameters, string name)
         {
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
+            using TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name);
+            TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
+            for (int k = 0; k < 25; k++)
             {
-                TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
-                for (int k = 0; k < 25; k++)
+                Assert.AreEqual(parameterDefinitions.Count, testParameters[k].Count);
+                Trace trace = readable.Get(k);
+                TraceParameterMap correctValue = testParameters[k];
+                foreach (var (key, parameter) in parameterDefinitions)
                 {
-                    Assert.AreEqual(parameterDefinitions.Count, testParameters[k].Count);
-                    Trace trace = readable.Get(k);
-                    TraceParameterMap correctValue = testParameters[k];
-                    foreach (var (key, parameter) in parameterDefinitions)
+                    if (parameter.Type == ParameterType.BYTE)
                     {
-                        if (parameter.Type == ParameterType.BYTE)
+                        if (parameter.Length == 1)
                         {
-                            if (parameter.Length == 1)
-                            {
-                                Assert.AreEqual(correctValue.GetByte(key), trace.Parameters.GetByte(key));
-                            }
-                            else
-                            {
-                                Assert.IsTrue(correctValue.GetByteArray(key).SequenceEqual(trace.Parameters.GetByteArray(key)));
-                            }
+                            Assert.AreEqual(correctValue.GetByte(key), trace.Parameters.GetByte(key));
                         }
-                        else if (parameter.Type == ParameterType.SHORT)
+                        else
                         {
-                            if (parameter.Length == 1)
-                            {
-                                Assert.AreEqual(correctValue.GetShort(key), trace.Parameters.GetShort(key));
-                            }
-                            else
-                            {
-                                Assert.IsTrue(correctValue.GetShortArray(key).SequenceEqual(trace.Parameters.GetShortArray(key)));
-                            }
+                            Assert.IsTrue(correctValue.GetByteArray(key).SequenceEqual(trace.Parameters.GetByteArray(key)));
                         }
-                        else if (parameter.Type == ParameterType.INT)
-                        {
-                            if (parameter.Length == 1)
-                            {
-                                Assert.AreEqual(correctValue.GetInt(key), trace.Parameters.GetInt(key));
-                            }
-                            else
-                            {
-                                Assert.IsTrue(correctValue.GetIntArray(key).SequenceEqual(trace.Parameters.GetIntArray(key)));
-                            }
-                        }
-                        else if (parameter.Type == ParameterType.FLOAT)
-                        {
-                            if (parameter.Length == 1)
-                            {
-                                Assert.AreEqual(correctValue.GetFloat(key), trace.Parameters.GetFloat(key));
-                            }
-                            else
-                            {
-                                Assert.IsTrue(correctValue.GetFloatArray(key).SequenceEqual(trace.Parameters.GetFloatArray(key)));
-                            }
-                        }
-                        else if (parameter.Type == ParameterType.LONG)
-                        {
-                            if (parameter.Length == 1)
-                            {
-                                Assert.AreEqual(correctValue.GetLong(key), trace.Parameters.GetLong(key));
-                            }
-                            else
-                            {
-                                Assert.IsTrue(correctValue.GetLongArray(key).SequenceEqual(trace.Parameters.GetLongArray(key)));
-                            }
-                        }
-                        else if (parameter.Type == ParameterType.DOUBLE)
-                        {
-                            if (parameter.Length == 1)
-                            {
-                                Assert.AreEqual(correctValue.GetDouble(key), trace.Parameters.GetDouble(key));
-                            }
-                            else
-                            {
-                                Assert.IsTrue(correctValue.GetDoubleArray(key).SequenceEqual(trace.Parameters.GetDoubleArray(key)));
-                            }
-                        }
-                        else if (parameter.Type == ParameterType.STRING)
-                        {
-                            Assert.AreEqual(correctValue.GetString(key), trace.Parameters.GetString(key));
-                        }
-                        else if (parameter.Type == ParameterType.BOOL)
-                        {
-                            if (parameter.Length == 1)
-                            {
-                                Assert.AreEqual(correctValue.GetBool(key), trace.Parameters.GetBool(key));
-                            }
-                            else
-                            {
-                                Assert.IsTrue(correctValue.GetBoolArray(key).SequenceEqual(trace.Parameters.GetBoolArray(key)));
-                            }
-                        }
-                        else throw new Exception("Unexpected type: " + parameter.Type);
-
                     }
-                }
+                    else if (parameter.Type == ParameterType.SHORT)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetShort(key), trace.Parameters.GetShort(key));
+                        }
+                        else
+                        {
+                            Assert.IsTrue(correctValue.GetShortArray(key).SequenceEqual(trace.Parameters.GetShortArray(key)));
+                        }
+                    }
+                    else if (parameter.Type == ParameterType.INT)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetInt(key), trace.Parameters.GetInt(key));
+                        }
+                        else
+                        {
+                            Assert.IsTrue(correctValue.GetIntArray(key).SequenceEqual(trace.Parameters.GetIntArray(key)));
+                        }
+                    }
+                    else if (parameter.Type == ParameterType.FLOAT)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetFloat(key), trace.Parameters.GetFloat(key));
+                        }
+                        else
+                        {
+                            Assert.IsTrue(correctValue.GetFloatArray(key).SequenceEqual(trace.Parameters.GetFloatArray(key)));
+                        }
+                    }
+                    else if (parameter.Type == ParameterType.LONG)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetLong(key), trace.Parameters.GetLong(key));
+                        }
+                        else
+                        {
+                            Assert.IsTrue(correctValue.GetLongArray(key).SequenceEqual(trace.Parameters.GetLongArray(key)));
+                        }
+                    }
+                    else if (parameter.Type == ParameterType.DOUBLE)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetDouble(key), trace.Parameters.GetDouble(key));
+                        }
+                        else
+                        {
+                            Assert.IsTrue(correctValue.GetDoubleArray(key).SequenceEqual(trace.Parameters.GetDoubleArray(key)));
+                        }
+                    }
+                    else if (parameter.Type == ParameterType.STRING)
+                    {
+                        Assert.AreEqual(correctValue.GetString(key), trace.Parameters.GetString(key));
+                    }
+                    else if (parameter.Type == ParameterType.BOOL)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetBool(key), trace.Parameters.GetBool(key));
+                        }
+                        else
+                        {
+                            Assert.IsTrue(correctValue.GetBoolArray(key).SequenceEqual(trace.Parameters.GetBoolArray(key)));
+                        }
+                    }
+                    else throw new Exception("Unexpected type: " + parameter.Type);
 
+                }
             }
         }
-        private void ReadBackTypedKeys(IList<TraceParameterMap> testParameters, string name)
+        private static void ReadBackTypedKeys(IList<TraceParameterMap> testParameters, string name)
         {
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name))
+            using TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + name);
+            TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
+            for (int k = 0; k < 25; k++)
             {
-                TraceParameterDefinitionMap parameterDefinitions = readable.MetaData.TraceParameterDefinitions;
-                for (int k = 0; k < 25; k++)
+                Assert.AreEqual(parameterDefinitions.Count, testParameters[k].Count);
+                Trace trace = readable.Get(k);
+                TraceParameterMap correctValue = testParameters[k];
+                foreach (var (key, parameter) in parameterDefinitions)
                 {
-                    Assert.AreEqual(parameterDefinitions.Count, testParameters[k].Count);
-                    Trace trace = readable.Get(k);
-                    TraceParameterMap correctValue = testParameters[k];
-                    foreach (var (key, parameter) in parameterDefinitions)
+                    if (parameter.Type == ParameterType.BYTE)
                     {
-                        if (parameter.Type == ParameterType.BYTE)
+                        if (parameter.Length == 1)
                         {
-                            if (parameter.Length == 1)
-                            {
-                                Assert.AreEqual(correctValue.GetByte(key), trace.Parameters.GetByte(key));
-                            }
-                            else
-                            {
-                                Assert.IsTrue(correctValue.GetByteArray(key).SequenceEqual(trace.Parameters.GetByteArray(key)));
-                            }
+                            Assert.AreEqual(correctValue.GetByte(key), trace.Parameters.GetByte(key));
                         }
-                        else if (parameter.Type == ParameterType.SHORT)
+                        else
                         {
-                            if (parameter.Length == 1)
-                            {
-                                Assert.AreEqual(correctValue.GetShort(key), trace.Parameters.GetShort(key));
-                            }
-                            else
-                            {
-                                Assert.IsTrue(correctValue.GetShortArray(key).SequenceEqual(trace.Parameters.GetShortArray(key)));
-                            }
+                            Assert.IsTrue(correctValue.GetByteArray(key).SequenceEqual(trace.Parameters.GetByteArray(key)));
                         }
-                        else if (parameter.Type == ParameterType.INT)
-                        {
-                            if (parameter.Length == 1)
-                            {
-                                Assert.AreEqual(correctValue.GetInt(key), trace.Parameters.GetInt(key));
-                            }
-                            else
-                            {
-                                Assert.IsTrue(correctValue.GetIntArray(key).SequenceEqual(trace.Parameters.GetIntArray(key)));
-                            }
-                        }
-                        else if (parameter.Type == ParameterType.FLOAT)
-                        {
-                            if (parameter.Length == 1)
-                            {
-                                Assert.AreEqual(correctValue.GetFloat(key), trace.Parameters.GetFloat(key));
-                            }
-                            else
-                            {
-                                Assert.IsTrue(correctValue.GetFloatArray(key).SequenceEqual(trace.Parameters.GetFloatArray(key)));
-                            }
-                        }
-                        else if (parameter.Type == ParameterType.LONG)
-                        {
-                            if (parameter.Length == 1)
-                            {
-                                Assert.AreEqual(correctValue.GetLong(key), trace.Parameters.GetLong(key));
-                            }
-                            else
-                            {
-                                Assert.IsTrue(correctValue.GetLongArray(key).SequenceEqual(trace.Parameters.GetLongArray(key)));
-                            }
-                        }
-                        else if (parameter.Type == ParameterType.DOUBLE)
-                        {
-                            if (parameter.Length == 1)
-                            {
-                                Assert.AreEqual(correctValue.GetDouble(key), trace.Parameters.GetDouble(key));
-                            }
-                            else
-                            {
-                                Assert.IsTrue(correctValue.GetDoubleArray(key).SequenceEqual(trace.Parameters.GetDoubleArray(key)));
-                            }
-                        }
-                        else if (parameter.Type == ParameterType.STRING)
-                        {
-                            Assert.AreEqual(correctValue.GetString(key), trace.Parameters.GetString(key));
-                        }
-                        else if (parameter.Type == ParameterType.BOOL)
-                        {
-                            if (parameter.Length == 1)
-                            {
-                                Assert.AreEqual(correctValue.GetBool(key), trace.Parameters.GetBool(key));
-                            }
-                            else
-                            {
-                                Assert.IsTrue(correctValue.GetBoolArray(key).SequenceEqual(trace.Parameters.GetBoolArray(key)));
-                            }
-                        }
-                        else throw new Exception("Unexpected type: " + parameter.Type);
-
                     }
-                }
+                    else if (parameter.Type == ParameterType.SHORT)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetShort(key), trace.Parameters.GetShort(key));
+                        }
+                        else
+                        {
+                            Assert.IsTrue(correctValue.GetShortArray(key).SequenceEqual(trace.Parameters.GetShortArray(key)));
+                        }
+                    }
+                    else if (parameter.Type == ParameterType.INT)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetInt(key), trace.Parameters.GetInt(key));
+                        }
+                        else
+                        {
+                            Assert.IsTrue(correctValue.GetIntArray(key).SequenceEqual(trace.Parameters.GetIntArray(key)));
+                        }
+                    }
+                    else if (parameter.Type == ParameterType.FLOAT)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetFloat(key), trace.Parameters.GetFloat(key));
+                        }
+                        else
+                        {
+                            Assert.IsTrue(correctValue.GetFloatArray(key).SequenceEqual(trace.Parameters.GetFloatArray(key)));
+                        }
+                    }
+                    else if (parameter.Type == ParameterType.LONG)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetLong(key), trace.Parameters.GetLong(key));
+                        }
+                        else
+                        {
+                            Assert.IsTrue(correctValue.GetLongArray(key).SequenceEqual(trace.Parameters.GetLongArray(key)));
+                        }
+                    }
+                    else if (parameter.Type == ParameterType.DOUBLE)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetDouble(key), trace.Parameters.GetDouble(key));
+                        }
+                        else
+                        {
+                            Assert.IsTrue(correctValue.GetDoubleArray(key).SequenceEqual(trace.Parameters.GetDoubleArray(key)));
+                        }
+                    }
+                    else if (parameter.Type == ParameterType.STRING)
+                    {
+                        Assert.AreEqual(correctValue.GetString(key), trace.Parameters.GetString(key));
+                    }
+                    else if (parameter.Type == ParameterType.BOOL)
+                    {
+                        if (parameter.Length == 1)
+                        {
+                            Assert.AreEqual(correctValue.GetBool(key), trace.Parameters.GetBool(key));
+                        }
+                        else
+                        {
+                            Assert.IsTrue(correctValue.GetBoolArray(key).SequenceEqual(trace.Parameters.GetBoolArray(key)));
+                        }
+                    }
+                    else throw new Exception("Unexpected type: " + parameter.Type);
 
+                }
             }
         }
 
@@ -668,15 +662,13 @@ namespace Trsfile.Test
         [TestMethod]
         public void TestModificationAfterReadback()
         {
-            using (TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + BYTES_TRS))
+            using TraceSet readable = TraceSet.Open(tempDir + Path.DirectorySeparatorChar + BYTES_TRS);
+            Assert.ThrowsException<NotSupportedException>(() => readable.MetaData.TraceSetParameters.Add("SHOULD_FAIL", 0));
+            //Assert.ThrowsException<NotSupportedException>(() => readable.MetaData.TraceParameterDefinitions.Add("SHOULD_FAIL", new TraceParameterDefinition<TraceParameter>(ParameterType.BYTE, (short)1, (short)1)));
+            for (int k = 0; k < NUMBER_OF_TRACES; k++)
             {
-                Assert.ThrowsException<NotSupportedException>(() => readable.MetaData.TraceSetParameters.Add("SHOULD_FAIL", 0));
-                //Assert.ThrowsException<NotSupportedException>(() => readable.MetaData.TraceParameterDefinitions.Add("SHOULD_FAIL", new TraceParameterDefinition<TraceParameter>(ParameterType.BYTE, (short)1, (short)1)));
-                for (int k = 0; k < NUMBER_OF_TRACES; k++)
-                {
-                    Trace t = readable.Get(k);
-                    Assert.ThrowsException<NotSupportedException>(() => t.Parameters.Add("SHOULD_FAIL", 0));
-                }
+                Trace t = readable.Get(k);
+                Assert.ThrowsException<NotSupportedException>(() => t.Parameters.Add("SHOULD_FAIL", 0));
             }
         }
 

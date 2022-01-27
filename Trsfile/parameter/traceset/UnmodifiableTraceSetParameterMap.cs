@@ -41,6 +41,11 @@
         {
             throw new NotSupportedException(MODIFICATION_NOT_SUPPORTED_EXCEPTION);
         }
+        public override TraceSetParameter this[string key]
+        {
+            get => base[key];
+            set => throw new NotSupportedException(UNABLE_TO_SET_PARAMETER);
+        }
     }
 
 }

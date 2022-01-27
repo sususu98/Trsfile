@@ -38,15 +38,10 @@
         {
             throw new NotSupportedException(string.Format(REMOVAL_NOT_SUPPORTED_EXCEPTION, key));
         }
-        
-        public bool Replace(string key, TraceParameter oldValue, TraceParameter newValue)
+        public override TraceParameter this[string key]
         {
-            throw new NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, newValue.ToString()));
-        }
-
-        public TraceParameter Replace(string key, TraceParameter value)
-        {
-            throw new NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, value.ToString()));
+            get => base[key];
+            set => throw new NotSupportedException(UNABLE_TO_SET_PARAMETER);
         }
 
     }

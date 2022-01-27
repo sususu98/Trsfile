@@ -72,7 +72,7 @@ namespace Trsfile.Test
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable["FOO"] = new TraceSetParameter(new IntegerArrayParameter(new int[] { -1 })));
 
-            string expectedMessage = "Unable to set parameter `FOO` to `[-1]`: This trace set is in read mode and cannot be modified.";
+            string expectedMessage = "Unable to set parameter `{0}` to `[{1}]`: This trace set is in read mode and cannot be modified.";
             string actualMessage = e.Message;
             Assert.IsTrue(actualMessage.Contains(expectedMessage));
 
@@ -83,7 +83,7 @@ namespace Trsfile.Test
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable["FOO"] = new TraceSetParameter(new IntegerArrayParameter(new int[] { -1 })));
 
-            string expectedMessage = "Unable to set parameter `FOO` to `[-1]`: This trace set is in read mode and cannot be modified.";
+            string expectedMessage = "Unable to set parameter `{0}` to `[{1}]`: This trace set is in read mode and cannot be modified.";
             string actualMessage = e.Message;
 
             Assert.IsTrue(actualMessage.Contains(expectedMessage));
