@@ -6,7 +6,6 @@ using System.Text;
 using System.IO.MemoryMappedFiles;
 using static Trsfile.Enums.TRSTag;
 using Encoding = Trsfile.Enums.Encoding;
-
 namespace Trsfile
 {
 #pragma warning disable CS8604, CS8618
@@ -193,7 +192,7 @@ namespace Trsfile
             if (firstTrace)
             {
                 int dataLength = trace.Data == null ? 0 : trace.Data.Length;
-                int titleLength = string.ReferenceEquals(trace.Title, null) ? 0 : trace.Title.GetBytes(System.Text.Encoding.UTF8).Length;
+                int titleLength = trace.Title is null ? 0 : System.Text.Encoding.UTF8.GetBytes(trace.Title).Length; //trace.Title.GetBytes(System.Text.Encoding.UTF8).Length;
                 MetaData.Add(NUMBER_OF_SAMPLES, trace.NumberOfSamples, false);
                 MetaData.Add(DATA_LENGTH, dataLength, false);
                 MetaData.Add(TITLE_SPACE, titleLength, false);
@@ -251,7 +250,7 @@ namespace Trsfile
             {
                 return null;
             }
-            byte[] sba = s.GetBytes(System.Text.Encoding.UTF8);
+            byte[] sba = System.Text.Encoding.UTF8.GetBytes(s);// s.GetBytes(System.Text.Encoding.UTF8);
             if (sba.Length <= maxBytes)
             {
                 // return System.Text.Encoding.UTF8.GetString(sba[..maxBytes]);
@@ -273,7 +272,7 @@ namespace Trsfile
             Encoding encoding = Encoding.FromValue(MetaData.GetInt(SAMPLE_CODING));
             writeStream.Write(ToByteArray(trace.Sample, encoding), 0, ToByteArray(trace.Sample, encoding).Length);
         }
-        private byte[] ToByteArray(float[] samples, Encoding encoding)
+        private static byte[] ToByteArray(float[] samples, Encoding encoding)
         {
             byte[] result;
             switch (encoding.innerEnumValue)
@@ -399,7 +398,7 @@ namespace Trsfile
         {
             byte[] titleArray = new byte[MetaData.GetInt(TITLE_SPACE)];
             buffer.Read(titleArray);
-            return StringHelper.NewString(titleArray);
+            return System.Text.Encoding.UTF8.GetString(titleArray);
         }
 
         protected internal virtual byte[] ReadData()

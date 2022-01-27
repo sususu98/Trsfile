@@ -56,7 +56,7 @@ namespace Trsfile.Parameter.Trace.Definition
                 dos.WriteShort(Count);
                 foreach (var entry in this)
                 {
-                    byte[] nameBytes = entry.Key.GetBytes(System.Text.Encoding.UTF8);
+					byte[] nameBytes = System.Text.Encoding.UTF8.GetBytes(entry.Key); //entry.Key.GetBytes(System.Text.Encoding.UTF8);
                     //Write NL
                     dos.WriteShort((short)nameBytes.Length);
                     //Write N
