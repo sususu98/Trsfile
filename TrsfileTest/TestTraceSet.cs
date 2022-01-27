@@ -331,7 +331,8 @@ namespace Trsfile.Test
                     parameters.Add("BYTEARRAY", new byte[] { (byte)k, (byte)k, (byte)k });
                     parameters.Add(TraceParameter.SAMPLES, new float[] { (float)k, (float)k, (float)k });
                     parameters.Add(TraceParameter.TITLE, strings[k % strings.Count]);
-                    traceWithParameters.Add(Trace.Create(strings[k % strings.Count], FLOAT_SAMPLES, parameters));
+                    Trace trace = Trace.Create(strings[k % strings.Count], FLOAT_SAMPLES, parameters);
+                    traceWithParameters.Add(trace);
                     testParameters.Add(parameters);
                 }
             }

@@ -28,7 +28,10 @@ namespace com.riscure.trs.parameter.trace
             return new TraceParameterMap(this);
         }
 
-        public virtual new void Add(string s, TraceParameter t) => base.Add(s, t);
+        public virtual new void Add(string s, TraceParameter t)
+        {
+            this[s] = t;
+        }
 
 #pragma warning disable CS8601
         public virtual new bool Remove(string s, out TraceParameter t) => base.Remove(s, out t);

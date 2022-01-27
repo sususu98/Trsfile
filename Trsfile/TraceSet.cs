@@ -238,7 +238,7 @@ namespace com.riscure.trs
         private void TruncateStrings(Trace trace, TRSMetaData metaData)
         {
             int titleSpace = metaData.GetInt(TITLE_SPACE);
-            trace.Title = fitUtf8StringToByteLength(trace.Title, titleSpace);
+            trace.Title = FitUtf8StringToByteLength(trace.Title, titleSpace);
             TraceParameterDefinitionMap traceParameterDefinitionMap = metaData.TraceParameterDefinitions;
             foreach (var definition in traceParameterDefinitionMap)
             {
@@ -252,7 +252,7 @@ namespace com.riscure.trs
                     string stringValue = sp.ScalarValue;
                     if (stringLength != stringValue.GetBytes(System.Text.Encoding.UTF8).Length)
                     {
-                        trace.Parameters.Add(key, fitUtf8StringToByteLength(stringValue, stringLength));
+                        trace.Parameters.Add(key, FitUtf8StringToByteLength(stringValue, stringLength));
                     }
                 }
             }
@@ -264,7 +264,7 @@ namespace com.riscure.trs
         /// character. If the string is too long, it is truncated. If it's too short, it's padded with NUL characters. </summary>
         /// <param name="s"> the string to fit </param>
         /// <param name="maxBytes"> the number of bytes required </param>
-        private string? fitUtf8StringToByteLength(string s, int maxBytes)
+        private string? FitUtf8StringToByteLength(string s, int maxBytes)
         {
             if (s is null)
             {
@@ -273,7 +273,9 @@ namespace com.riscure.trs
             byte[] sba = s.GetBytes(System.Text.Encoding.UTF8);
             if (sba.Length <= maxBytes)
             {
-                return System.Text.Encoding.UTF8.GetString(sba[..maxBytes]);
+                byte[] bytes = new byte[maxBytes];
+                Array.Copy(sba, 0, bytes, 0, sba.Length); 
+                return System.Text.Encoding.UTF8.GetString(bytes[..maxBytes]);
             }
             // Ensure truncation by having byte buffer = maxBytes
             var bb = sba.AsSpan(0, maxBytes);
