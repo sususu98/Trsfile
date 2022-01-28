@@ -72,12 +72,12 @@ namespace Trsfile.Test
         }
 
 
-        // Here;s no ReplaceAll in C#, so we remove this
-        public void ReplaceAll()
+        [TestMethod]
+        public void TestReplace()
         {
-            Exception e = Assert.ThrowsException<NotSupportedException>(() => new IntegerArrayParameter(new int[] { 1 }));
+            Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable["BLA"] = new IntegerArrayParameter(new int[] { 1 }));
 
-            string expectedMessage = "Unable to modify: This trace set is in read mode and cannot be modified.";
+            string expectedMessage = "Unable to set parameter `BLA` to `[1]`: This trace set is in read mode and cannot be modified.";
             string actualMessage = e.Message;
 
             Assert.IsTrue(actualMessage.Contains(expectedMessage));
