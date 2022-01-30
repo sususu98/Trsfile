@@ -28,7 +28,11 @@ namespace Trsfile.Parameter.Trace.Definition
 		public new virtual bool Remove(string key) => base.Remove(key);
 
 		public new virtual void Clear() => base.Clear();
-
+		public virtual new TraceParameterDefinition this[string key]
+		{
+			get => base[key];
+			set => base[key] = value;
+		}
 		/// <returns> a new instance of a TraceParameterDefinitionMap containing all the same values as this one </returns>
 		public object Clone()
 		{

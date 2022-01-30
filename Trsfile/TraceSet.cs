@@ -449,17 +449,17 @@ namespace Trsfile
             return samples;
         }
 
-        private float[] ToFloatArray(byte[] numbers)
+        private static float[] ToFloatArray(byte[] numbers)
         {
             float[] result = new float[numbers.Length];
             for (int k = 0; k < numbers.Length; k++)
             {
-                result[k] = numbers[k];
+                result[k] = (sbyte)numbers[k];
             }
             return result;
         }
 
-        private float[] ToFloatArray(int[] numbers)
+        private static float[] ToFloatArray(int[] numbers)
         {
             float[] result = new float[numbers.Length];
             for (int k = 0; k < numbers.Length; k++)
@@ -469,7 +469,7 @@ namespace Trsfile
             return result;
         }
 
-        private float[] ToFloatArray(short[] numbers)
+        private static float[] ToFloatArray(short[] numbers)
         {
             float[] result = new float[numbers.Length];
             for (int k = 0; k < numbers.Length; k++)
