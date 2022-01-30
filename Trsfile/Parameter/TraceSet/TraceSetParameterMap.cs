@@ -43,12 +43,12 @@ namespace Trsfile.Parameter.Traceset
         }
 
         /// <returns> this map converted to a byte array, serialized according to the TRS V2 standard definition </returns>
-        /// <exception cref="RuntimeException"> if the map failed to serialize correctly </exception>
-        public virtual byte[] Serialize()
+        /// <exception cref="Exception"> if the map failed to serialize correctly </exception>
+        public byte[] Serialize()
         {
-            MemoryStream baos = new();
             try
             {
+                MemoryStream baos = new();
                 using LittleEndianOutputStream dos = new(baos);
                 //Write NE
                 dos.WriteShort(Count);
@@ -73,7 +73,7 @@ namespace Trsfile.Parameter.Traceset
 
         /// <param name="bytes"> a valid serialized Trace set parameter map </param>
         /// <returns> a new populated Trace set parameter map as represented by the provided byte array </returns>
-        /// <exception cref="RuntimeException"> if the provided byte array does not represent a valid parameter map </exception>
+        /// <exception cref="Exception"> if the provided byte array does not represent a valid parameter map </exception>
         public static TraceSetParameterMap Deserialize(byte[] bytes)
         {
             TraceSetParameterMap result = new();
@@ -81,17 +81,15 @@ namespace Trsfile.Parameter.Traceset
             {
                 try
                 {
-                    using (MemoryStream bais = new(bytes))
+                    MemoryStream bais = new(bytes);
+                    using LittleEndianInputStream dis = new(bais);
+                    //Read NE
+                    short numberOfEntries = dis.ReadShort();
+                    for (int k = 0; k < numberOfEntries; k++)
                     {
-                        LittleEndianInputStream dis = new(bais);
-                        //Read NE
-                        short numberOfEntries = dis.ReadShort();
-                        for (int k = 0; k < numberOfEntries; k++)
-                        {
-                            string name = TRSMetaDataUtils.ReadName(dis);
-                            //Read value
-                            result.Add(name, TraceSetParameter.Deserialize(dis));
-                        }
+                        string name = TRSMetaDataUtils.ReadName(dis);
+                        //Read value
+                        result.Add(name, TraceSetParameter.Deserialize(dis));
                     }
                 }
                 catch (IOException ex)
@@ -107,19 +105,19 @@ namespace Trsfile.Parameter.Traceset
         /// <param name="typedKey"> the <seealso cref="TypedKey"/> defining the name and the type of the added value </param>
         /// <param name="value"> the value of the parameter to add </param>
         /// <typeparam name="T">the type of the parameter</typeparam>
-        /// <exception cref="IllegalArgumentException"> if the value is not valid </exception>
-        public virtual void Add<T>(TypedKey<T> typedKey, T value)
+        /// <exception cref="InvalidCastException"> if the value is not valid </exception>
+        public void Add<T>(TypedKey<T> typedKey, T value)
         {
             Add(typedKey.Key, new TraceSetParameter(typedKey.CreateParameter(value)));
         }
 
         /// <summary>
         /// Add a new parameter to the map </summary>
-        /// <param name="typedKey"> the <seealso cref="TypedKey"/> defining the name and the type of the added value </param>
+        /// <param name="typedKey"> the <seealso cref="TypedKey{T}"/> defining the name and the type of the added value </param>
         /// <param name="value"> the value of the parameter to add </param>
         /// <typeparam name="T">the type of the array's parameter</typeparam>
-        /// <exception cref="IllegalArgumentException"> if the value is not valid </exception>
-        public virtual void Add<T>(TypedKey<T> typedKey, T[] value)
+        /// <exception cref="InvalidCastException"> if the value is not valid </exception>
+        public void Add<T>(TypedKey<T> typedKey, T[] value)
         {
             Add(typedKey.Key, new TraceSetParameter(typedKey.CreateParameter(value)));
         }
@@ -169,7 +167,7 @@ namespace Trsfile.Parameter.Traceset
         /// <param name="typedKey"> the <seealso cref="TypedKey<typeparamref name="T"/>"/> defining the name and the type of the value to retrieve </param>
         /// <typeparam name="T"> the type of the array's parameter </typeparam>
         /// <returns> the value of the requested parameter </returns>
-        /// <exception cref="ClassCastException"> if the requested value is not of the expected type </exception>
+        /// <exception cref="InvalidCastException"> if the requested value is not of the expected type </exception>
         public T[]? GetArray<T>(TypedKey<T> typedKey, out bool isNull, T[]? defaultValue = default, bool throwIfNull = true)
         {
             TraceParameter parameter = this[typedKey.Key].Value;
@@ -197,7 +195,6 @@ namespace Trsfile.Parameter.Traceset
             isNull = false;
             return Tparameter.Value;
         }
-
 
 
         public void Add(string key, byte value) => Add(new ByteTypeKey(key), value);
@@ -268,20 +265,10 @@ namespace Trsfile.Parameter.Traceset
 
         public override bool Equals(object? obj)
         {
-            if (this == obj)
-            {
-                return true;
-            }
-            if (obj == null || GetType() != obj.GetType())
-            {
+            if ((object)this == obj) return true;
+            if (obj is not TraceSetParameterMap that)
                 return false;
-            }
-
-            TraceSetParameterMap that = (TraceSetParameterMap)obj;
-            if (Count != that.Count)
-            {
-                return false;
-            }
+            if (Count != that.Count) return false;
 
             foreach (var (key, item) in this)
             {
@@ -290,6 +277,12 @@ namespace Trsfile.Parameter.Traceset
             }
             return true;
         }
+
+        public static bool operator ==(TraceSetParameterMap a, TraceSetParameterMap b)
+            => a.Equals(b);
+
+        public static bool operator !=(TraceSetParameterMap a, TraceSetParameterMap b)
+            => !a.Equals(b);
 
         public override int GetHashCode()
         {

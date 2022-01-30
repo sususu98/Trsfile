@@ -43,14 +43,14 @@ namespace Trsfile.Parameter.Trace.Definition
 		/// Sum of bytes in the map
 		/// </summary>
 		/// <returns>total byte size</returns>
-		public virtual int TotalByteSize()
+		public int TotalByteSize()
 		{
 			return Values.Select(definition => definition.Length * definition.Type.ByteSize).Sum();
 		}
 
 		/// <returns> this map converted to a byte array, serialized according to the TRS V2 standard definition </returns>
-		/// <exception cref="RuntimeException"> if the map failed to serialize correctly </exception>
-		public virtual byte[] Serialize()
+		/// <exception cref="Exception"> if the map failed to serialize correctly </exception>
+		public byte[] Serialize()
 		{
 			MemoryStream baos = new();
 			try
@@ -60,7 +60,7 @@ namespace Trsfile.Parameter.Trace.Definition
                 dos.WriteShort(Count);
                 foreach (var entry in this)
                 {
-                    byte[] nameBytes = entry.Key.GetBytes(System.Text.Encoding.UTF8);
+					byte[] nameBytes = System.Text.Encoding.UTF8.GetBytes(entry.Key); //entry.Key.GetBytes(System.Text.Encoding.UTF8);
                     //Write NL
                     dos.WriteShort((short)nameBytes.Length);
                     //Write N
@@ -79,7 +79,7 @@ namespace Trsfile.Parameter.Trace.Definition
 
 		/// <param name="bytes"> a valid serialized Trace parameter definition map </param>
 		/// <returns> a new populated Trace parameter definition map as represented by the provided byte array </returns>
-		/// <exception cref="RuntimeException"> if the provided byte array does not represent a valid parameter definition map </exception>
+		/// <exception cref="Exception"> if the provided byte array does not represent a valid parameter definition map </exception>
 		public static TraceParameterDefinitionMap Deserialize(byte[] bytes)
 		{
 			TraceParameterDefinitionMap result = new();
@@ -129,23 +129,18 @@ namespace Trsfile.Parameter.Trace.Definition
 
 		public override bool Equals(object? obj)
 		{
-			if (this == obj)
-			{
-				return true;
-			}
-			if (obj == null || GetType() != obj.GetType())
-			{
+			if ((object)this == obj) return true;
+			if (obj is not TraceParameterDefinitionMap that)
 				return false;
-			}
-
-			TraceParameterDefinitionMap that = (TraceParameterDefinitionMap) obj;
-			if (Count != that.Count)
-			{
-				return false;
-			}
-
+			if (Count != that.Count) return false;
 			return this.All(e => e.Value == that[e.Key]);
 		}
+
+		public static bool operator ==(TraceParameterDefinitionMap a, TraceParameterDefinitionMap b)
+			=> a.Equals(b);
+		public static bool operator !=(TraceParameterDefinitionMap a, TraceParameterDefinitionMap b)
+			=> !a.Equals(b);
+
 
 		public override int GetHashCode()
 		{

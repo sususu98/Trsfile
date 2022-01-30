@@ -1,5 +1,4 @@
-﻿using LittleEndianInputStream = Trsfile.IO.LittleEndianInputStream;
-using LittleEndianOutputStream = Trsfile.IO.LittleEndianOutputStream;
+﻿using Trsfile.IO;
 
 namespace Trsfile.Parameter.Primitive
 {

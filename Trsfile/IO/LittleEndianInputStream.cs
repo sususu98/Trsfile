@@ -150,7 +150,8 @@
             return ((ch1 << 0) + (ch2 << 8) + (ch3 << 16) + (ch4 << 24));
         }
 
-        private byte[] readBuffer = new byte[8];
+        private readonly byte[] readBuffer = new byte[8];
+
         public long ReadLong()
         {
             ReadFully(readBuffer, 0, 8);
@@ -169,7 +170,7 @@
         {
             int length = ReadUnsignedShort();
             byte[] bytes = new byte[length];
-            int read = this.Read(bytes);
+            int read = Read(bytes);
             if (read != length)
             {
                 throw new EndOfStreamException();

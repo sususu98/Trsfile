@@ -41,9 +41,10 @@
         public override TraceParameter this[string key]
         {
             get => base[key];
-            set => throw new NotSupportedException(UNABLE_TO_SET_PARAMETER);
+            set => throw new NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, value.ToString()));
         }
 
+        public override object Clone() => new UnmodifiableTraceParameterMap(this);
     }
 
 }

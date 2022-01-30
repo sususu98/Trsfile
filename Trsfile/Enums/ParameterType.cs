@@ -1,6 +1,6 @@
 ﻿namespace Trsfile.Enums
 {
-    public sealed class ParameterType
+    public sealed record ParameterType
     {
         public static readonly ParameterType BYTE
             = new("BYTE", ParameterTypeEnum.BYTE, 0x01, sizeof(byte), typeof(byte), typeof(byte[]));
@@ -30,11 +30,6 @@
             STRING,
             BOOL
         };
-
-        static ParameterType()
-        {
-
-        }
 
         public enum ParameterTypeEnum
         {

@@ -1,36 +1,55 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using Trsfile.Parameter.Primitive;
-using Trsfile.Parameter.Traceset;
+using Trsfile.Parameter.Trace;
+using Trsfile.Parameter;
 
 namespace Trsfile.Test
 {
     [TestClass]
-    public class UnmodifiableTraceSetParameterMapTest
+    public class UnmodifiableTraceParameterMapTest
     {
-        private TraceSetParameterMap immutable;
+        private TraceParameterMap immutable;
 
         [TestInitialize]
-        public virtual void Setup()
+        public void Setup()
         {
-            TraceSetParameterMap mutable = new();
+            TraceParameterMap mutable = new();
             mutable.Add("FOO", 1);
 
-            immutable = UnmodifiableTraceSetParameterMap.Of(mutable);
+            immutable = UnmodifiableTraceParameterMap.Of(mutable);
         }
+
+        /// <summary>
+        /// This test ensure that the underlying map of an unmodifiable map cannot change the map itself
+        /// </summary>
         [TestMethod]
-        public virtual void Add()
+        public void TestUnmodifiable()
+        {
+            byte[] ba = new byte[] { 1, 2, 3, 4, 5 };
+            ByteArrayParameter bap = new(ba);
+            TraceParameterMap tpm = new();
+            tpm.Add("BA", bap);
+            TraceParameterMap copy = UnmodifiableTraceParameterMap.Of(tpm);
+            ba[1] = 6;
+            var t = copy["BA"];
+            if (t is TraceParameter<byte> Tparameter)
+                Assert.IsFalse(Tparameter.Value.Equals(ba));
+
+        }
+
+        [TestMethod]
+        public void Add()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Add("BLA", 2));
 
             string expectedMessage = "Unable to set parameter `BLA` to `[2]`: This trace set is in read mode and cannot be modified.";
             string actualMessage = e.Message;
-
             Assert.IsTrue(actualMessage.Contains(expectedMessage));
         }
 
         [TestMethod]
-        public virtual void Remove()
+        public void Remove()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Remove("FOO"));
 
@@ -41,9 +60,8 @@ namespace Trsfile.Test
         }
 
 
-
         [TestMethod]
-        public virtual void Clear()
+        public void Clear()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Clear());
 
@@ -51,12 +69,22 @@ namespace Trsfile.Test
             string actualMessage = e.Message;
 
             Assert.IsTrue(actualMessage.Contains(expectedMessage));
-
         }
 
 
         [TestMethod]
-        public virtual void TestRemove()
+        public void TestReplace()
+        {
+            Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable["BLA"] = new IntegerArrayParameter(new int[] { 1 }));
+
+            string expectedMessage = "Unable to set parameter `BLA` to `[1]`: This trace set is in read mode and cannot be modified.";
+            string actualMessage = e.Message;
+
+            Assert.IsTrue(actualMessage.Contains(expectedMessage));
+        }
+
+        [TestMethod]
+        public void TestRemove()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Remove("BLA", out _));
 
@@ -64,30 +92,7 @@ namespace Trsfile.Test
             string actualMessage = e.Message;
 
             Assert.IsTrue(actualMessage.Contains(expectedMessage));
-
         }
 
-        [TestMethod]
-        public virtual void Replace()
-        {
-            Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable["FOO"] = new TraceSetParameter(new IntegerArrayParameter(new int[] { -1 })));
-
-            string expectedMessage = "Unable to set parameter `{0}` to `[{1}]`: This trace set is in read mode and cannot be modified.";
-            string actualMessage = e.Message;
-            Assert.IsTrue(actualMessage.Contains(expectedMessage));
-
-        }
-
-        [TestMethod]
-        public virtual void TestReplace()
-        {
-            Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable["FOO"] = new TraceSetParameter(new IntegerArrayParameter(new int[] { -1 })));
-
-            string expectedMessage = "Unable to set parameter `{0}` to `[{1}]`: This trace set is in read mode and cannot be modified.";
-            string actualMessage = e.Message;
-
-            Assert.IsTrue(actualMessage.Contains(expectedMessage));
-
-        }
     }
 }

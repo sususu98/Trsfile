@@ -24,7 +24,7 @@ namespace Trsfile.Parameter.Trace.Definition
             Offset = offset;
         }
 
-        public virtual void Serialize(LittleEndianOutputStream dos)
+        public void Serialize(LittleEndianOutputStream dos)
         {
             dos.WriteByte(Type.Value);
             dos.WriteShort(Length);

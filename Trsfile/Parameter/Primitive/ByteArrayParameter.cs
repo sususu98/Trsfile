@@ -1,5 +1,4 @@
-﻿using LittleEndianInputStream = Trsfile.IO.LittleEndianInputStream;
-using LittleEndianOutputStream = Trsfile.IO.LittleEndianOutputStream;
+﻿using Trsfile.IO;
 
 namespace Trsfile.Parameter.Primitive
 {
@@ -43,22 +42,6 @@ namespace Trsfile.Parameter.Primitive
         public override string ToString()
         {
             return HexUtils.ToHexString(Value);
-        }
-
-        public override bool Equals(object? o)
-        {
-            if (this == o)
-            {
-                return true;
-            }
-            if (o == null || this.GetType() != o.GetType())
-            {
-                return false;
-            }
-
-            ByteArrayParameter that = (ByteArrayParameter)o;
-
-            return Value.SequenceEqual(that.Value);
         }
 
         public override int GetHashCode()

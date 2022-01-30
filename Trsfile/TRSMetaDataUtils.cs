@@ -1,9 +1,8 @@
 ﻿using System.IO.MemoryMappedFiles;
-using System.Text;
-using TRSTag = Trsfile.Enums.TRSTag;
-using LittleEndianInputStream = Trsfile.IO.LittleEndianInputStream;
-using TraceParameterDefinitionMap = Trsfile.Parameter.Trace.Definition.TraceParameterDefinitionMap;
-using TraceSetParameterMap = Trsfile.Parameter.Traceset.TraceSetParameterMap;
+using Trsfile.Enums;
+using Trsfile.IO;
+using Trsfile.Parameter.Trace.Definition;
+using Trsfile.Parameter.Traceset;
 
 namespace Trsfile
 {
@@ -26,7 +25,7 @@ namespace Trsfile
                 Console.Error.WriteLine(REWINDING_STREAM);
                 fos.Position = 0;
             }
-            foreach (TRSTag tag in TRSTag.Values())
+            foreach (TRSTag tag in TRSTag.Values)
             {
                 if (tag.Equals(TRSTag.TRACE_BLOCK))
                 {
@@ -40,7 +39,7 @@ namespace Trsfile
                 if (tag.Type == typeof(string))
                 {
                     string s = metaData.GetString(tag);
-                    byte[] stringBytes = Encoding.UTF8.GetBytes(s);
+                    byte[] stringBytes = System.Text.Encoding.UTF8.GetBytes(s);
                     WriteLength(fos, stringBytes.Length);
                     fos.Write(stringBytes, 0, stringBytes.Length);
                 }
@@ -110,8 +109,8 @@ namespace Trsfile
         }
 
         /// <summary>
-        /// Reads the meta data of a TRS file. The {@code ByteBuffer} is assumed to be positioned at the start of the file; A
-        /// {@code TRSFormatException} will probably be thrown otherwise, since it cannot be parsed.
+        /// Reads the meta data of a TRS file. The ByteBuffer is assumed to be positioned at the start of the file; A
+        /// TRSFormatException will probably be thrown otherwise, since it cannot be parsed.
         /// </summary>
         /// <param name="buffer"> The buffer which wraps the TRS file (should be positioned at the first byte of the file) </param>
         /// <returns> the meta data of a TRS file </returns>
@@ -151,7 +150,7 @@ namespace Trsfile
                 throw new IOException("Error reading parameter name");
             }
             //Read N
-            return StringHelper.NewString(nameBytes, Encoding.UTF8);
+            return StringHelper.NewString(nameBytes, System.Text.Encoding.UTF8);
         }
 
 
@@ -166,7 +165,7 @@ namespace Trsfile
             catch (TRSFormatException)
             {
                 //unknown tag, but read it anyway
-                buffer.Position = buffer.Position + length;
+                buffer.Position += length;
                 Console.Error.WriteLine(string.Format(IGNORED_UNKNOWN_TAG, tag));
                 return;
             }
@@ -237,7 +236,7 @@ namespace Trsfile
         {
             byte[] ba = new byte[length];
             buffer.Read(ba);
-            return StringHelper.NewString(ba, Encoding.UTF8);
+            return StringHelper.NewString(ba, System.Text.Encoding.UTF8);
         }
 
         private static TraceSetParameterMap ReadTraceSetParameters(MemoryMappedViewStream buffer, int length)

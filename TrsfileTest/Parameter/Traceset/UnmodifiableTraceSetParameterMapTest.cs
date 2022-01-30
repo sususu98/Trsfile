@@ -1,43 +1,23 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using Trsfile.Parameter.Primitive;
-using Trsfile.Parameter.Trace;
-using Trsfile.Parameter;
+using Trsfile.Parameter.Traceset;
 
 namespace Trsfile.Test
 {
     [TestClass]
-    public class UnmodifiableTraceParameterMapTest
+    public class UnmodifiableTraceSetParameterMapTest
     {
-        private TraceParameterMap immutable;
+        private TraceSetParameterMap immutable;
 
         [TestInitialize]
         public void Setup()
         {
-            TraceParameterMap mutable = new();
+            TraceSetParameterMap mutable = new();
             mutable.Add("FOO", 1);
 
-            immutable = UnmodifiableTraceParameterMap.Of(mutable);
+            immutable = UnmodifiableTraceSetParameterMap.Of(mutable);
         }
-
-        /// <summary>
-        /// This test ensure that the underlying map of an unmodifiable map cannot change the map itself
-        /// </summary>
-        [TestMethod]
-        public void TestUnmodifiable()
-        {
-            byte[] ba = new byte[] { 1, 2, 3, 4, 5 };
-            ByteArrayParameter bap = new(ba);
-            TraceParameterMap tpm = new();
-            tpm.Add("BA", bap);
-            TraceParameterMap copy = UnmodifiableTraceParameterMap.Of(tpm);
-            ba[1] = 6;
-            var t = copy["BA"];
-            if (t is TraceParameter<byte> Tparameter)
-                Assert.IsFalse(Tparameter.Value.Equals(ba));
-
-        }
-
         [TestMethod]
         public void Add()
         {
@@ -45,6 +25,7 @@ namespace Trsfile.Test
 
             string expectedMessage = "Unable to set parameter `BLA` to `[2]`: This trace set is in read mode and cannot be modified.";
             string actualMessage = e.Message;
+
             Assert.IsTrue(actualMessage.Contains(expectedMessage));
         }
 
@@ -60,6 +41,7 @@ namespace Trsfile.Test
         }
 
 
+
         [TestMethod]
         public void Clear()
         {
@@ -69,19 +51,9 @@ namespace Trsfile.Test
             string actualMessage = e.Message;
 
             Assert.IsTrue(actualMessage.Contains(expectedMessage));
+
         }
 
-
-        // Here;s no ReplaceAll in C#, so we remove this
-        public void ReplaceAll()
-        {
-            Exception e = Assert.ThrowsException<NotSupportedException>(() => new IntegerArrayParameter(new int[] { 1 }));
-
-            string expectedMessage = "Unable to modify: This trace set is in read mode and cannot be modified.";
-            string actualMessage = e.Message;
-
-            Assert.IsTrue(actualMessage.Contains(expectedMessage));
-        }
 
         [TestMethod]
         public void TestRemove()
@@ -92,7 +64,30 @@ namespace Trsfile.Test
             string actualMessage = e.Message;
 
             Assert.IsTrue(actualMessage.Contains(expectedMessage));
+
         }
 
+        [TestMethod]
+        public void Replace()
+        {
+            Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable["FOO"] = new TraceSetParameter(new IntegerArrayParameter(new int[] { -1 })));
+
+            string expectedMessage = "Unable to set parameter `{0}` to `[{1}]`: This trace set is in read mode and cannot be modified.";
+            string actualMessage = e.Message;
+            Assert.IsTrue(actualMessage.Contains(expectedMessage));
+
+        }
+
+        [TestMethod]
+        public void TestReplace()
+        {
+            Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable["FOO"] = new TraceSetParameter(new IntegerArrayParameter(new int[] { -1 })));
+
+            string expectedMessage = "Unable to set parameter `{0}` to `[{1}]`: This trace set is in read mode and cannot be modified.";
+            string actualMessage = e.Message;
+
+            Assert.IsTrue(actualMessage.Contains(expectedMessage));
+
+        }
     }
 }

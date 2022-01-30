@@ -23,10 +23,7 @@ namespace Trsfile.Parameter.Trace
         }
 
         /// <returns> a new instance of a TraceParameterMap containing all the same values as this one </returns>
-        public object Clone()
-        {
-            return new TraceParameterMap(this);
-        }
+        public virtual object Clone() => new TraceParameterMap(this);
 
         public virtual new void Add(string s, TraceParameter t)
         {
@@ -49,9 +46,9 @@ namespace Trsfile.Parameter.Trace
         /// <exception cref="RuntimeException"> if the map failed to serialize correctly </exception>
         public byte[] Serialize()
         {
-            MemoryStream baos = new();
             try
             {
+                MemoryStream baos = new();
                 using LittleEndianOutputStream dos = new(baos);
                 foreach (TraceParameter parameter in Values)
                 {
@@ -265,21 +262,10 @@ namespace Trsfile.Parameter.Trace
 
         public override bool Equals(object? o)
         {
-            if (this == o)
-            {
-                return true;
-            }
-            if (o == null || GetType() != o.GetType())
-            {
+            if ((object)this == o) return true;
+            if (o is not TraceParameterMap that)
                 return false;
-            }
-
-            TraceParameterMap that = (TraceParameterMap)o;
-            if (Count != that.Count)
-            {
-                return false;
-            }
-
+            if (Count != that.Count) return false;
             foreach (var (key, item) in this)
             {
                 if (!that.ContainsKey(key) || that[key] != item)
@@ -287,6 +273,12 @@ namespace Trsfile.Parameter.Trace
             }
             return true;
         }
+
+        public static bool operator ==(TraceParameterMap a, TraceParameterMap b)
+            => a.Equals(b);
+
+        public static bool operator !=(TraceParameterMap a, TraceParameterMap b)
+            => !a.Equals(b);
 
         public override int GetHashCode()
         {
