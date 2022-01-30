@@ -25,7 +25,7 @@ namespace Trsfile
                 Console.Error.WriteLine(REWINDING_STREAM);
                 fos.Position = 0;
             }
-            foreach (TRSTag tag in TRSTag.Values())
+            foreach (TRSTag tag in TRSTag.Values)
             {
                 if (tag.Equals(TRSTag.TRACE_BLOCK))
                 {
@@ -109,8 +109,8 @@ namespace Trsfile
         }
 
         /// <summary>
-        /// Reads the meta data of a TRS file. The {@code ByteBuffer} is assumed to be positioned at the start of the file; A
-        /// {@code TRSFormatException} will probably be thrown otherwise, since it cannot be parsed.
+        /// Reads the meta data of a TRS file. The ByteBuffer is assumed to be positioned at the start of the file; A
+        /// TRSFormatException will probably be thrown otherwise, since it cannot be parsed.
         /// </summary>
         /// <param name="buffer"> The buffer which wraps the TRS file (should be positioned at the first byte of the file) </param>
         /// <returns> the meta data of a TRS file </returns>

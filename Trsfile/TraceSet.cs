@@ -73,7 +73,7 @@ namespace Trsfile
         }
 
         /// <returns> the Path on disk of this trace set </returns>
-        public virtual string FilePath { get { return filePath; } }
+        public string FilePath { get { return filePath; } }
         private void MapBuffer()
         {
             mmf = MemoryMappedFile.CreateFromFile(filePath, FileMode.Open);
@@ -109,7 +109,7 @@ namespace Trsfile
         /// Get a trace from the set at the specified index </summary>
         /// <param name="index"> the index of the Trace to read from the file </param>
         /// <returns> the Trace at the requested trace index </returns>
-        public virtual Trace Get(int index)
+        public Trace Get(int index)
         {
             if (!open_Conflict)
             {
@@ -275,11 +275,11 @@ namespace Trsfile
         private static byte[] ToByteArray(float[] samples, Encoding encoding)
         {
             byte[] result;
-            switch (encoding.innerEnumValue)
+            switch (encoding.InnerEnumValue)
             {
-                case Encoding.InnerEnum.ILLEGAL:
+                case Encoding.EncodingEnum.ILLEGAL:
                     throw new TRSFormatException("Illegal sample encoding");
-                case Encoding.InnerEnum.BYTE:
+                case Encoding.EncodingEnum.BYTE:
                     result = new byte[samples.Length];
                     for (int k = 0; k < samples.Length; k++)
                     {
@@ -290,7 +290,7 @@ namespace Trsfile
                         result[k] = (byte)samples[k];
                     }
                     break;
-                case Encoding.InnerEnum.SHORT:
+                case Encoding.EncodingEnum.SHORT:
                     result = new byte[samples.Length * 2];
                     for (int k = 0; k < samples.Length; k++)
                     {
@@ -303,7 +303,7 @@ namespace Trsfile
                         result[2 * k + 1] = (byte)(value >> 8);
                     }
                     break;
-                case Encoding.InnerEnum.INT:
+                case Encoding.EncodingEnum.INT:
                     result = new byte[samples.Length * 4];
                     for (int k = 0; k < samples.Length; k++)
                     {
@@ -314,7 +314,7 @@ namespace Trsfile
                         result[4 * k + 3] = (byte)(value >> 24);
                     }
                     break;
-                case Encoding.InnerEnum.FLOAT:
+                case Encoding.EncodingEnum.FLOAT:
                     result = new byte[samples.Length * 4];
                     for (int k = 0; k < samples.Length; k++)
                     {
@@ -392,16 +392,16 @@ namespace Trsfile
         /// <summary>
         /// Get the metadata associated with this trace set </summary>
         /// <returns> the metadata associated with this trace set </returns>
-        public virtual TRSMetaData MetaData { get; }
+        public TRSMetaData MetaData { get; }
 
-        protected internal virtual string ReadTraceTitle()
+        protected internal string ReadTraceTitle()
         {
             byte[] titleArray = new byte[MetaData.GetInt(TITLE_SPACE)];
             buffer.Read(titleArray);
             return System.Text.Encoding.UTF8.GetString(titleArray);
         }
 
-        protected internal virtual byte[] ReadData()
+        protected internal byte[] ReadData()
         {
             int inputSize = MetaData.GetInt(DATA_LENGTH);
             byte[] comDataArray = new byte[inputSize];
@@ -409,7 +409,7 @@ namespace Trsfile
             return comDataArray;
         }
 
-        protected internal virtual float[] ReadSamples()
+        protected internal float[] ReadSamples()
         {
             int numberOfSamples = MetaData.GetInt(NUMBER_OF_SAMPLES);
             float[] samples;

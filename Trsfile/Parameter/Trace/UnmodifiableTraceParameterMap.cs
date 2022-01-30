@@ -44,6 +44,7 @@
             set => throw new NotSupportedException(string.Format(UNABLE_TO_SET_PARAMETER, key, value.ToString()));
         }
 
+        public override object Clone() => new UnmodifiableTraceParameterMap(this);
     }
 
 }

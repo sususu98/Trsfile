@@ -11,7 +11,7 @@ namespace Trsfile.Test
         private TraceSetParameterMap immutable;
 
         [TestInitialize]
-        public virtual void Setup()
+        public void Setup()
         {
             TraceSetParameterMap mutable = new();
             mutable.Add("FOO", 1);
@@ -19,7 +19,7 @@ namespace Trsfile.Test
             immutable = UnmodifiableTraceSetParameterMap.Of(mutable);
         }
         [TestMethod]
-        public virtual void Add()
+        public void Add()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Add("BLA", 2));
 
@@ -30,7 +30,7 @@ namespace Trsfile.Test
         }
 
         [TestMethod]
-        public virtual void Remove()
+        public void Remove()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Remove("FOO"));
 
@@ -43,7 +43,7 @@ namespace Trsfile.Test
 
 
         [TestMethod]
-        public virtual void Clear()
+        public void Clear()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Clear());
 
@@ -56,7 +56,7 @@ namespace Trsfile.Test
 
 
         [TestMethod]
-        public virtual void TestRemove()
+        public void TestRemove()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable.Remove("BLA", out _));
 
@@ -68,7 +68,7 @@ namespace Trsfile.Test
         }
 
         [TestMethod]
-        public virtual void Replace()
+        public void Replace()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable["FOO"] = new TraceSetParameter(new IntegerArrayParameter(new int[] { -1 })));
 
@@ -79,7 +79,7 @@ namespace Trsfile.Test
         }
 
         [TestMethod]
-        public virtual void TestReplace()
+        public void TestReplace()
         {
             Exception e = Assert.ThrowsException<NotSupportedException>(() => immutable["FOO"] = new TraceSetParameter(new IntegerArrayParameter(new int[] { -1 })));
 

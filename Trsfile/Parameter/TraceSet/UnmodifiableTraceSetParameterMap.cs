@@ -46,6 +46,8 @@
             get => base[key];
             set => throw new NotSupportedException(UNABLE_TO_SET_PARAMETER);
         }
+
+        public override object Clone() => new UnmodifiableTraceSetParameterMap(this);
     }
 
 }

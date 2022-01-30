@@ -1,9 +1,7 @@
 ﻿using System.Text;
-using TRSTag = Trsfile.Enums.TRSTag;
-using TraceParameterDefinitionMap = Trsfile.Parameter.Trace.Definition.TraceParameterDefinitionMap;
-using UnmodifiableTraceParameterDefinitionMap = Trsfile.Parameter.Trace.Definition.UnmodifiableTraceParameterDefinitionMap;
-using TraceSetParameterMap = Trsfile.Parameter.Traceset.TraceSetParameterMap;
-using UnmodifiableTraceSetParameterMap = Trsfile.Parameter.Traceset.UnmodifiableTraceSetParameterMap;
+using Trsfile.Enums;
+using Trsfile.Parameter.Trace.Definition;
+using Trsfile.Parameter.Traceset;
 
 namespace Trsfile
 {
@@ -25,7 +23,7 @@ namespace Trsfile
 
         private void Init()
         {
-            foreach (TRSTag tag in TRSTag.Values())
+            foreach (TRSTag tag in TRSTag.Values)
             {
                 metaData[tag] = tag.DefaultValue;
             }
@@ -122,11 +120,6 @@ namespace Trsfile
                 object o = metaData[TRSTag.TRACE_SET_PARAMETERS];
                 return o as TraceSetParameterMap ??
                     UnmodifiableTraceSetParameterMap.Of(new TraceSetParameterMap());
-                //if (o.GetType().IsAssignableFrom(typeof(TraceSetParameterMap)))
-                //{
-                //    return (TraceSetParameterMap)o;
-                //}
-                //return UnmodifiableTraceSetParameterMap.Of(new TraceSetParameterMap());
             }
         }
 
@@ -138,10 +131,6 @@ namespace Trsfile
             get
             {
                 object o = metaData[TRSTag.TRACE_PARAMETER_DEFINITIONS];
-                //if (typeof(TraceParameterDefinitionMap).IsAssignableFrom(o.GetType()))
-                //{
-                //    return (TraceParameterDefinitionMap)o;
-                //}
                 return o as TraceParameterDefinitionMap ??
                     UnmodifiableTraceParameterDefinitionMap.Of(new TraceParameterDefinitionMap());
             }
@@ -159,7 +148,7 @@ namespace Trsfile
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
-            foreach (TRSTag tag in TRSTag.Values())
+            foreach (TRSTag tag in TRSTag.Values)
             {
                 builder.Append(tag).Append("\n\tValue = ").Append(this[tag]).Append('\n');
             }
