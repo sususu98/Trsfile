@@ -1,5 +1,5 @@
-﻿using TraceParameter = Trsfile.Parameter.TraceParameter;
-using ShortArrayParameter = Trsfile.Parameter.Primitive.ShortArrayParameter;
+﻿using Trsfile.Parameter;
+using Trsfile.Parameter.Primitive;
 
 namespace Trsfile.Types
 {

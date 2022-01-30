@@ -3,7 +3,7 @@ using TraceSetParameterMap = Trsfile.Parameter.Traceset.TraceSetParameterMap;
 
 namespace Trsfile.Enums
 {
-    public sealed class TRSTag
+    public sealed record TRSTag
     {
         public static readonly TRSTag NUMBER_OF_TRACES = new("NUMBER_OF_TRACES", InnerEnum.NUMBER_OF_TRACES, 0x41, "NT", true, typeof(int), 4, 0, "Number of traces");
         public static readonly TRSTag NUMBER_OF_SAMPLES = new("NUMBER_OF_SAMPLES", InnerEnum.NUMBER_OF_SAMPLES, 0x42, "NS", true, typeof(int), 4, 0, "Number of samples per trace");
