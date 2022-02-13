@@ -78,9 +78,6 @@ namespace Trsfile
         {
             mmf = MemoryMappedFile.CreateFromFile(filePath, FileMode.Open);
             this.buffer = mmf.CreateViewStream(bufferStart, bufferSize, MemoryMappedFileAccess.Read);
-
-            //this.buffer = this.channel.map(FileChannel.MapMode.READ_ONLY, this.bufferStart, this.bufferSize);
-
         }
 
         private void MoveBufferIfNecessary(int traceIndex)
@@ -139,7 +136,7 @@ namespace Trsfile
 
             long absolutePosition = metaDataSize + index * traceSize;
             buffer.Position = absolutePosition - this.bufferStart;
-
+             
             string traceTitle = ReadTraceTitle();
             if (traceTitle.Trim().Length == 0)
             {
@@ -283,9 +280,9 @@ namespace Trsfile
                     result = new byte[samples.Length];
                     for (int k = 0; k < samples.Length; k++)
                     {
-                        if (samples[k] != (byte)samples[k])
+                        if (samples[k] != (sbyte)samples[k])
                         {
-                            throw new System.ArgumentException("Byte sample encoding too small");
+                            throw new ArgumentException("Byte sample encoding too small");
                         }
                         result[k] = (byte)samples[k];
                     }
@@ -296,7 +293,7 @@ namespace Trsfile
                     {
                         if (samples[k] != (short)samples[k])
                         {
-                            throw new System.ArgumentException("Short sample encoding too small");
+                            throw new ArgumentException("Short sample encoding too small");
                         }
                         short value = (short)samples[k];
                         result[2 * k] = (byte)value;
