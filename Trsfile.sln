@@ -10,8 +10,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrsfileTest", "TrsfileTest\
 		{83A8EE1D-C308-4158-958C-37131EB77644} = {83A8EE1D-C308-4158-958C-37131EB77644}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StaticAlign", "StaticAlign\StaticAlign.csproj", "{CE04C293-2F2C-4A21-8FCE-F13927897DF2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -26,10 +24,6 @@ Global
 		{E8632B62-3B37-4D8C-89C8-5D63D48B346F}.Debug|x64.Build.0 = Debug|x64
 		{E8632B62-3B37-4D8C-89C8-5D63D48B346F}.Release|x64.ActiveCfg = Release|x64
 		{E8632B62-3B37-4D8C-89C8-5D63D48B346F}.Release|x64.Build.0 = Release|x64
-		{CE04C293-2F2C-4A21-8FCE-F13927897DF2}.Debug|x64.ActiveCfg = Debug|x64
-		{CE04C293-2F2C-4A21-8FCE-F13927897DF2}.Debug|x64.Build.0 = Debug|x64
-		{CE04C293-2F2C-4A21-8FCE-F13927897DF2}.Release|x64.ActiveCfg = Release|x64
-		{CE04C293-2F2C-4A21-8FCE-F13927897DF2}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
