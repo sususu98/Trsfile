@@ -14,7 +14,6 @@ class StaticAlign
     double[] reTrace;
     const int referenceTraceIndex = 2;
 
-    double max;
     int threshold = 95;
 
 
@@ -32,17 +31,18 @@ class StaticAlign
         Array.Copy(vs, referenceFirst, reTrace, 0, referenceSampleNum);
     }
 
-    float[]? DoAlign(float[] f)
+
+    Trace? Process(Trace t)
     {
+        float[] d = t.Sample;
+        double max = 0;
         double[] offsetTrace = new double[referenceSampleNum];
         //寻找最佳对齐点
         int shift = 0;
         for (int j = -shiftMax / 2; j < shiftMax / 2; j++)
         {
-            Array.Copy(f, referenceFirst + j, offsetTrace, 0, referenceSampleNum);
+            Array.Copy(d, referenceFirst + j, offsetTrace, 0, referenceSampleNum);
             double cor = MathNet.Numerics.Statistics.Correlation.Pearson(reTrace, offsetTrace);
-            if (max == 0)
-                max = cor;
             if (cor > max)
             {
                 max = cor;
@@ -56,34 +56,20 @@ class StaticAlign
             return null;
         }
         if (shift == 0)
-            return f;
+            return t;
         if (shift < 0)
         {
-            float[] temp = new float[f.Length];
-            Array.Copy(f, f.Length + shift, temp, 0, -shift);
-            Array.Copy(f, 0, temp, -shift, f.Length + shift);
-            return temp;
+            float[] temp = new float[d.Length];
+            Array.Copy(d, d.Length + shift, temp, 0, -shift);
+            Array.Copy(d, 0, temp, -shift, d.Length + shift);
         }
         else
         {
-            float[] temp = new float[f.Length];
-            Array.Copy(f, shift, temp, 0, f.Length - shift);
-            Array.Copy(f, 0, temp, f.Length - shift, shift);
-            return temp;
-        }
-    }
-
-    Trace? Process(Trace t)
-    {
-        max = 0;
-
-        float[]? d = DoAlign(t.Sample);
-        if (d == null)
-        {
-            return null;
+            float[] temp = new float[d.Length];
+            Array.Copy(d, shift, temp, 0, d.Length - shift);
+            Array.Copy(d, 0, temp, d.Length - shift, shift);
         }
         return new Trace(t.Title ?? string.Empty, d, t.Parameters);
-
     }
 
     void TimeTest()
@@ -92,7 +78,7 @@ class StaticAlign
         int numTraces = traceSet.MetaData.GetInt(NUMBER_OF_TRACES);
         var sw = new System.Diagnostics.Stopwatch();
         sw.Start();
-        Parallel.For(0, numTraces, (i, ParallelLoopState) =>
+        Parallel.For(0, numTraces, i =>
         {
             Trace? trace = Process(traceSet.Get(i));
             if (trace is not null)

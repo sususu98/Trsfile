@@ -8,6 +8,36 @@ using static Trsfile.Enums.TRSTag;
 using Encoding = Trsfile.Enums.Encoding;
 namespace Trsfile
 {
+    internal static class BufferExtension
+    {
+        internal static readonly object obj = new();
+
+        internal static int ReadSafe(this MemoryMappedViewStream s, byte[] buffer, int offset, int count, ref long position)
+        {
+            if (s is null) return -1;
+            lock (obj)
+            {
+                s.Position = position;
+                int result = s.Read(buffer, offset, count);
+                position = s.Position;
+                return result;
+            }
+        }
+
+        internal static int ReadSafe(this MemoryMappedViewStream s, System.Span<byte> buffer, ref long position)
+        {
+            if (s is null) return -1;
+            lock (obj)
+            {
+                s.Position = position;
+                int result = s.Read(buffer);
+                position = s.Position;
+                return result;
+            }
+        }
+
+    }
+
 #pragma warning disable CS8604, CS8618
     public class TraceSet : IDisposable
     {
@@ -27,57 +57,57 @@ namespace Trsfile
                 new DecoderReplacementFallback(""));
 
         //Reading variables
-        private int metaDataSize;
+        private readonly int metaDataSize;
         //private FileChannel channel;
-        private FileInfo info;
+        private readonly FileInfo info;
         private MemoryMappedFile mmf;
 
         private MemoryMappedViewStream buffer;
 
         private long bufferStart; //the byte index of the file where the buffer window starts
         private long bufferSize; //the number of bytes that are in the buffer window
-        private long fileSize; //the total number of bytes in the underlying file
+        private readonly long fileSize; //the total number of bytes in the underlying file
 
         //Writing variables
-        private FileStream writeStream;
+        private readonly FileStream writeStream;
 
         private bool firstTrace = true;
-        private bool open_Conflict;
+        private bool openConflict;
         private readonly bool writing; //whether the trace is opened in write mode
-        private readonly string filePath;
 
         private TraceSet(string inputFileName)
         {
-            this.writing = false;
-            this.open_Conflict = true;
-            this.filePath = Path.GetFullPath(inputFileName);
-            this.info = new FileInfo(inputFileName);
+            writing = false;
+            openConflict = true;
+            FilePath = Path.GetFullPath(inputFileName);
+            info = new FileInfo(inputFileName);
 
             //the file might be bigger than the buffer, in which case we partially buffer it in memory
-            this.fileSize = this.info.Length;
-            this.bufferStart = 0L;
-            this.bufferSize = Math.Min(fileSize, MAX_BUFFER_SIZE);
+            fileSize = info.Length;
+            bufferStart = 0L;
+            bufferSize = Math.Min(fileSize, MAX_BUFFER_SIZE);
 
             MapBuffer();
-            this.MetaData = TRSMetaDataUtils.ReadTRSMetaData(buffer); // buffer is not null through MapBuffer()
-            this.metaDataSize = (int)buffer.Position;
+            MetaData = TRSMetaDataUtils.ReadTRSMetaData(buffer); // buffer is not null through MapBuffer()
+            metaDataSize = (int)buffer.Position;
+            bufferPosition = buffer.Position;
         }
 
         private TraceSet(string outputFileName, TRSMetaData metaData)
         {
-            this.open_Conflict = true;
-            this.writing = true;
-            this.MetaData = metaData;
-            this.filePath = Path.GetFullPath(outputFileName);
-            this.writeStream = new FileStream(outputFileName, FileMode.Create, FileAccess.Write);
+            openConflict = true;
+            writing = true;
+            MetaData = metaData;
+            FilePath = Path.GetFullPath(outputFileName);
+            writeStream = new FileStream(outputFileName, FileMode.Create, FileAccess.Write);
         }
 
         /// <returns> the Path on disk of this trace set </returns>
-        public string FilePath { get { return filePath; } }
+        public string FilePath { get; }
         private void MapBuffer()
         {
-            mmf = MemoryMappedFile.CreateFromFile(filePath, FileMode.Open);
-            this.buffer = mmf.CreateViewStream(bufferStart, bufferSize, MemoryMappedFileAccess.Read);
+            mmf = MemoryMappedFile.CreateFromFile(FilePath, FileMode.Open);
+            buffer = mmf.CreateViewStream(bufferStart, bufferSize, MemoryMappedFileAccess.Read);
         }
 
         private void MoveBufferIfNecessary(int traceIndex)
@@ -86,12 +116,12 @@ namespace Trsfile
             long start = metaDataSize + (long)traceIndex * traceSize;
             long end = start + traceSize;
 
-            bool moveRequired = start < this.bufferStart || this.bufferStart + this.bufferSize < end;
+            bool moveRequired = start < bufferStart || bufferStart + bufferSize < end;
             if (moveRequired)
             {
-                this.bufferStart = start;
-                this.bufferSize = Math.Min(this.fileSize - start, MAX_BUFFER_SIZE);
-                this.MapBuffer();
+                bufferStart = start;
+                bufferSize = Math.Min(fileSize - start, MAX_BUFFER_SIZE);
+                MapBuffer();
             }
         }
 
@@ -102,13 +132,16 @@ namespace Trsfile
             return sampleSpace + MetaData.GetInt(DATA_LENGTH) + MetaData.GetInt(TITLE_SPACE);
         }
 
+        [ThreadStatic]
+        private static long bufferPosition = 0;
+
         /// <summary>
         /// Get a trace from the set at the specified index </summary>
         /// <param name="index"> the index of the Trace to read from the file </param>
         /// <returns> the Trace at the requested trace index </returns>
         public Trace Get(int index)
         {
-            if (!open_Conflict)
+            if (!openConflict)
             {
                 throw new ArgumentException(TRACE_SET_NOT_OPEN);
             }
@@ -132,10 +165,13 @@ namespace Trsfile
                 string msg = string.Format(ERROR_READING_FILE, fileSize, metaDataSize, traceSize, nrOfTraces);
                 throw new InvalidOperationException(msg);
             }
-            MoveBufferIfNecessary(index);
-
-            long absolutePosition = metaDataSize + index * traceSize;
-            buffer.Position = absolutePosition - this.bufferStart;
+            lock (BufferExtension.obj)
+            {
+                MoveBufferIfNecessary(index);
+                long absolutePosition = metaDataSize + index * traceSize;
+                //buffer.Position = absolutePosition - this.bufferStart;
+                bufferPosition = absolutePosition - bufferStart;
+            }
              
             string traceTitle = ReadTraceTitle();
             if (traceTitle.Trim().Length == 0)
@@ -151,7 +187,7 @@ namespace Trsfile
                     TraceParameterDefinitionMap traceParameterDefinitionMap = MetaData.TraceParameterDefinitions;
                     int size = traceParameterDefinitionMap.TotalByteSize();
                     byte[] data = new byte[size];
-                    buffer.Read(data, 0, size);
+                    buffer.ReadSafe(data, 0, size, ref bufferPosition);
                     traceParameterMap = TraceParameterMap.Deserialize(data, traceParameterDefinitionMap);
                 }
                 else
@@ -178,7 +214,7 @@ namespace Trsfile
         /// <param name="trace"> the Trace object to add </param>
         public void Add(Trace trace)
         {
-            if (!open_Conflict)
+            if (!openConflict)
             {
                 throw new ArgumentException(TRACE_SET_NOT_OPEN);
             }
@@ -241,7 +277,7 @@ namespace Trsfile
         /// character. If the string is too long, it is truncated. If it's too short, it's padded with NUL characters. </summary>
         /// <param name="s"> the string to fit </param>
         /// <param name="maxBytes"> the number of bytes required </param>
-        private static string? FitUtf8StringToByteLength(string s, int maxBytes)
+        private static string? FitUtf8StringToByteLength(string? s, int maxBytes)
         {
             if (s is null)
             {
@@ -262,13 +298,14 @@ namespace Trsfile
 
         private void WriteTrace(Trace trace)
         {
-            string title = trace.Title is null ? "" : trace.Title;
+            string title = trace.Title is null ? string.Empty : trace.Title;
             writeStream.Write(title.GetBytes(System.Text.Encoding.UTF8));
             byte[] data = trace.Data is null ? Array.Empty<byte>() : trace.Data;
             writeStream.Write(data, 0, data.Length);
             Encoding encoding = Encoding.FromValue(MetaData.GetInt(SAMPLE_CODING));
             writeStream.Write(ToByteArray(trace.Sample, encoding), 0, ToByteArray(trace.Sample, encoding).Length);
         }
+
         private static byte[] ToByteArray(float[] samples, Encoding encoding)
         {
             byte[] result;
@@ -331,7 +368,7 @@ namespace Trsfile
         private bool closed = false;
         public void Close()
         {
-            open_Conflict = false;
+            openConflict = false;
             if (writing)
             {
                 CloseWriter();
@@ -394,7 +431,7 @@ namespace Trsfile
         protected internal string ReadTraceTitle()
         {
             byte[] titleArray = new byte[MetaData.GetInt(TITLE_SPACE)];
-            buffer.Read(titleArray);
+            buffer.ReadSafe(titleArray, ref bufferPosition);
             return System.Text.Encoding.UTF8.GetString(titleArray);
         }
 
@@ -402,7 +439,7 @@ namespace Trsfile
         {
             int inputSize = MetaData.GetInt(DATA_LENGTH);
             byte[] comDataArray = new byte[inputSize];
-            buffer.Read(comDataArray);
+            buffer.ReadSafe(comDataArray, ref bufferPosition);
             return comDataArray;
         }
 
@@ -415,26 +452,26 @@ namespace Trsfile
             {
                 case Encoding e when e == Encoding.BYTE:
                     byte[] byteData = new byte[numberOfSamples];
-                    buffer.Read(byteData);
+                    buffer.ReadSafe(byteData, ref bufferPosition);
                     samples = ToFloatArray(byteData);
                     break;
                 case Encoding e when e == Encoding.SHORT:
                     short[] shortData = new short[numberOfSamples];
                     temp = new byte[numberOfSamples * sizeof(short)];
-                    buffer.Read(temp);
+                    buffer.ReadSafe(temp, ref bufferPosition);
                     Buffer.BlockCopy(temp, 0, shortData, 0, temp.Length);
                     samples = ToFloatArray(shortData);
                     break;
                 case Encoding e when e == Encoding.FLOAT:
                     samples = new float[numberOfSamples];
                     temp = new byte[numberOfSamples * sizeof(float)];
-                    buffer.Read(temp);
+                    buffer.ReadSafe(temp, ref bufferPosition);
                     Buffer.BlockCopy(temp, 0, samples, 0, temp.Length);
                     break;
                 case Encoding e when e == Encoding.INT:
                     int[] intData = new int[numberOfSamples];
                     temp = new byte[numberOfSamples * sizeof(int)];
-                    buffer.Read(temp);
+                    buffer.ReadSafe(temp, ref bufferPosition);
                     Buffer.BlockCopy(temp, 0, intData, 0, temp.Length);
                     samples = ToFloatArray(intData);
                     break;
