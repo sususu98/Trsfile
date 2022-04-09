@@ -86,7 +86,7 @@ namespace Trsfile
             fileSize = info.Length;
             bufferStart = 0L;
             bufferSize = Math.Min(fileSize, MAX_BUFFER_SIZE);
-
+            mmf = MemoryMappedFile.CreateFromFile(FilePath, FileMode.Open);
             MapBuffer();
             MetaData = TRSMetaDataUtils.ReadTRSMetaData(buffer); // buffer is not null through MapBuffer()
             metaDataSize = (int)buffer.Position;
@@ -106,7 +106,6 @@ namespace Trsfile
         public string FilePath { get; }
         private void MapBuffer()
         {
-            mmf = MemoryMappedFile.CreateFromFile(FilePath, FileMode.Open);
             buffer = mmf.CreateViewStream(bufferStart, bufferSize, MemoryMappedFileAccess.Read);
         }
 
